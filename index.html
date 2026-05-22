@@ -1162,6 +1162,7 @@
           </div>
 
 <script>
+// Objeto global que vai receber os dados unificados do JSON
 let database = { 
     logoEmpresa: "",
     produtosConfigurados: [], 
@@ -1169,7 +1170,8 @@ let database = {
     quantidades: [], 
     valoresAcabamento: null,
     modelosMao: [], 
-    coresEva: []
+    coresEva: [],
+    valorStartMao: 0
 };
 
 let numeroOrcamentoAtualInstancia = "";
@@ -1203,24 +1205,26 @@ function verificarQuantidadeVariavel(select) {
     }
 }
 
-// Bancos de reserva integrados em um único objeto global seguro
-const bancoReservaUnificado = {
-  "logoEmpresa": "",
-  "produtosConfigurados": [
-    { "id": 1, "nomeCompleto": "500 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.78 },
-    { "id": 2, "nomeCompleto": "Sacola Offset 180g - 18x24x8 - Laminação BOPP Fosca", "precoBase": 4.50 }
-  ],
-  "cordoes": [{ "nome": "Nylon", "preco": 0.20 }, { "nome": "Gorgurão", "preco": 0.80 }],
-  "quantidades": [500, 1000, 2000],
-  "valoresAcabamento": { "ilhos": 0.20, "furoLaco": 0.15, "cores": { "1x0": 480.0, "2x0": 550.0, "4x0": 700.0, "4x1": 850.0 } },
+// Banco de reserva idêntico à primeira parte do seu JSON real para evitar quebras se o arquivo sumir
+const bancoReservaMao = {
+  "logoEmpresa": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
   "modelosMao": [
-    { "id": 1, "nome": "Mão de E.V.A - Modelo Tradicional 40cm", "precoBase": 2.50 },
-    { "id": 2, "nome": "Mão de E.V.A - Modelo Dedão Positivo 45cm", "precoBase": 2.80 }
+    { "id": 1, "nome": "Mão tipo Nº1", "precoBase": 3.5 },
+    { "id": 2, "nome": "Mão do Rock", "precoBase": 4.2 },
+    { "id": 3, "nome": "Mão aberta", "precoBase": 4 },
+    { "id": 4, "nome": "Mão dedo do meio", "precoBase": 3.8 }
   ],
-  "coresEva": ["Azul Comercial", "Vermelho", "Verde", "Amarelo", "Preto", "Branco"]
+  "coresEva": [
+    { "nome": "1 cor", "preco": 0.3 },
+    { "nome": "2 cores", "preco": 0.5 },
+    { "nome": "3 cores", "preco": 0.9 },
+    { "nome": "4 cores", "preco": 1 },
+    { "nome": "Cromia ( Papel )", "preco": 1.5 }
+  ],
+  "valorStartMao": 100
 };
 
-// Carregamento unificado: lê o dados.json uma única vez e alimenta os seletores de ambas as abas
+// Captura o dados.json uma única vez e alimenta a memória
 window.onload = function() {
     fetch('dados.json?t=' + new Date().getTime())
         .then(response => {
@@ -1231,22 +1235,23 @@ window.onload = function() {
             database = data; 
             if(database.logoEmpresa && database.logoEmpresa.trim() !== "") {
                 objImgMinha.src = database.logoEmpresa;
-                // Alimenta os elementos de imagem se eles existirem na tela
                 const imgPreview = document.getElementById('img-minha-preview');
                 if(imgPreview) imgPreview.src = database.logoEmpresa;
             }
-            // Executa o preenchimento dos menus de ambas as abas
+            // Chama a alimentação da Sacola (se a função existir no escopo global)
             if(typeof carregarMenusUnificados === "function") carregarMenusUnificados();
+            // Alimenta a aba Mão
             carregarMenusMao(); 
         })
         .catch(err => { 
-            console.warn("Utilizando banco reserva integrado unificado.");
-            database = JSON.parse(JSON.stringify(bancoReservaUnificado));
+            console.warn("Utilizando banco reserva integrado.");
+            database = JSON.parse(JSON.stringify(bancoReservaMao));
             if(typeof carregarMenusUnificados === "function") carregarMenusUnificados();
             carregarMenusMao(); 
         });
 };
 
+// Alimenta dinamicamente os selects baseado no seu JSON real
 function carregarMenusMao() {
     const modeloSel = document.getElementById("selectModeloMao");
     if(modeloSel) {
@@ -1267,50 +1272,60 @@ function carregarMenusMao() {
         if(database.coresEva) {
             database.coresEva.forEach((cor) => {
                 let opt = document.createElement("option");
-                opt.value = cor;
-                opt.text = cor; 
+                opt.value = cor.nome; // Guarda o nome como valor de busca
+                opt.text = cor.nome; 
                 corSel.add(opt);
             });
         }
     }
 }
 
+function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
 
-            function formatarMoeda(valor) {
-              return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-            }
-
-            function calcularValoresAtuais() {
-              const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
-              const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
-              const corEva = document.getElementById("selectCorEva").value;
-              const selectQtd = document.getElementById("selectQuantidade").value;
-
-              let qtd = 500;
-              if (selectQtd === "Variavel") {
-                qtd = parseInt(document.getElementById("qtdManual").value) || 1;
-              } else {
-                qtd = parseInt(selectQtd);
-              }
-
-              let modeloEncontrado = database.modelosMao.find((m) => m.id === idModeloSelected);
-              let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
-              let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : "Nenhum modelo";
-
-              // Espaço reservado para as regras matemáticas futuras
-              let custoTotalFinalDoLote = precoModeloBase * qtd;
-              let totalLoteComMargemLucro = custoTotalFinalDoLote;
-              let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
-
-              return {
-                custoUnitario: precoUnitarioDeVenda,
-                qtd,
-                total: totalLoteComMargemLucro,
-                detalhesBase,
-                tipoEncaixe,
-                corEva,
-              };
-            }
+// Novo motor de cálculo corrigido para ler os preços das cores e a taxa start do seu JSON
+function calcularValoresAtuais() {
+    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
+    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
+    const nomeCorEvaSelected = document.getElementById("selectCorEva").value;
+    const selectQtd = document.getElementById("selectQuantidade").value;
+    
+    let qtd = 500;
+    if (selectQtd === "Variavel") {
+        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
+    } else {
+        qtd = parseInt(selectQtd);
+    }
+    
+    // Busca do modelo
+    let modeloEncontrado = database.modelosMao.find(m => m.id === idModeloSelected);
+    let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
+    let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
+    
+    // Busca do preço da cor baseado no objeto selecionado do JSON
+    let corEncontrada = database.coresEva.find(c => c.nome === nomeCorEvaSelected);
+    let precoCorEva = corEncontrada ? parseFloat(corEncontrada.preco || 0) : 0;
+    
+    // Pega o valor start do JSON (ou usa 100 como padrão caso falhe)
+    let valorStart = database.valorStartMao !== undefined ? parseFloat(database.valorStartMao) : 100;
+    
+    // Regra Matemática: (Preço Base do Modelo + Preço da Cor) * Quantidade + Taxa Inicial Start
+    let custoTotalFinalDoLote = ((precoModeloBase + precoCorEva) * qtd) + valorStart;
+    
+    // Definição das variáveis de saída
+    let totalLoteComMargemLucro = custoTotalFinalDoLote; 
+    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
+    
+    return { 
+        custoUnitario: precoUnitarioDeVenda, 
+        qtd, 
+        total: totalLoteComMargemLucro, 
+        detalhesBase, 
+        tipoEncaixe, 
+        corEva: nomeCorEvaSelected
+    };
+}
 
             function obterNumeroIdentificador() {
               if (numeroOrcamentoAtualInstancia) return numeroOrcamentoAtualInstancia;
