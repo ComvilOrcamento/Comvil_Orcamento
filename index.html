@@ -554,10 +554,10 @@ input:focus, select:focus { border-color: #0056b3; }
     <h2>Dados do cliente</h2>
     <div class="field" style="margin-bottom: 12px;">
         <label>Nome *</label>
-        <input type="text" id="nomeCliente" placeholder="Nome do cliente ou Empresa (Obrigatório)" required>
+        <input type="text" id="nomeClienteM" placeholder="Nome do cliente ou Empresa (Obrigatório)" required>
     </div>
     <div class="row">
-        <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente" placeholder="(00) 00000-0000 (Obrigatório)" oninput="mascaraTelefone(this)" maxlength="15" required></div>
+        <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telClienteM" placeholder="(00) 00000-0000 (Obrigatório)" oninput="mascaraTelefone(this)" maxlength="15" required></div>
         <div class="field"><label>E-mail</label><input type="email" id="emailCliente" placeholder="email@exemplo.com (Opcional)"></div>
     </div>
     <h2>Itens do orçamento</h2>
@@ -596,7 +596,7 @@ input:focus, select:focus { border-color: #0056b3; }
         </div>
         <div class="field" id="campoQtdVariavel" style="display: none;">
             <label>Digite a Quantidade *</label>
-            <input type="number" id="qtdManual" min="1" placeholder="Ex: 750">
+            <input type="number" id="qtdManualM" min="1" placeholder="Ex: 750">
         </div>
     </div>
 
@@ -604,48 +604,48 @@ input:focus, select:focus { border-color: #0056b3; }
     <div class="row">
         <div class="field">
             <label>Nome do Vendedor</label>
-            <input type="text" id="nomeVendedor" placeholder="Seu nome (Opcional)">
+            <input type="text" id="nomeVendedorM" placeholder="Seu nome (Opcional)">
         </div>
         <div class="field">
             <label>Telefone do Vendedor</label>
-            <input type="text" id="telVendedor" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
+            <input type="text" id="telVendedorM" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
         </div>
     </div>
 
-    <button class="btn-principal" onclick="gerarVisualizacaoTela()">Gerar Orçamento</button>
+    <button class="btn-principal" onclick="gerarVisualizacaoTelaA()">Gerar Orçamento</button>
 
-    <div id="bloco-resultado" style="display: none;">
-        <div id="area-orcamento">
+    <div id="bloco-resultadoM" style="display: none;">
+        <div id="area-orcamentoM">
             <div class="logos-header">
                 <div class="logo-box"><img id="img-minha-preview" src="logo-empresa.png" onerror="this.src='https://placehold.co'"></div>
-                <div id="preview-numeracao-topo" style="font-size: 14px; font-weight: bold; color: #333;"></div>
+                <div id="preview-numeracao-topoM" style="font-size: 14px; font-weight: bold; color: #333;"></div>
             </div>
             <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase;">Pré-visualização Interna</div>
-            <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente"></div></div>
-            <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto"></div></div>
-            <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro"></div></div>
+            <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-clienteM"></div></div>
+            <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produtoM"></div></div>
+            <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiroM"></div></div>
             
-            <div class="rodape-contato-preview" id="preview-contato-rodape"></div>
+            <div class="rodape-contato-preview" id="preview-contato-rodapeM"></div>
         </div>
-        <canvas id="canvasEspelho" style="display:none;"></canvas>
+        <canvas id="canvasEspelhoM" style="display:none;"></canvas>
 <div class="botoes-container">
-            <button class="btn-exportar" onclick="abrirImagemNovaAba()">Exportar Orçamento</button>
+            <button class="btn-exportar" onclick="abrirImagemNovaAbaM()">Exportar Orçamento</button>
         </div>
     </div>
 </div>
 
 <script>
-let database = { 
+let dataBaseM = { 
     logoEmpresa: "",
     modelosMao: [], 
     coresEva: []
 };
 
-let numeroOrcamentoAtualInstancia = "";
+let numeroOrcamentoAtualInstanciaM = "";
 
-let objImgMinha = new Image();
-objImgMinha.src = "logo-empresa.png";
-objImgMinha.onerror = function() { objImgMinha.src = "https://placehold.co"; };
+let objImgMinhaM = new Image();
+objImgMinhaM.src = "logo-empresa.png";
+objImgMinhaM.onerror = function() { objImgMinhaM.src = "https://placehold.co"; };
 
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
@@ -688,16 +688,16 @@ window.onload = function() {
             return response.json();
         })
         .then(data => { 
-            database = data; 
-            if(database.logoEmpresa && database.logoEmpresa.trim() !== "") {
-                objImgMinha.src = database.logoEmpresa;
-                document.getElementById('img-minha-preview').src = database.logoEmpresa;
+            dataBaseM = data; 
+            if(dataBaseM.logoEmpresa && dataBaseM.logoEmpresa.trim() !== "") {
+                objImgMinhaM.src = dataBaseM.logoEmpresa;
+                document.getElementById('img-minha-preview').src = dataBaseM.logoEmpresa;
             }
             carregarMenusMao(); 
         })
         .catch(err => { 
             console.warn("Utilizando banco reserva integrado.");
-            database = JSON.parse(JSON.stringify(bancoReservaMao));
+            dataBaseM = JSON.parse(JSON.stringify(bancoReservaMao));
             carregarMenusMao(); 
         });
 };
@@ -705,8 +705,8 @@ window.onload = function() {
 function carregarMenusMao() {
     const modeloSel = document.getElementById("selectModeloMao");
     modeloSel.innerHTML = '';
-    if(database.modelosMao) {
-        database.modelosMao.forEach((mod) => {
+    if(dataBaseM.modelosMao) {
+        dataBaseM.modelosMao.forEach((mod) => {
             let opt = document.createElement("option");
             opt.value = mod.id;
             opt.text = mod.nome; 
@@ -715,8 +715,8 @@ function carregarMenusMao() {
     }
 const corSel = document.getElementById("selectCorEva");
     corSel.innerHTML = '';
-    if(database.coresEva) {
-        database.coresEva.forEach((cor) => {
+    if(dataBaseM.coresEva) {
+        dataBaseM.coresEva.forEach((cor) => {
             let opt = document.createElement("option");
             opt.value = cor;
             opt.text = cor; 
@@ -742,7 +742,7 @@ function calcularValoresAtuais() {
         qtd = parseInt(selectQtd);
     }
     
-    let modeloEncontrado = database.modelosMao.find(m => m.id === idModeloSelected);
+    let modeloEncontrado = dataBaseM.modelosMao.find(m => m.id === idModeloSelected);
     let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
     let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
     
@@ -762,32 +762,32 @@ function calcularValoresAtuais() {
 }
 
 function obterNumeroIdentificador() {
-    if(numeroOrcamentoAtualInstancia) return numeroOrcamentoAtualInstancia;
+    if(numeroOrcamentoAtualInstanciaM) return numeroOrcamentoAtualInstanciaM;
     const d = new Date();
-    numeroOrcamentoAtualInstancia = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
-    return numeroOrcamentoAtualInstancia;
+    numeroOrcamentoAtualInstanciaM = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    return numeroOrcamentoAtualInstanciaM;
 }
 
-function gerarVisualizacaoTela() {
-    const nome = document.getElementById("nomeCliente").value.trim();
-    const tel = document.getElementById("telCliente").value.trim();
+function gerarVisualizacaoTelaA() {
+    const nome = document.getElementById("nomeClienteM").value.trim();
+    const tel = document.getElementById("telClienteM").value.trim();
     if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
     
     const dadosComerciais = calcularValoresAtuais();
     const telVendedor = document.getElementById("telVendedor").value.trim();
 
     const numeroFinal = obterNumeroIdentificador();
-    document.getElementById("preview-numeracao-topo").innerText = "Nº " + numeroFinal;
+    document.getElementById("preview-numeracao-topoM").innerText = "Nº " + numeroFinal;
 
-    document.getElementById("text-dados-cliente").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto").innerHTML = `<strong>Modelo:</strong> ${dadosComerciais.detalhesBase}<br><strong>Encaixe:</strong> ${dadosComerciais.tipoEncaixe} | <strong>Cor do E.V.A:</strong> ${dadosComerciais.corEva}`;
-    document.getElementById("text-dados-financeiro").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
+    document.getElementById("text-dados-clienteM").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    document.getElementById("text-dados-produtoM").innerHTML = `<strong>Modelo:</strong> ${dadosComerciais.detalhesBase}<br><strong>Encaixe:</strong> ${dadosComerciais.tipoEncaixe} | <strong>Cor do E.V.A:</strong> ${dadosComerciais.corEva}`;
+    document.getElementById("text-dados-financeiroM").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
     
     let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
+    document.getElementById("preview-contato-rodapeM").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
 
-    document.getElementById("area-orcamento").style.display = "block";
-    document.getElementById("bloco-resultado").style.display = "block";
+    document.getElementById("area-orcamentoM").style.display = "block";
+    document.getElementById("bloco-resultadoM").style.display = "block";
 }
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     let words = text.split(' ');
@@ -810,16 +810,16 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     return currentY + lineHeight;
 }
 
-function abrirImagemNovaAba() {
-    const nome = document.getElementById("nomeCliente").value.trim();
-    const telFormulario = document.getElementById("telCliente").value.trim();
-    const vendedor = document.getElementById("nomeVendedor").value.trim();
-    const telVendedor = document.getElementById("telVendedor").value.trim();
+function abrirImagemNovaAbaM() {
+    const nome = document.getElementById("nomeClienteM").value.trim();
+    const telFormulario = document.getElementById("telClienteM").value.trim();
+    const vendedor = document.getElementById("nomeVendedorM").value.trim();
+    const telVendedor = document.getElementById("telVendedorM").value.trim();
     const dadosComerciais = calcularValoresAtuais();
     const dataHoje = new Date();
     const dataValidade = new Date();
     dataValidade.setDate(dataHoje.getDate() + 10);
-    const canvas = document.getElementById("canvasEspelho");
+    const canvas = document.getElementById("canvasEspelhoM");
     const ctx = canvas.getContext("2d");
     
     canvas.width = 600; canvas.height = 860;
@@ -827,12 +827,12 @@ function abrirImagemNovaAba() {
     
     try {
         let maxAlturaLogo = 50;
-        let larguraOriginal = objImgMinha.naturalWidth || objImgMinha.width || 150;
-        let alturaOriginal = objImgMinha.naturalHeight || objImgMinha.height || 55;
+        let larguraOriginal = objImgMinhaM.naturalWidth || objImgMinhaM.width || 150;
+        let alturaOriginal = objImgMinhaM.naturalHeight || objImgMinhaM.height || 55;
         let proporcaoLogo = larguraOriginal / alturaOriginal; 
         let larguraCalculada = maxAlturaLogo * proporcaoLogo; 
         if(larguraCalculada > 220) { larguraCalculada = 220; maxAlturaLogo = larguraCalculada / proporcaoLogo; }
-        ctx.drawImage(objImgMinha, 35, 30, larguraCalculada, maxAlturaLogo); 
+        ctx.drawImage(objImgMinhaM, 35, 30, larguraCalculada, maxAlturaLogo); 
     } catch(e){}
 
     const numeroFinal = obterNumeroIdentificador();
