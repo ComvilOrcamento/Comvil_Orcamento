@@ -535,6 +535,10 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
         input:focus, select:focus { border-color: #0056b3; }
         input[readonly] { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; cursor: not-allowed; }
         
+        .radio-group { display: flex; gap: 20px; align-items: center; height: 38px; }
+        .radio-option { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; cursor: pointer; }
+        .radio-option input { width: auto; height: auto; cursor: pointer; }
+
         .btn-principal { width: 100%; background: #003366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; margin: 15px 0; }
         .btn-principal:hover { background: #002244; }
         
@@ -575,15 +579,19 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
     
     <div class="row">
         <div class="field">
-            <label>Tipo de Encaixe *</label>
-            <select id="selectTipoEncaixe">
-                <option value="Luva">Luva</option>
-                <option value="Argola">Argola</option>
-            </select>
+            <label>Tipo *</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="tipoMao" value="Luva" checked> Luva
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="tipoMao" value="Argola"> Argola
+                </label>
+            </div>
         </div>
         <div class="field">
-            <label>Cor do E.V.A *</label>
-            <select id="selectCorEva"></select>
+            <label>Cores de Impressão *</label>
+            <select id="selectCoresImpressao"></select>
         </div>
     </div>
     
@@ -606,6 +614,8 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
             <input type="number" id="qtdManual" min="1" placeholder="Ex: 750">
         </div>
     </div>
+
+    <input type="hidden" id="valorStartMao" value="0">
 
     <h2>Dados de Atendimento</h2>
     <div class="row">
@@ -645,6 +655,7 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
 <script>
 let database = { 
     logoEmpresa: "",
+    valorStartMao: 0.00,
     modelosMao: [], 
     coresEva: []
 };
@@ -682,11 +693,15 @@ function verificarQuantidadeVariavel(select) {
 
 const bancoReservaMao = {
   "logoEmpresa": "",
+  "valorStartMao": 150.00,
   "modelosMao": [
     { "id": 1, "nome": "Mão de E.V.A - Modelo Tradicional 40cm", "precoBase": 2.50 },
     { "id": 2, "nome": "Mão de E.V.A - Modelo Dedão Positivo 45cm", "precoBase": 2.80 }
   ],
-  "coresEva": ["Azul Comercial", "Vermelho", "Verde", "Amarelo", "Preto", "Branco"]
+  "coresEva": [
+    { "nome": "Azul Comercial", "preco": 0.00 },
+    { "nome": "Vermelho", "preco": 0.00 }
+  ]
 };
 
 window.onload = function() {
@@ -701,11 +716,15 @@ window.onload = function() {
                 objImgMinha.src = database.logoEmpresa;
                 document.getElementById('img-minha-preview').src = database.logoEmpresa;
             }
+            if(database.valorStartMao !== undefined) {
+                document.getElementById('valorStartMao').value = database.valorStartMao;
+            }
             carregarMenusMao(); 
         })
         .catch(err => { 
             console.warn("Utilizando banco reserva integrado.");
             database = JSON.parse(JSON.stringify(bancoReservaMao));
+            document.getElementById('valorStartMao').value = database.valorStartMao;
             carregarMenusMao(); 
         });
 };
@@ -722,13 +741,14 @@ function carregarMenusMao() {
         });
     }
 
-    const corSel = document.getElementById("selectCorEva");
+    const corSel = document.getElementById("selectCoresImpressao");
     corSel.innerHTML = '';
     if(database.coresEva) {
         database.coresEva.forEach((cor) => {
             let opt = document.createElement("option");
-            opt.value = cor;
-            opt.text = cor; 
+            let nomeCor = typeof cor === 'object' ? cor.nome : cor;
+            opt.value = nomeCor;
+            opt.text = nomeCor; 
             corSel.add(opt);
         });
     }
@@ -739,10 +759,11 @@ function formatarMoeda(valor) {
 }
 
 function calcularValoresAtuais() {
-    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
-    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
-    const corEva = document.getElementById("selectCorEva").value;
+    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value) || 0;
+    const tipoMao = document.querySelector('input[name="tipoMao"]:checked').value;
+    const coresImpressao = document.getElementById("selectCoresImpressao").value;
     const selectQtd = document.getElementById("selectQuantidade").value;
+    const valorStart = parseFloat(document.getElementById("valorStartMao").value) || 0;
     
     let qtd = 500;
     if (selectQtd === "Variavel") {
@@ -751,13 +772,23 @@ function calcularValoresAtuais() {
         qtd = parseInt(selectQtd);
     }
     
-    let modeloEncontrado = database.modelosMao.find(m => m.id === idModeloSelected);
+    let modeloEncontrado = (database.modelosMao || []).find(m => m.id === idModeloSelected);
     let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
     let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
     
-    // Espaço reservado para as regras matemáticas futuras
-    let custoTotalFinalDoLote = precoModeloBase * qtd;
-    let totalLoteComMargemLucro = custoTotalFinalDoLote; 
+    let precoCorAdicional = 0;
+    let corEncontrada = (database.coresEva || []).find(c => (typeof c === 'object' ? c.nome : c) === coresImpressao);
+    if(corEncontrada && typeof corEncontrada === 'object') {
+        precoCorAdicional = parseFloat(corEncontrada.preco || 0);
+    }
+
+    // (Modelo + Cores) * quantidade = A
+    let subtotalA = (precoModeloBase + precoCorAdicional) * qtd;
+    let multiplicadorTipo = (tipoMao === "Luva") ? 2 : 1;
+    
+    // MODIFICADO: Aplicado o acréscimo de 70% de lucro sobre o custo bruto final do pedido
+    let custoTotalBruto = (subtotalA * multiplicadorTipo) + valorStart;
+    let totalLoteComMargemLucro = custoTotalBruto * 1.70; 
     let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
     
     return { 
@@ -765,8 +796,8 @@ function calcularValoresAtuais() {
         qtd, 
         total: totalLoteComMargemLucro, 
         detalhesBase, 
-        tipoEncaixe, 
-        corEva
+        tipoMao, 
+        coresImpressao
     };
 }
 
@@ -789,7 +820,7 @@ function gerarVisualizacaoTela() {
     document.getElementById("preview-numeracao-topo").innerText = "Nº " + numeroFinal;
 
     document.getElementById("text-dados-cliente").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto").innerHTML = `<strong>Modelo:</strong> ${dadosComerciais.detalhesBase}<br><strong>Encaixe:</strong> ${dadosComerciais.tipoEncaixe} | <strong>Cor do E.V.A:</strong> ${dadosComerciais.corEva}`;
+    document.getElementById("text-dados-produto").innerHTML = `<strong>Modelo:</strong> ${dadosComerciais.detalhesBase}<br><strong>Tipo:</strong> ${dadosComerciais.tipoMao} | <strong>Cores de Impressão:</strong> ${dadosComerciais.coresImpressao}`;
     document.getElementById("text-dados-financeiro").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
     
     let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
@@ -864,8 +895,9 @@ function abrirImagemNovaAba() {
     let partes = detalhesTexto.split(" | ");
     ctx.fillText("• " + partes.slice(0, 4).join(" | "), 50, 290);
     if(partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
+    
     ctx.font = "bold 11px Arial"; ctx.fillText("Especificações de montagem e estampa:", 50, 324); ctx.font = "11px Arial";
-    ctx.fillText("• Tipo de Encaixe: " + dadosComerciais.tipoEncaixe + "  |  • Cor do E.V.A: " + dadosComerciais.corEva, 50, 338);
+    ctx.fillText("• Tipo: " + dadosComerciais.tipoMao + "  |  • Cores de Impressão: " + dadosComerciais.coresImpressao, 50, 338);
     desenharCaixaPdf(ctx, 35, 360, 530, 70, "Resumo Financeiro");
     ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
     ctx.fillText("Quantidade Solicitada: " + dadosComerciais.qtd + " unidades", 50, 395); 
@@ -910,8 +942,8 @@ function abrirImagemNovaAba() {
         const nomeArquivo = `Orcamento_${numeroFinal}_${nome.replace(/\s+/g, '_')}.jpg`;
         
         const telefoneLimpo = telFormulario.replace(/\D/g, "");
-        let assinaturaMensagem = vendedor ? vendedor.trim() : "Comvil Brindes";
-        const msgTextoFormatado = `Olá, segue o orçamento solicitado Att ${assinaturaMensagem}.`;
+        let signatureMessage = vendedor ? vendedor.trim() : "Comvil Brindes";
+        const msgTextoFormatado = `Olá, segue o orçamento solicitado Att ${signatureMessage}.`;
         const textoInjetado = encodeURIComponent(msgTextoFormatado);
 
         novaAba.document.write(`
@@ -932,7 +964,7 @@ function abrirImagemNovaAba() {
                 <img src="${dataUrl}" />
                 <div class="btn-container">
                     <a href="${dataUrl}" download="${nomeArquivo}" class="btn-download">Baixar Imagem</a>
-                    <a href="https://whatsapp.com` + telefoneLimpo + `&text=` + textoInjetado + `" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>
+                    <a href="https://api.whatsapp.com/send?phone=55` + telefoneLimpo + `&text=` + textoInjetado + `" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>
                 </div>
             </body>
             </html>
