@@ -286,6 +286,11 @@ const bancoReserva = {
 };
 
 window.onload = function () {
+    if (window.location.protocol === 'file:') {
+        database = JSON.parse(JSON.stringify(bancoReserva));
+        carregarMenus();
+        return;
+    }
     fetch('dados.json?t=' + new Date().getTime())
         .then(r => { if (!r.ok) throw new Error(); return r.json(); })
         .then(data => {
