@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)https://comvilorcamento.github.io/Comvil_Orcamento/ -->
-<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comvil Orçamentos</title>
     <style>
@@ -18,34 +18,41 @@
         .orcamento-box { background: white; width: 100%; max-width: 750px; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         h1 { font-size: 24px; color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; }
 
+        /* ABAS */
         .tabs { display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; }
         .tab-btn { padding: 12px 24px; border: 1px solid #cbd5e1; border-radius: 6px 6px 0 0; background: #f8fafc; cursor: pointer; font-weight: bold; color: var(--text-muted); margin-bottom: -2px; }
         .tab-btn.active { background: white; color: var(--primary); border-bottom-color: transparent; position: relative; z-index: 2; }
 
+        /* CONTEÚDOS */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
+        
+        .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 30px; background: white; }
+        
+        /* FORMULÁRIOS UNIFICADOS */
         h2 { font-size: 14px; margin: 15px 0 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .row { display: flex; gap: 15px; margin-bottom: 12px; }
         .field { flex: 1; display: flex; flex-direction: column; }
         label { font-size: 11px; margin-bottom: 4px; color: #555; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; outline: none; background: #fff; height: 38px; }
+        
         input:focus, select:focus { border-color: #0056b3; }
         input[readonly] { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; cursor: not-allowed; }
-
+        
         .btn-principal { width: 100%; background: #003366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; margin: 15px 0; }
         .btn-principal:hover { background: #002244; }
-
+        
         .botoes-container { display: flex; gap: 15px; margin-top: 15px; width: 100%; }
         .btn-exportar { flex: 1; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; height: 42px; }
         .btn-exportar:hover { background: #004085; }
-
+        
         .area-orcamento { background: #ffffff; border: 1px solid #ddd; padding: 25px; margin-top: 15px; color: #333; border-radius: 6px; display: none; }
         .logos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #0056b3; padding-bottom: 15px; gap: 15px; }
         .logo-box { flex: 1; display: flex; align-items: center; }
         .logo-box img { max-height: 55px; max-width: 150px; object-fit: contain; display: block; }
         .secao-preview { margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 6px; border-left: 3px solid #0056b3; font-size: 13px; line-height: 1.5; }
         .preview-titulo { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #777; margin-bottom: 5px; }
+        
         .rodape-contato-preview { margin-top: 15px; border: 1px solid #dddddd; padding: 12px; border-radius: 6px; background-color: #fafafa; text-align: center; font-size: 11px; color: #555555; line-height: 1.5; }
     </style>
 </head>
@@ -53,40 +60,34 @@
 
 <div class="orcamento-box">
     <h1>Comvil Orçamentos</h1>
-
+    
     <div class="tabs">
-        <button class="tab-btn" onclick="switchTab(event, &#39;tab-sacola&#39;)">Sacola</button>
-        <button class="tab-btn active" onclick="switchTab(event, &#39;tab-mao&#39;)">Mão de E.V.A</button>
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-sacola')">Sacola</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-mao')">Mão</button>
     </div>
 
     <!-- ABA SACOLA -->
-    <div id="tab-sacola" class="tab-content">
-        <form id="fSacola">
+    <div id="tab-sacola" class="tab-content active">
+        <div class="box-conteudo">
             <h2>Dados do cliente</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Nome *</label>
-                <input type="text" id="s-nomeCliente" placeholder="Nome do cliente ou Empresa (Obrigatório)" required="">
+                <input type="text" id="nomeCliente_sacola" placeholder="Nome do cliente ou Empresa (Obrigatório)" required>
             </div>
             <div class="row">
-                <div class="field">
-                    <label>Telefone / WhatsApp *</label>
-                    <input type="text" id="s-telCliente" placeholder="(00) 00000-0000 (Obrigatório)" oninput="mascaraTelefone(this)" maxlength="15" required="">
-                </div>
-                <div class="field">
-                    <label>E-mail</label>
-                    <input type="email" id="s-emailCliente" placeholder="email@exemplo.com (Opcional)">
-                </div>
+                <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente_sacola" placeholder="(00) 00000-0000 (Obrigatório)" oninput="mascaraTelefone(this)" maxlength="15" required></div>
+                <div class="field"><label>E-mail</label><input type="email" id="emailCliente_sacola" placeholder="email@exemplo.com (Opcional)"></div>
             </div>
-
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Configuração do Produto Base *</label>
-                <select id="s-selectProduto"><option value="2">05 Sacolas 17x18x8 - Offset 180g - sem revestimento</option><option value="6">1 Sacolas 17x18x8 - Offset 180g - sem revestimento</option><option value="7">2 Sacolas 17x18x8 - Offset 180g - sem revestimento</option></select>
+                <select id="selectProdutoConfigurado_sacola"></select>
             </div>
+            
             <div class="row">
                 <div class="field">
                     <label>Impressão / Cores *</label>
-                    <select id="s-selectCores">
+                    <select id="selectCores_sacola">
                         <option value="1x0">1x0</option>
                         <option value="2x0">2x0</option>
                         <option value="4x0">4x0</option>
@@ -95,105 +96,103 @@
                 </div>
                 <div class="field">
                     <label>Acabamento com Ilhós *</label>
-                    <select id="s-selectIlhos">
+                    <select id="selectIlhos_sacola">
                         <option value="Não">Não</option>
                         <option value="Sim">Sim</option>
                     </select>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="field">
                     <label>Tipo de Cordão / Alça *</label>
-                    <select id="s-selectCordao"><option value="Nylon">Nylon</option><option value="Gorgurão">Gorgurão</option></select>
+                    <select id="selectCordao_sacola"></select>
                 </div>
                 <div class="field">
                     <label>Furo para Laço *</label>
-                    <select id="s-selectFuroLaco">
+                    <select id="selectFuroLaco_sacola">
                         <option value="Não">Não</option>
                         <option value="Sim">Sim</option>
                     </select>
                 </div>
             </div>
+
             <div class="field" style="margin-bottom: 12px;">
                 <label>Quantidade Mínima *</label>
-                <select id="s-selectQtd"><option value="500">500 un</option><option value="1000">1000 un</option><option value="2000">2000 un</option><option value="3000">3000 un</option><option value="4000">4000 un</option><option value="5000">5000 un</option></select>
+                <select id="qtd_sacola"></select>
             </div>
 
             <h2>Dados de Atendimento</h2>
             <div class="row">
                 <div class="field">
                     <label>Nome do Vendedor</label>
-                    <input type="text" id="s-nomeVendedor" placeholder="Seu nome (Opcional)">
+                    <input type="text" id="nomeVendedor_sacola" placeholder="Seu nome (Opcional)">
                 </div>
                 <div class="field">
                     <label>Telefone do Vendedor</label>
-                    <input type="text" id="s-telVendedor" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
+                    <input type="text" id="telVendedor_sacola" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
                 </div>
             </div>
 
-            <button type="button" class="btn-principal" onclick="gerarOrcamento(&#39;sacola&#39;)">Gerar Orçamento</button>
+            <button class="btn-principal" onclick="gerarVisualizacaoTelaSacola()">Gerar Orçamento</button>
 
-            <div id="s-bloco-resultado" style="display: none;">
-                <div id="s-area-orcamento" class="area-orcamento">
+            <div id="bloco-resultado_sacola" style="display: none;">
+                <div id="area-orcamento_sacola" class="area-orcamento">
                     <div class="logos-header">
-                        <div class="logo-box"><img id="s-img-preview" src="data:image/png;base64,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" onerror="this.src=&#39;https://placehold.co&#39;"></div>
-                        <div id="s-preview-numeracao" style="font-size: 14px; font-weight: bold; color: #333;"></div>
+                        <div class="logo-box"><img id="img-minha-preview_sacola" src="logo-empresa.png" onerror="this.src='https://placehold.co'"></div>
+                        <div id="preview-numeracao-topo_sacola" style="font-size: 14px; font-weight: bold; color: #333;"></div>
                     </div>
                     <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase;">Pré-visualização Interna</div>
-                    <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="s-text-cliente"></div></div>
-                    <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="s-text-produto"></div></div>
-                    <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="s-text-financeiro"></div></div>
-                    <div class="rodape-contato-preview" id="s-preview-rodape"></div>
+                    <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente_sacola"></div></div>
+                    <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto_sacola"></div></div>
+                    <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro_sacola"></div></div>
+                    
+                    <div class="rodape-contato-preview" id="preview-contato-rodape_sacola"></div>
                 </div>
-                <canvas id="s-canvas" style="display:none;"></canvas>
+                
                 <div class="botoes-container">
-                    <button type="button" class="btn-exportar" onclick="abrirImagemNovaAba(&#39;sacola&#39;)">Exportar Orçamento</button>
+                    <button class="btn-exportar" onclick="abrirImagemNovaAbaSacola()">Exportar Orçamento</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-
-    <!-- ABA MÃO DE E.V.A -->
-    <div id="tab-mao" class="tab-content active">
-        <form id="fMao">
+    <!-- ABA MÃO -->
+    <div id="tab-mao" class="tab-content">
+        <div class="box-conteudo">
             <h2>Dados do cliente</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Nome *</label>
-                <input type="text" id="m-nomeCliente" placeholder="Nome do cliente ou Empresa (Obrigatório)" required="">
+                <input type="text" id="nomeCliente_mao" placeholder="Nome do cliente ou Empresa (Obrigatório)" required>
             </div>
             <div class="row">
-                <div class="field">
-                    <label>Telefone / WhatsApp *</label>
-                    <input type="text" id="m-telCliente" placeholder="(00) 00000-0000 (Obrigatório)" oninput="mascaraTelefone(this)" maxlength="15" required="">
-                </div>
-                <div class="field">
-                    <label>E-mail</label>
-                    <input type="email" id="m-emailCliente" placeholder="email@exemplo.com (Opcional)">
-                </div>
+                <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente_mao" placeholder="(00) 00000-0000 (Obrigatório)" oninput="mascaraTelefone(this)" maxlength="15" required></div>
+                <div class="field"><label>E-mail</label><input type="email" id="emailCliente_mao" placeholder="email@exemplo.com (Opcional)"></div>
             </div>
 
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Modelo Comercial *</label>
-                <select id="m-selectModelo"><option value="1">Mão tipo Nº1</option><option value="2">Mão do Rock</option><option value="3">Mão aberta</option><option value="4">Mão dedo do meio</option></select>
+                <select id="selectModeloMao_mao"></select>
             </div>
+            
             <div class="row">
                 <div class="field">
                     <label>Tipo de Encaixe *</label>
-                    <select id="m-selectTipoEncaixe">
+                    <select id="selectTipoEncaixe_mao">
                         <option value="Luva">Luva</option>
                         <option value="Argola">Argola</option>
                     </select>
                 </div>
                 <div class="field">
                     <label>Cor do E.V.A *</label>
-                    <select id="m-selectCorEva"><option value="[object Object]">[object Object]</option><option value="[object Object]">[object Object]</option><option value="[object Object]">[object Object]</option><option value="[object Object]">[object Object]</option><option value="[object Object]">[object Object]</option></select>
+                    <select id="selectCorEva_mao"></select>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="field">
                     <label>Quantidade Mínima *</label>
-                    <select id="m-selectQtd" onchange="verificarQtdVariavel(this)">
+                    <select id="selectQuantidade_mao" onchange="verificarQuantidadeVariavelMao(this)">
                         <option value="100">100 un</option>
                         <option value="200">200 un</option>
                         <option value="300">300 un</option>
@@ -204,9 +203,9 @@
                         <option value="Variavel">Outra Quantidade...</option>
                     </select>
                 </div>
-                <div class="field" id="m-campoQtdVariavel" style="display: none;">
+                <div class="field" id="campoQtdVariavel_mao" style="display: none;">
                     <label>Digite a Quantidade *</label>
-                    <input type="number" id="m-qtdManual" min="1" placeholder="Ex: 750">
+                    <input type="number" id="qtdManual_mao" min="1" placeholder="Ex: 750">
                 </div>
             </div>
 
@@ -214,410 +213,605 @@
             <div class="row">
                 <div class="field">
                     <label>Nome do Vendedor</label>
-                    <input type="text" id="m-nomeVendedor" placeholder="Seu nome (Opcional)">
+                    <input type="text" id="nomeVendedor_mao" placeholder="Seu nome (Opcional)">
                 </div>
                 <div class="field">
                     <label>Telefone do Vendedor</label>
-                    <input type="text" id="m-telVendedor" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
+                    <input type="text" id="telVendedor_mao" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
                 </div>
             </div>
 
-            <button type="button" class="btn-principal" onclick="gerarOrcamento(&#39;mao&#39;)">Gerar Orçamento</button>
+            <button class="btn-principal" onclick="gerarVisualizacaoTelaMao()">Gerar Orçamento</button>
 
-            <div id="m-bloco-resultado" style="display: none;">
-                <div id="m-area-orcamento" class="area-orcamento">
+            <div id="bloco-resultado_mao" style="display: none;">
+                <div id="area-orcamento_mao" class="area-orcamento">
                     <div class="logos-header">
-                        <div class="logo-box"><img id="m-img-preview" src="data:image/png;base64,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" onerror="this.src=&#39;https://placehold.co&#39;"></div>
-                        <div id="m-preview-numeracao" style="font-size: 14px; font-weight: bold; color: #333;"></div>
+                        <div class="logo-box"><img id="img-minha-preview_mao" src="logo-empresa.png" onerror="this.src='https://placehold.co'"></div>
+                        <div id="preview-numeracao-topo_mao" style="font-size: 14px; font-weight: bold; color: #333;"></div>
                     </div>
                     <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase;">Pré-visualização Interna</div>
-                    <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="m-text-cliente"></div></div>
-                    <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="m-text-produto"></div></div>
-                    <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="m-text-financeiro"></div></div>
-                    <div class="rodape-contato-preview" id="m-preview-rodape"></div>
+                    <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente_mao"></div></div>
+                    <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto_mao"></div></div>
+                    <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro_mao"></div></div>
+                    
+                    <div class="rodape-contato-preview" id="preview-contato-rodape_mao"></div>
                 </div>
-                <canvas id="m-canvas" style="display:none;"></canvas>
+                
                 <div class="botoes-container">
-                    <button type="button" class="btn-exportar" onclick="abrirImagemNovaAba(&#39;mao&#39;)">Exportar Orçamento</button>
+                    <button class="btn-exportar" onclick="abrirImagemNovaAbaMao()">Exportar Orçamento</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
+<!-- ELEMENTO CANVAS COMPARTILHADO -->
+<canvas id="canvasEspelho" style="display:none;"></canvas>
 <script>
-let database = {
-    logoEmpresa: "",
-    produtosConfigurados: [],
-    cordoes: [],
-    quantidades: [],
-    valoresAcabamento: null,
-    modelosMao: [],
-    coresEva: []
+// BANCOS DE DADOS ISOLADOS
+let databaseSacola = { produtosConfigurados: [], cordoes: [], quantidades: [], valoresAcabamento: null };
+let databaseMao = { logoEmpresa: "", modelosMao: [], coresEva: [] };
+
+let numeroOrcamentoAtualInstancia = "";
+let objImgMinha = new Image();
+objImgMinha.src = "logo-empresa.png";
+objImgMinha.onerror = function() { objImgMinha.src = "https://placehold.co"; };
+
+const bancoReservaSacola = {
+  "produtosConfigurados": [
+    { "id": 1, "nomeCompleto": "500 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.78 },
+    { "id": 2, "nomeCompleto": "Sacola Offset 180g - 18x24x8 - Laminação BOPP Fosca", "precoBase": 4.50 }
+  ],
+  "cordoes": [{ "nome": "Nylon", "preco": 0.20 }, { "nome": "Gorgurão", "preco": 0.80 }],
+  "quantidades": [500, 1000, 2000],
+  "valoresAcabamento": { "ilhos": 0.20, "furoLaco": 0.15, "cores": { "1x0": 480.0, "2x0": 550.0, "4x0": 700.0, "4x1": 850.0 } }
 };
 
-const numeracoes = { sacola: null, mao: null };
-
-const objImgEmpresa = new Image();
-objImgEmpresa.src = "logo-empresa.png";
-//objImgEmpresa.onerror = () => { objImgEmpresa.src = "https://placehold.co"; };
-
-const bancoReserva = {
-    logoEmpresa: "",
-    produtosConfigurados: [
-        { id: 1, nomeCompleto: "500 Sacolas 17x18x8 - Offset 180g - sem revestimento", precoBase: 0.78 },
-        { id: 2, nomeCompleto: "Sacola Offset 180g - 18x24x8 - Laminação BOPP Fosca", precoBase: 4.50 }
-    ],
-    cordoes: [
-        { nome: "Nylon", preco: 0.20 },
-        { nome: "Gorgurão", preco: 0.80 }
-    ],
-    quantidades: [500, 1000, 2000],
-    valoresAcabamento: {
-        ilhos: 0.20,
-        furoLaco: 0.15,
-        cores: { "1x0": 480.0, "2x0": 550.0, "4x0": 700.0, "4x1": 850.0 }
-    },
-    modelosMao: [
-        { id: 1, nome: "Mão de E.V.A - Modelo Tradicional 40cm", precoBase: 2.50 },
-        { id: 2, nome: "Mão de E.V.A - Modelo Dedão Positivo 45cm", precoBase: 2.80 }
-    ],
-    coresEva: ["Azul Comercial", "Vermelho", "Verde", "Amarelo", "Preto", "Branco"]
+const bancoReservaMao = {
+  "logoEmpresa": "",
+  "modelosMao": [
+    { "id": 1, "nome": "Mão de E.V.A - Modelo Tradicional 40cm", "precoBase": 2.50 },
+    { "id": 2, "nome": "Mão de E.V.A - Modelo Dedão Positivo 45cm", "precoBase": 2.80 }
+  ],
+  "coresEva": ["Azul Comercial", "Vermelho", "Verde", "Amarelo", "Preto", "Branco"]
 };
 
-window.onload = function () {
-    if (window.location.protocol === 'file:') {
-        database = JSON.parse(JSON.stringify(bancoReserva));
-        carregarMenus();
-        return;
-    }
+window.onload = function() {
     fetch('dados.json?t=' + new Date().getTime())
-        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-        .then(data => {
-            database = data;
-            if (database.logoEmpresa && database.logoEmpresa.trim()) {
-                objImgEmpresa.src = database.logoEmpresa;
-                document.getElementById('s-img-preview').src = database.logoEmpresa;
-                document.getElementById('m-img-preview').src = database.logoEmpresa;
-            }
-            carregarMenus();
+        .then(response => {
+            if (!response.ok) throw new Error("Falha ao abrir o dados.json");
+            return response.json();
         })
-        .catch(() => {
-            console.warn("Utilizando banco reserva integrado.");
-            database = JSON.parse(JSON.stringify(bancoReserva));
-            carregarMenus();
+        .then(data => { 
+            databaseSacola = data;
+            databaseMao = data;
+            let logoDefinida = data.logoEmpresa || "";
+            if(logoDefinida.trim() !== "") {
+                objImgMinha.src = logoDefinida;
+                document.getElementById('img-minha-preview_sacola').src = logoDefinida;
+                document.getElementById('img-minha-preview_mao').src = logoDefinida;
+            }
+            carregarMenusSacola(); 
+            carregarMenusMao();
+        })
+        .catch(err => { 
+            console.warn("Utilizando bancos de reserva integrados.");
+            databaseSacola = JSON.parse(JSON.stringify(bancoReservaSacola));
+            databaseMao = JSON.parse(JSON.stringify(bancoReservaMao));
+            carregarMenusSacola(); 
+            carregarMenusMao();
         });
 };
+function carregarMenusSacola() {
+    const produtoSel = document.getElementById("selectProdutoConfigurado_sacola");
+    produtoSel.innerHTML = '';
+    if(databaseSacola.produtosConfigurados) {
+        databaseSacola.produtosConfigurados.forEach((prod) => {
+            let opt = document.createElement("option");
+            opt.value = prod.id;
+            opt.text = prod.nomeCompleto; 
+            produtoSel.add(opt);
+        });
+    }
 
-function carregarMenus() {
-    const prodSel = document.getElementById("s-selectProduto");
-    prodSel.innerHTML = '';
-    (database.produtosConfigurados || []).forEach(p => prodSel.add(new Option(p.nomeCompleto, p.id)));
-
-    const cordaoSel = document.getElementById("s-selectCordao");
+    const cordaoSel = document.getElementById("selectCordao_sacola");
     cordaoSel.innerHTML = '';
-    (database.cordoes || []).forEach(c => cordaoSel.add(new Option(c.nome, c.nome)));
+    if(databaseSacola.cordoes) {
+        databaseSacola.cordoes.forEach((c) => {
+            let opt = document.createElement("option");
+            opt.value = c.nome;
+            opt.text = c.nome; 
+            cordaoSel.add(opt);
+        });
+    }
 
-    const qtdSel = document.getElementById("s-selectQtd");
+    const qtdSel = document.getElementById("qtd_sacola");
     qtdSel.innerHTML = '';
-    (database.quantidades || []).forEach(q => qtdSel.add(new Option(q + " un", q)));
+    if(databaseSacola.quantidades) {
+        databaseSacola.quantidades.forEach((q) => {
+            let opt = new Option(q + " un", q);
+            qtdSel.add(opt);
+        });
+    }
+}
 
-    const modeloSel = document.getElementById("m-selectModelo");
+function carregarMenusMao() {
+    const modeloSel = document.getElementById("selectModeloMao_mao");
     modeloSel.innerHTML = '';
-    (database.modelosMao || []).forEach(m => modeloSel.add(new Option(m.nome, m.id)));
-
-    const corSel = document.getElementById("m-selectCorEva");
+    if(databaseMao.modelosMao) {
+        databaseMao.modelosMao.forEach((mod) => {
+            let opt = document.createElement("option");
+            opt.value = mod.id;
+            opt.text = mod.nome; 
+            modeloSel.add(opt);
+        });
+    }
+    const corSel = document.getElementById("selectCorEva_mao");
     corSel.innerHTML = '';
-    (database.coresEva || []).forEach(cor => corSel.add(new Option(cor, cor)));
+    if(databaseMao.coresEva) {
+        databaseMao.coresEva.forEach((cor) => {
+            let opt = document.createElement("option");
+            opt.value = cor;
+            opt.text = cor; 
+            corSel.add(opt);
+        });
+    }
 }
 
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.substring(0, 11);
-    if (v.length > 10)     v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-    else if (v.length > 6) v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-    else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
-    else if (v.length > 0) v = v.replace(/^(\d{0,2})$/, "($1");
+    if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+    } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+    } else if (v.length > 0) {
+        v = v.replace(/^(\d{0,2})$/, "($1");
+    }
     input.value = v;
 }
 
-function verificarQtdVariavel(select) {
-    document.getElementById("m-campoQtdVariavel").style.display =
-        select.value === "Variavel" ? "flex" : "none";
-}
-
-function obterNumero(tipo) {
-    if (numeracoes[tipo]) return numeracoes[tipo];
-    const d = new Date();
-    numeracoes[tipo] = d.getFullYear() +
-        String(d.getMonth() + 1).padStart(2, '0') +
-        String(d.getDate()).padStart(2, '0') +
-        String(d.getMilliseconds()).substring(0, 2);
-    return numeracoes[tipo];
+function verificarQuantidadeVariavelMao(select) {
+    const campoManual = document.getElementById("campoQtdVariavel_mao");
+    campoManual.style.display = (select.value === "Variavel") ? "flex" : "none";
 }
 
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-function calcularValores(tipo) {
-    if (tipo === 'sacola') {
-        const idProd = parseInt(document.getElementById("s-selectProduto").value);
-        const nomeCordao = document.getElementById("s-selectCordao").value;
-        const cor = document.getElementById("s-selectCores").value;
-        const temIlhos = document.getElementById("s-selectIlhos").value === "Sim";
-        const temFuroLaco = document.getElementById("s-selectFuroLaco").value === "Sim";
-        const qtd = parseInt(document.getElementById("s-selectQtd").value) || 500;
+function calcularValoresSacola() {
+    const idProdutoSelected = parseInt(document.getElementById("selectProdutoConfigurado_sacola").value);
+    const nomeCordaoSelected = document.getElementById("selectCordao_sacola").value;
+    const corSelecionada = document.getElementById("selectCores_sacola").value;
+    const temIlhos = document.getElementById("selectIlhos_sacola").value === "Sim";
+    const temFuroLaco = document.getElementById("selectFuroLaco_sacola").value === "Sim";
+    const qtd = parseInt(document.getElementById("qtd_sacola").value) || 500;
+    
+    let produtoEncontrado = databaseSacola.produtosConfigurados.find(p => p.id === idProdutoSelected);
+    let precoProdutoBase = produtoEncontrado ? parseFloat(produtoEncontrado.precoBase || 0) : 0;
+    let detalhesBase = produtoEncontrado ? produtoEncontrado.nomeCompleto : 'Nenhum produto';
+    
+    let cordaoEncontrado = databaseSacola.cordoes.find(c => c.nome === nomeCordaoSelected);
+    let precoCordaoAlca = cordaoEncontrado ? parseFloat(cordaoEncontrado.preco || 0) : 0;
+    
+    let precoIlhos = (temIlhos && databaseSacola.valoresAcabamento) ? parseFloat(databaseSacola.valoresAcabamento.ilhos || 0) : 0;
+    let precoFuroLaco = (temFuroLaco && databaseSacola.valoresAcabamento) ? parseFloat(databaseSacola.valoresAcabamento.furoLaco || 0) : 0;
+    let precoCoresFixo = (databaseSacola.valoresAcabamento && databaseSacola.valoresAcabamento.cores) ? parseFloat(databaseSacola.valoresAcabamento.cores[corSelecionada] || 0) : 0;
 
-        const prod = (database.produtosConfigurados || []).find(p => p.id === idProd);
-        const precoProd = prod ? parseFloat(prod.precoBase || 0) : 0;
-        const detalhes = prod ? prod.nomeCompleto : 'Nenhum produto';
-
-        const cordao = (database.cordoes || []).find(c => c.nome === nomeCordao);
-        const precoCordao = cordao ? parseFloat(cordao.preco || 0) : 0;
-
-        const acab = database.valoresAcabamento || {};
-        const precoIlhos = temIlhos ? parseFloat(acab.ilhos || 0) : 0;
-        const precoFuro = temFuroLaco ? parseFloat(acab.furoLaco || 0) : 0;
-        const precoCores = acab.cores ? parseFloat(acab.cores[cor] || 0) : 0;
-
-        let custo = (precoProd + precoIlhos + precoCordao + precoFuro) * qtd + precoCores;
-        if (qtd > 2000) custo += Math.ceil((qtd - 2000) / 1000) * 50;
-        const total = custo * 1.70;
-
-        return { tipo, qtd, total, custoUnitario: total / qtd, detalhes, nomeCordao, cor, temIlhos, temFuroLaco };
+    let somaInsumosFisicosUnitarios = precoProdutoBase + precoIlhos + precoCordaoAlca + precoFuroLaco;
+    let subtotalTiragemFisica = somaInsumosFisicosUnitarios * qtd;
+    let custoTotalFinalDoLote = subtotalTiragemFisica + precoCoresFixo;
+    
+    if (qtd > 2000) {
+        let unidadesExcedentes = qtd - 2000;
+        let blocksDeMil = Math.ceil(unidadesExcedentes / 1000); 
+        custoTotalFinalDoLote += (blocksDeMil * 50.00);
     }
-
-    // mao
-    const idModelo = parseInt(document.getElementById("m-selectModelo").value);
-    const tipoEncaixe = document.getElementById("m-selectTipoEncaixe").value;
-    const corEva = document.getElementById("m-selectCorEva").value;
-    const selQtd = document.getElementById("m-selectQtd").value;
-    const qtd = selQtd === "Variavel"
-        ? parseInt(document.getElementById("m-qtdManual").value) || 1
-        : parseInt(selQtd);
-
-    const modelo = (database.modelosMao || []).find(m => m.id === idModelo);
-    const precoBase = modelo ? parseFloat(modelo.precoBase || 0) : 0;
-    const detalhes = modelo ? modelo.nome : 'Nenhum modelo';
-
-    const total = precoBase * qtd;
-    return { tipo, qtd, total, custoUnitario: total / qtd, detalhes, tipoEncaixe, corEva };
+    
+    let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70;
+    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
+    
+    return { custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, detalhesBase, nomeCordao: nomeCordaoSelected, corSelecionada, temFuroLaco, temIlhos };
 }
-
-function gerarOrcamento(tipo) {
-    const p = tipo === 'sacola' ? 's' : 'm';
-
-    const nome = document.getElementById(p + '-nomeCliente').value.trim();
-    const tel = document.getElementById(p + '-telCliente').value.trim();
-    if (!nome || !tel) { alert("Nome e Telefone do cliente são obrigatórios!"); return; }
-
-    const dados = calcularValores(tipo);
-    const telVendedor = document.getElementById(p + '-telVendedor').value.trim();
-    const numero = obterNumero(tipo);
-
-    document.getElementById(p + '-preview-numeracao').innerText = "Nº " + numero;
-    document.getElementById(p + '-text-cliente').innerHTML =
-        `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-
-    if (tipo === 'sacola') {
-        document.getElementById(p + '-text-produto').innerHTML =
-            `<strong>Base:</strong> ${dados.detalhes}<br>` +
-            `<strong>Cores:</strong> ${dados.cor} | <strong>Ilhós:</strong> ${dados.temIlhos ? 'Sim' : 'Não'}<br>` +
-            `<strong>Alça:</strong> ${dados.nomeCordao} | <strong>Furo Laço:</strong> ${dados.temFuroLaco ? 'Sim' : 'Não'}`;
+function calcularValoresMao() {
+    const idModeloSelected = parseInt(document.getElementById("selectModeloMao_mao").value);
+    const tipoEncaixe = document.getElementById("selectTipoEncaixe_mao").value;
+    const corEva = document.getElementById("selectCorEva_mao").value;
+    const selectQtd = document.getElementById("selectQuantidade_mao").value;
+    
+    let qtd = 500;
+    if (selectQtd === "Variavel") {
+        qtd = parseInt(document.getElementById("qtdManual_mao").value) || 1;
     } else {
-        document.getElementById(p + '-text-produto').innerHTML =
-            `<strong>Modelo:</strong> ${dados.detalhes}<br>` +
-            `<strong>Encaixe:</strong> ${dados.tipoEncaixe} | <strong>Cor do E.V.A:</strong> ${dados.corEva}`;
+        qtd = parseInt(selectQtd);
     }
-
-    document.getElementById(p + '-text-financeiro').innerHTML =
-        `<strong>Quantidade:</strong> ${dados.qtd} un | <strong>Unitário:</strong> ${formatarMoeda(dados.custoUnitario)} <br>` +
-        `<strong>Total do Lote: ${formatarMoeda(dados.total)}</strong>`;
-
-    const sufixoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById(p + '-preview-rodape').innerHTML =
-        `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>` +
-        `☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${sufixoVendedor}`;
-
-    document.getElementById(p + '-area-orcamento').style.display = "block";
-    document.getElementById(p + '-bloco-resultado').style.display = "block";
+    
+    let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
+    let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
+    let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
+    
+    let custoTotalFinalDoLote = precoModeloBase * qtd;
+    let totalLoteComMargemLucro = custoTotalFinalDoLote; 
+    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
+    
+    return { custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, detalhesBase, tipoEncaixe, corEva };
 }
 
-function abrirImagemNovaAba(tipo) {
-    const p = tipo === 'sacola' ? 's' : 'm';
+function obterNumeroIdentificador() {
+    if(numeroOrcamentoAtualInstancia) return numeroOrcamentoAtualInstancia;
+    const d = new Date();
+    numeroOrcamentoAtualInstancia = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    return numeroOrcamentoAtualInstancia;
+}
 
-    const nome = document.getElementById(p + '-nomeCliente').value.trim();
-    const tel = document.getElementById(p + '-telCliente').value.trim();
-    const vendedor = document.getElementById(p + '-nomeVendedor').value.trim();
-    const telVendedor = document.getElementById(p + '-telVendedor').value.trim();
-    const dados = calcularValores(tipo);
+function gerarVisualizacaoTelaSacola() {
+    const nome = document.getElementById("nomeCliente_sacola").value.trim();
+    const tel = document.getElementById("telCliente_sacola").value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
+    
+    const dadosComerciais = calcularValoresSacola();
+    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
+    const numeroFinal = obterNumeroIdentificador();
+    
+    document.getElementById("preview-numeracao-topo_sacola").innerText = "Nº " + numeroFinal;
+    document.getElementById("text-dados-cliente_sacola").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    document.getElementById("text-dados-produto_sacola").innerHTML = `<strong>Base:</strong> ${dadosComerciais.detalhesBase}<br><strong>Cores:</strong> ${dadosComerciais.corSelecionada} | <strong>Ilhós:</strong> ${dadosComerciais.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dadosComerciais.nomeCordao} | <strong>Furo Laço:</strong> ${dadosComerciais.temFuroLaco ? 'Sim' : 'Não'}`;
+    document.getElementById("text-dados-financeiro_sacola").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
+    
+    let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
+    document.getElementById("preview-contato-rodape_sacola").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
 
+    document.getElementById("area-orcamento_sacola").style.display = "block";
+    document.getElementById("bloco-resultado_sacola").style.display = "block";
+}
+function gerarVisualizacaoTelaMao() {
+    const nome = document.getElementById("nomeCliente_mao").value.trim();
+    const tel = document.getElementById("telCliente_mao").value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
+    
+    const dadosComerciais = calcularValoresMao();
+    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
+    const numeroFinal = obterNumeroIdentificador();
+    
+    document.getElementById("preview-numeracao-topo_mao").innerText = "Nº " + numeroFinal;
+    document.getElementById("text-dados-cliente_mao").innerHTML = `<strong>Nome:</strong> \({nome} <br> <strong>Telefone:</strong>\){tel}`;
+    document.getElementById("text-dados-produto_mao").innerHTML = `<strong>Modelo:</strong> \${dadosComerciais.detalhesBase}<br><strong>Encaixe:</strong> \({dadosComerciais.tipoEncaixe} \vert{} <strong>Cor do E.V.A:</strong>\){dadosComerciais.corEva}`;
+    document.getElementById("text-dados-financeiro_mao").innerHTML = `<strong>Quantidade:</strong> \${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> \({formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote:\){formatarMoeda(dadosComerciais.total)}</strong>`;
+    
+    let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: \${telVendedor}` : '';
+    document.getElementById("preview-contato-rodape_mao").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-08
+function abrirImagemNovaAbaSacola() {
+    const nome = document.getElementById("nomeCliente_sacola").value.trim();
+    const telFormulario = document.getElementById("telCliente_sacola").value.trim();
+    const vendedor = document.getElementById("nomeVendedor_sacola").value.trim();
+    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
+    const dadosComerciais = calcularValoresAtuaisSacola();
     const dataHoje = new Date();
     const dataValidade = new Date();
     dataValidade.setDate(dataHoje.getDate() + 10);
-
-    const canvas = document.getElementById(p + '-canvas');
+    
+    const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = 600;
-    canvas.height = 860;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    
+    canvas.width = 600; canvas.height = 860;
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
     try {
-        let maxH = 50;
-        const larg = objImgEmpresa.naturalWidth || 150;
-        const alt = objImgEmpresa.naturalHeight || 55;
-        const prop = larg / alt;
-        let largCalc = maxH * prop;
-        if (largCalc > 220) { largCalc = 220; maxH = largCalc / prop; }
-        ctx.drawImage(objImgEmpresa, 35, 30, largCalc, maxH);
-    } catch (e) {}
+        let maxAlturaLogo = 50;
+        let larguraOriginal = objImgMinha.naturalWidth || objImgMinha.width || 150;
+        let alturaOriginal = objImgMinha.naturalHeight || objImgMinha.height || 55;
+        let proporcaoLogo = larguraOriginal / alturaOriginal; 
+        let larguraCalculada = maxAlturaLogo * proporcaoLogo; 
+        if(larguraCalculada > 220) { larguraCalculada = 220; maxAlturaLogo = larguraCalculada / proporcaoLogo; }
+        ctx.drawImage(objImgMinha, 35, 30, larguraCalculada, maxAlturaLogo); 
+    } catch(e){}
 
-    const numero = obterNumero(tipo);
-    ctx.fillStyle = "#333333"; ctx.font = "bold 14px Arial"; ctx.textAlign = "right";
-    ctx.fillText("ORÇAMENTO Nº " + numero, 565, 60);
+    const numeroFinal = obterNumeroIdentificadorSacola();
+    ctx.fillStyle = "#333333";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "right";
+    ctx.fillText("ORÇAMENTO Nº " + numeroFinal, 565, 60);
 
     ctx.textAlign = "left";
-    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(35, 95); ctx.lineTo(565, 95); ctx.stroke();
-
-    const tituloProposta = tipo === 'sacola'
-        ? "PROPOSTA COMERCIAL DE EMBALAGENS"
-        : "PROPOSTA COMERCIAL DE BRINDES";
-    ctx.fillStyle = "#0056b3"; ctx.font = "bold 15px Arial";
-    ctx.fillText(tituloProposta, 35, 130);
-
-    desenharCaixa(ctx, 35, 150, 530, 65, "Dados do Cliente");
+    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(35, 95); ctx.lineTo(565, 95); ctx.stroke();
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 15px Arial"; ctx.fillText("PROPOSTA COMERCIAL DE EMBALAGENS", 35, 130);
+    
+    desenharCaixaPdf(ctx, 35, 150, 530, 65, "Dados do Cliente");
     ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
-    ctx.fillText("Nome / Razão Social: " + nome, 50, 185);
-    ctx.fillText("Telefone: " + tel, 50, 203);
-
-    desenharCaixa(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
-    ctx.fillStyle = "#333333"; ctx.font = "bold 11px Arial";
-    ctx.fillText("Modelo base de fábrica:", 50, 270);
-    ctx.font = "11px Arial";
-
-    const partes = dados.detalhes.split(" | ");
+    ctx.fillText("Nome / Razão Social: " + nome, 50, 185); ctx.fillText("Telefone: " + telFormulario, 50, 203);
+    
+    desenharCaixaPdf(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
+    ctx.fillStyle = "#333333"; ctx.font = "bold 11px Arial"; ctx.fillText("Modelo base de fábrica:", 50, 270); ctx.font = "11px Arial";
+    
+    let detalhesTexto = dadosComerciais.detalhesBase;
+    let partes = detalhesTexto.split(" | ");
     ctx.fillText("• " + partes.slice(0, 4).join(" | "), 50, 290);
-    if (partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
-
-    ctx.font = "bold 11px Arial";
-    if (tipo === 'sacola') {
-        ctx.fillText("Especificações de montagem e impressão:", 50, 324);
-        ctx.font = "11px Arial";
-        ctx.fillText(
-            "• Cores: " + dados.cor +
-            "  |  • Ilhós: " + (dados.temIlhos ? "Sim" : "Não") +
-            "  |  • Alça: " + dados.nomeCordao +
-            "  |  • Furo Laço: " + (dados.temFuroLaco ? "Sim" : "Não"),
-            50, 338
-        );
-    } else {
-        ctx.fillText("Especificações de montagem e estampa:", 50, 324);
-        ctx.font = "11px Arial";
-        ctx.fillText(
-            "• Tipo de Encaixe: " + dados.tipoEncaixe +
-            "  |  • Cor do E.V.A: " + dados.corEva,
-            50, 338
-        );
-    }
-
-    desenharCaixa(ctx, 35, 360, 530, 70, "Resumo Financeiro");
+    if(partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
+    
+    ctx.font = "bold 11px Arial"; ctx.fillText("Especificações de montagem e impressão:", 50, 324); ctx.font = "11px Arial";
+    ctx.fillText("• Cores: " + dadosComerciais.corSelecionada + "  |  • Ilhós: " + (dadosComerciais.temIlhos ? "Sim" : "Não") + "  |  • Alça: " + dadosComerciais.nomeCordao + "  |  • Furo Laço: " + (dadosComerciais.temFuroLaco ? "Sim" : "Não"), 50, 338);
+    
+    desenharCaixaPdf(ctx, 35, 360, 530, 70, "Resumo Financeiro");
     ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
-    ctx.fillText("Quantidade Solicitada: " + dados.qtd + " unidades", 50, 395);
-    ctx.fillText("Preço Unitário Médio de Venda: " + formatarMoeda(dados.custoUnitario), 50, 415);
-    ctx.fillStyle = "#0056b3"; ctx.font = "bold 14px Arial"; ctx.textAlign = "right";
-    ctx.fillText("TOTAL DA PROPOSTA: " + formatarMoeda(dados.total), 550, 410);
-
-    ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135);
-    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
-    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left";
-    ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
-
+    ctx.fillText("Quantidade Solicitada: " + dadosComerciais.qtd + " unidades", 50, 395); 
+    ctx.fillText("Preço Unitário Médio de Venda: " + formatarMoeda(dadosComerciais.custoUnitario), 50, 415);
+    
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 14px Arial"; ctx.textAlign = "right"; 
+    ctx.fillText("TOTAL DA PROPOSTA: " + formatarMoeda(dadosComerciais.total), 550, 410);
+    
+    ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135); ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left"; ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
+    
     ctx.fillStyle = "#444444"; ctx.font = "11px Arial";
     let startY = 495;
-    const maxW = 510, esp = 16;
-    startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxW, esp);
-    startY = wrapText(ctx, "• Forma de Pagamento: 50% de entrada na aprovação do pedido e 50% restante para 21 dias após a entrega.", 45, startY, maxW, esp);
-    startY = wrapText(ctx, "• Prazo de Produção: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.", 45, startY, maxW, esp);
-    wrapText(ctx, "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB).", 45, startY, maxW, esp);
+    const maxTextWidth = 510; 
+    const lineSpacing = 16;
 
-    const assinatura = vendedor || 'Equipe Comercial Comvil';
-    ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; ctx.textAlign = "center";
-    ctx.fillText("Documento emitido por: " + assinatura + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
-
-    ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5;
-    ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
-
-    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center";
-    ctx.fillText("COMVIL BRINDES", 300, 665);
+    startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
+    startY = wrapText(ctx, "• Forma de Pagamento: 50% de entrada na aprovação do pedido e 50% restante para 21 dias após a entrega.", 45, startY, maxTextWidth, lineSpacing);
+    startY = wrapText(ctx, "• Prazo de Produção: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.", 45, startY, maxTextWidth, lineSpacing);
+    wrapText(ctx, "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB).", 45, startY, maxTextWidth, lineSpacing);
+    let nomeAssinaturaVendedor = vendedor || 'Equipe Comercial Comvil';
+    ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; ctx.textAlign = "center"; ctx.fillText("Documento emitido por: " + nomeAssinaturaVendedor + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
+    
+    ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center"; ctx.fillText("COMVIL BRINDES", 300, 665);
+    
     ctx.fillStyle = "#555555"; ctx.font = "10px Arial";
     ctx.fillText("CNPJ: 36.206.286/0001-03  |  ✉️ comvil@comvil.com.br", 300, 685);
-    let strTel = "☎️ Fixo: 11 3461-0813  |  📱 WhatsApp: 11 97024-3064";
-    if (telVendedor) strTel += `  |  📞 Vendedor: ${telVendedor}`;
-    ctx.fillText(strTel, 300, 703);
+    
+    let stringTelefones = "☎️ Fixo: 11 3461-0813  |  📱 WhatsApp: 11 97024-3064";
+    if (telVendedor) stringTelefones += `  |  📞 Vendedor: ${telVendedor}`;
+    ctx.fillText(stringTelefones, 300, 703);
 
     const novaAba = window.open("", "_blank");
-    if (!novaAba) return;
+    if (novaAba) {
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
+        const nomeArquivo = `Orcamento_${numeroFinal}_${nome.replace(/\s+/g, '_')}.jpg`;
+        const telefoneLimpo = telFormulario.replace(/\D/g, "");
+        let assinaturaMensagem = vendedor ? vendedor.trim() : "Comvil Brindes";
+        const msgTextoFormatado = `Olá, segue o orçamento solicitado. Att, ${assinaturaMensagem}.`;
+        const textoInjetado = encodeURIComponent(msgTextoFormatado);
 
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
-    const nomeArquivo = `Orcamento_${numero}_${nome.replace(/\s+/g, '_')}.jpg`;
-    const telefoneLimpo = tel.replace(/\D/g, "");
-    const msg = encodeURIComponent(`Olá, segue o orçamento solicitado. Att ${assinatura}.`);
-
-    novaAba.document.write(`
-        <html><head><title>Exportar Orçamento</title><style>
-            body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial,sans-serif; padding:20px 0; }
-            img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,.5); background:white; margin-bottom:20px; }
-            .btns { display:flex; gap:15px; }
-            a { padding:12px 30px; border-radius:8px; font-size:16px; font-weight:bold; text-decoration:none; box-shadow:0 4px 6px rgba(0,0,0,.2); color:white; }
-            .dl { background:#0056b3; } .dl:hover { background:#004085; }
-            .wa { background:#25D366; } .wa:hover { background:#128C7E; }
-        </style></head><body>
-            <img src="${dataUrl}" />
-            <div class="btns">
-                <a href="${dataUrl}" download="${nomeArquivo}" class="dl">Baixar Imagem</a>
-                <a href="https://wa.me/55${telefoneLimpo}?text=${msg}" target="_blank" class="wa">Abrir WhatsApp</a>
-            </div>
-        </body></html>
-    `);
-    novaAba.document.close();
+        novaAba.document.write(`
+            <html>
+            <head>
+                <title>Exportar Orçamento</title>
+                <style>
+                    body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial, sans-serif; padding: 20px 0; }
+                    img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,0.5); background:white; margin-bottom: 20px; }
+                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; }
+                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
+                    .btn-download:hover { background: #004085; }
+                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
+                    .btn-whatsapp:hover { background: #128C7E; }
+                </style>
+            </head>
+            <body>
+                <img src="${dataUrl}" />
+                <div class="btn-container">
+                    <a href="${dataUrl}" download="${nomeArquivo}" class="btn-download">Baixar Imagem</a>
+                    <a href="https://whatsapp.com{telefoneLimpo}&text=${textoInjetado}" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>
+                </div>
+            </body>
+            </html>
+        `);
+        novaAba.document.close();
+    }
+}
+/* ==========================================================================
+   LÓGICA DA ABA MÃO DE TORCIDA
+   ========================================================================== */
+function carregarMenusMao() {
+    const modeloSel = document.getElementById("selectModeloMao");
+    modeloSel.innerHTML = '';
+    if(databaseMao.modelosMao) {
+        databaseMao.modelosMao.forEach((mod) => {
+            let opt = document.createElement("option");
+            opt.value = mod.id; opt.text = mod.nome; 
+            modeloSel.add(opt);
+        });
+    }
+    const corSel = document.getElementById("selectCorEva");
+    corSel.innerHTML = '';
+    if(databaseMao.coresEva) {
+        databaseMao.coresEva.forEach((cor) => {
+            let opt = document.createElement("option");
+            opt.value = cor; opt.text = cor; 
+            corSel.add(opt);
+        });
+    }
 }
 
-function desenharCaixa(ctx, x, y, w, h, titulo) {
+function verificarQuantidadeVariavel(select) {
+    const campoManual = document.getElementById("campoQtdVariavel");
+    campoManual.style.display = (select.value === "Variavel") ? "flex" : "none";
+}
+
+function calcularValoresAtuaisMao() {
+    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
+    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
+    const corEva = document.getElementById("selectCorEva").value;
+    const selectQtd = document.getElementById("selectQuantidade").value;
+    
+    let qtd = 550;
+    if (selectQtd === "Variavel") {
+        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
+    } else {
+        qtd = parseInt(selectQtd);
+    }
+    
+    let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
+    let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
+    let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
+    
+    let custoTotalFinalDoLote = precoModeloBase * qtd;
+    let totalLoteComMargemLucro = custoTotalFinalDoLote; 
+    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
+    
+    return { 
+        custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, 
+        detalhesBase, tipoEncaixe, corEva
+    };
+}
+
+function obterNumeroIdentificadorMao() {
+    if(numeroOrcamentoMao) return numeroOrcamentoMao;
+    const d = new Date();
+    numeroOrcamentoMao = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    return numeroOrcamentoMao;
+}
+function gerarVisualizacaoTelaMao() {
+    const nome = document.getElementById("nomeCliente_mao").value.trim();
+    const tel = document.getElementById("telCliente_mao").value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
+    
+    const dadosComerciais = calcularValoresAtuaisMao();
+    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
+    const numeroFinal = obterNumeroIdentificadorMao();
+    
+    document.getElementById("preview-numeracao-topo_mao").innerText = "Nº " + numeroFinal;
+    document.getElementById("text-dados-cliente_mao").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    document.getElementById("text-dados-produto_mao").innerHTML = `<strong>Modelo:</strong> ${dadosComerciais.detalhesBase}<br><strong>Encaixe:</strong> ${dadosComerciais.tipoEncaixe} | <strong>Cor do E.V.A:</strong> ${dadosComerciais.corEva}`;
+    document.getElementById("text-dados-financeiro_mao").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
+    
+    let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
+    document.getElementById("preview-contato-rodape_mao").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
+
+    document.getElementById("area-orcamento_mao").style.display = "block";
+    document.getElementById("bloco-resultado_mao").style.display = "block";
+}
+
+function abrirImagemNovaAbaMao() {
+    const nome = document.getElementById("nomeCliente_mao").value.trim();
+    const telFormulario = document.getElementById("telCliente_mao").value.trim();
+    const vendedor = document.getElementById("nomeVendedor_mao").value.trim();
+    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
+    const dadosComerciais = calcularValoresAtuaisMao();
+    const dataHoje = new Date();
+    const dataValidade = new Date();
+    dataValidade.setDate(dataHoje.getDate() + 10);
+    
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    
+    canvas.width = 600; canvas.height = 860;
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    try {
+        let maxAlturaLogo = 50;
+        let larguraOriginal = objImgMinha.naturalWidth || objImgMinha.width || 150;
+        let alturaOriginal = objImgMinha.naturalHeight || objImgMinha.height || 55;
+        let proporcaoLogo = larguraOriginal / alturaOriginal; 
+        let larguraCalculada = maxAlturaLogo * proporcaoLogo; 
+        if(larguraCalculada > 220) { larguraCalculada = 220; maxAlturaLogo = larguraCalculada / proporcaoLogo; }
+        ctx.drawImage(objImgMinha, 35, 30, larguraCalculada, maxAlturaLogo); 
+    } catch(e){}
+
+    const numeroFinal = obterNumeroIdentificadorMao();
+    ctx.fillStyle = "#333333"; ctx.font = "bold 14px Arial"; ctx.textAlign = "right";
+    ctx.fillText("ORÇAMENTO Nº " + numeroFinal, 565, 60);
+
+    ctx.textAlign = "left";
+    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(35, 95); ctx.lineTo(565, 95); ctx.stroke();
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 15px Arial"; ctx.fillText("PROPOSTA COMERCIAL DE EMBALAGENS E BRINDES", 35, 130);
+    
+    desenharCaixaPdf(ctx, 35, 150, 530, 65, "Dados do Cliente");
+    ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
+    ctx.fillText("Nome / Razão Social: " + nome, 50, 185); ctx.fillText("Telefone: " + telFormulario, 50, 203);
+    desenharCaixaPdf(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
+    ctx.fillStyle = "#333333"; ctx.font = "bold 11px Arial"; ctx.fillText("Modelo base de fábrica:", 50, 270); ctx.font = "11px Arial";
+    
+    let detalhesTexto = dadosComerciais.detalhesBase;
+    let partes = detalhesTexto.split(" | ");
+    ctx.fillText("• " + partes.slice(0, 4).join(" | "), 50, 290);
+    if(partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
+    
+    ctx.font = "bold 11px Arial"; ctx.fillText("Especificações de montagem e estampa:", 50, 324); ctx.font = "11px Arial";
+    ctx.fillText("• Tipo de Encaixe: " + dadosComerciais.tipoEncaixe + "  |  • Cor do E.V.A: " + dadosComerciais.corEva, 50, 338);
+    
+    desenharCaixaPdf(ctx, 35, 360, 530, 70, "Resumo Financeiro");
+    ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
+    ctx.fillText("Quantidade Solicitada: " + dadosComerciais.qtd + " unidades", 50, 395); 
+    ctx.fillText("Preço Unitário Médio de Venda: " + formatarMoeda(dadosComerciais.custoUnitario), 50, 415);
+    
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 14px Arial"; ctx.textAlign = "right"; 
+    ctx.fillText("TOTAL DA PROPOSTA: " + formatarMoeda(dadosComerciais.total), 550, 410);
+    
+    ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135); ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left"; ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
+    
+    ctx.fillStyle = "#444444"; ctx.font = "11px Arial";
+    let startY = 495; const maxTextWidth = 510; const lineSpacing = 16;
+    startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
+    startY = wrapText(ctx, "• Forma de Pagamento: 50% de entrada na aprovação do pedido e 50% restante para 21 dias após a entrega.", 45, startY, maxTextWidth, lineSpacing);
+    startY = wrapText(ctx, "• Prazo de Production: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.", 45, startY, maxTextWidth, lineSpacing);
+    wrapText(ctx, "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB).", 45, startY, maxTextWidth, lineSpacing);
+    
+    let nomeAssinaturaVendedor = vendedor || 'Equipe Comercial Comvil';
+    ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; ctx.textAlign = "center"; ctx.fillText("Documento emitido por: " + nomeAssinaturaVendedor + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
+    
+    ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center"; ctx.fillText("COMVIL BRINDES", 300, 665);
+    ctx.fillStyle = "#555555"; ctx.font = "10px Arial"; ctx.fillText("CNPJ: 36.206.286/0001-03  |  ✉️ comvil@comvil.com.br", 300, 685);
+    
+    let stringTelefones = "☎️ Fixo: 11 3461-0813  |  📱 WhatsApp: 11 97024-3064";
+    if (telVendedor) stringTelefones += `  |  📞 Vendedor: ${telVendedor}`;
+    ctx.fillText(stringTelefones, 300, 703);
+
+    const novaAba = window.open("", "_blank");
+    if (novaAba) {
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
+        const nomeArquivo = `Orcamento_Mao_${numeroFinal}_${nome.replace(/\s+/g, '_')}.jpg`;
+        const telefoneLimpo = telFormulario.replace(/\D/g, "");
+        let assinaturaMensagem = vendedor ? vendedor.trim() : "Comvil Brindes";
+        const msgTextoFormatado = `Olá, segue o orçamento solicitado. Att, ${assinaturaMensagem}.`;
+        const textoInjetado = encodeURIComponent(msgTextoFormatado);
+
+        novaAba.document.write(`
+            <html>
+            <head>
+                <title>Exportar Orçamento - Mão</title>
+                <style>
+                    body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial, sans-serif; padding: 20px 0; }
+                    img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,0.5); background:white; margin-bottom: 20px; }
+                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; }
+                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
+                    .btn-download:hover { background: #004085; }
+                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
+                    .btn-whatsapp:hover { background: #128C7E; }
+                </style>
+            </head>
+            <body>
+                <img src="${dataUrl}" />
+                <div class="btn-container">
+                    <a href="${dataUrl}" download="${nomeArquivo}" class="btn-download">Baixar Imagem</a>
+                    <a href="https://whatsapp.com{telefoneLimpo}&text=${textoInjetado}" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>
+                </div>
+            </body>
+            </html>
+        `);
+        novaAba.document.close();
+    }
+}
+
+function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
     ctx.fillStyle = "#fafafa"; ctx.fillRect(x, y, w, h);
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
     ctx.fillStyle = "#777777"; ctx.font = "bold 9px Arial"; ctx.textAlign = "left";
     ctx.fillText(titulo.toUpperCase(), x + 15, y + 18);
-    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
+    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
 }
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ');
-    let line = '', currentY = y;
-    for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' ';
-        if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-            ctx.fillText(line, x, currentY);
-            line = words[n] + ' ';
-            currentY += lineHeight;
-        } else {
-            line = testLine;
-        }
-    }
-    ctx.fillText(line, x, currentY);
-    return currentY + lineHeight;
-}
-
-function switchTab(e, id) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
+function switchTab(e, idConteudo) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(panel => panel.classList.remove('active'));
     e.target.classList.add('active');
-    document.getElementById(id).classList.add('active');
+    document.getElementById(idConteudo).classList.add('active');
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
