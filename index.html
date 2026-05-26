@@ -146,8 +146,10 @@
                     <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente_sacola"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto_sacola"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro_sacola"></div></div>
+                    
                     <div class="rodape-contato-preview" id="preview-contato-rodape_sacola"></div>
                 </div>
+                
                 <div class="botoes-container">
                     <button class="btn-exportar" onclick="abrirImagemNovaAbaSacola()">Exportar Orçamento</button>
                 </div>
@@ -231,14 +233,17 @@
                     <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente_mao"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto_mao"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro_mao"></div></div>
+                    
                     <div class="rodape-contato-preview" id="preview-contato-rodape_mao"></div>
                 </div>
+                
                 <div class="botoes-container">
                     <button class="btn-exportar" onclick="abrirImagemNovaAbaMao()">Exportar Orçamento</button>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -257,24 +262,18 @@ objImgMinha.onerror = function() { objImgMinha.src = "https://placehold.co"; };
 
 const bancoReservaSacola = {
   "produtosConfigurados": [
-    { "id": 2, "nomeCompleto": "05 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.68 },
-    { "id": 6, "nomeCompleto": "1 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.64 }
+    { "id": 2, "nomeCompleto": "500 Sacolas 17x18x8 - Offset 180g", "precoBase": 0.68 }
   ],
-  "cordoes": [{ "nome": "Nylon", "preco": 0.2 }, { "nome": "Gorgurão", "preco": 0.28 }],
-  "quantidades": [500, 1000, 2000, 3000],
-  "valoresAcabamento": { "ilhos": 0.2, "furoLaco": 0.1, "cores": { "1x0": 450, "2x0": 480, "4x0": 560, "4x1": 590 } }
+  "cordoes": [{ "nome": "Nylon", "preco": 0.20 }, { "nome": "Gorgurão", "preco": 0.28 }],
+  "quantidades": [500, 1000, 2000],
+  "valoresAcabamento": { "ilhos": 0.20, "furoLaco": 0.10, "cores": { "1x0": 450.0, "2x0": 480.0, "4x0": 560.0, "4x1": 590.0 } }
 };
 
 const bancoReservaMao = {
-  "logoEmpresa": "",
   "modelosMao": [
-    { "id": 1, "nome": "Mão tipo Nº1", "precoBase": 3.5 },
-    { "id": 2, "nome": "Mão do Rock", "precoBase": 4.2 }
+    { "id": 1, "nome": "Mão tipo Nº1", "precoBase": 3.5 }
   ],
-  "coresEva": [
-    { "nome": "1 cor", "preco": 0.3 },
-    { "nome": "2 cores", "preco": 0.5 }
-  ],
+  "coresEva": [{ "nome": "1 cor", "preco": 0.3 }],
   "valorStartMao": 100
 };
 
@@ -285,11 +284,17 @@ window.onload = function() {
             return response.json();
         })
         .then(data => { 
-            if (data.produtosConfigurados || data.valoresAcabamento) { databaseSacola = data; } 
-            else { databaseSacola = JSON.parse(JSON.stringify(bancoReservaSacola)); }
+            if (data.produtosConfigurados || data.valoresAcabamento) {
+                databaseSacola = data;
+            } else {
+                databaseSacola = JSON.parse(JSON.stringify(bancoReservaSacola));
+            }
 
-            if (data.modelosMao || data.coresEva) { databaseMao = data; } 
-            else { databaseMao = JSON.parse(JSON.stringify(bancoReservaMao)); }
+            if (data.modelosMao || data.coresEva) {
+                databaseMao = data;
+            } else {
+                databaseMao = JSON.parse(JSON.stringify(bancoReservaMao));
+            }
             
             let logoDefinida = data.logoEmpresa || databaseSacola.logoEmpresa || databaseMao.logoEmpresa;
             if(logoDefinida && logoDefinida.trim() !== "") {
@@ -297,17 +302,39 @@ window.onload = function() {
                 if(document.getElementById('img-minha-preview_sacola')) document.getElementById('img-minha-preview_sacola').src = logoDefinida;
                 if(document.getElementById('img-minha-preview_mao')) document.getElementById('img-minha-preview_mao').src = logoDefinida;
             }
+            
             carregarMenusSacola(); 
             carregarMenusMao(); 
         })
         .catch(err => { 
-            console.warn("Utilizando bancos de reserva integrados devido a falha no dados.json:", err);
+            console.warn("Utilizando bancos reserva:", err);
             databaseSacola = JSON.parse(JSON.stringify(bancoReservaSacola));
             databaseMao = JSON.parse(JSON.stringify(bancoReservaMao));
             carregarMenusSacola(); 
             carregarMenusMao(); 
         });
 };
+/* ==========================================================================
+   FUNÇÕES AUXILIARES E RENDERIZAÇÃO DOS MENUS
+   ========================================================================== */
+function mascaraTelefone(input) {
+    let v = input.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.substring(0, 11);
+    if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+    } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+    } else if (v.length > 0) {
+        v = v.replace(/^(\d{0,2})$/, "($1");
+    }
+    input.value = v;
+}
+
+function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
 
 function carregarMenusSacola() {
     const produtoSel = document.getElementById("selectProdutoConfigurado_sacola");
@@ -321,6 +348,7 @@ function carregarMenusSacola() {
             });
         }
     }
+
     const cordaoSel = document.getElementById("selectCordao_sacola");
     if(cordaoSel) {
         cordaoSel.innerHTML = '';
@@ -332,6 +360,7 @@ function carregarMenusSacola() {
             });
         }
     }
+
     const qtdSel = document.getElementById("qtd_sacola");
     if(qtdSel) {
         qtdSel.innerHTML = '';
@@ -343,7 +372,88 @@ function carregarMenusSacola() {
         }
     }
 }
+/* ==========================================================================
+   CÁLCULOS FINANCEIROS - ABA SACOLA
+   ========================================================================== */
+function calcularValoresAtuaisSacola() {
+    const idProdutoSelected = parseInt(document.getElementById("selectProdutoConfigurado_sacola").value);
+    const nomeCordaoSelected = document.getElementById("selectCordao_sacola").value;
+    const corSelecionada = document.getElementById("selectCores_sacola").value;
+    const temIlhos = document.getElementById("selectIlhos_sacola").value === "Sim";
+    const temFuroLaco = document.getElementById("selectFuroLaco_sacola").value === "Sim";
+    const qtd = parseInt(document.getElementById("qtd_sacola").value) || 500;
+    
+    let produtoEncontrado = databaseSacola.produtosConfigurados.find(p => p.id === idProdutoSelected);
+    let precoProdutoBase = produtoEncontrado ? parseFloat(produtoEncontrado.precoBase || 0) : 0;
+    let detalhesBase = produtoEncontrado ? produtoEncontrado.nomeCompleto : 'Nenhum produto';
+    
+    let cordaoEncontrado = databaseSacola.cordoes.find(c => c.nome === nomeCordaoSelected);
+    let precoCordaoAlca = cordaoEncontrado ? parseFloat(cordaoEncontrado.preco || 0) : 0;
+    
+    let precoIlhos = 0;
+    if (temIlhos && databaseSacola.valoresAcabamento) {
+        precoIlhos = parseFloat(databaseSacola.valoresAcabamento.ilhos || 0);
+    }
+    
+    let precoFuroLaco = 0;
+    if (temFuroLaco && databaseSacola.valoresAcabamento) {
+        precoFuroLaco = parseFloat(databaseSacola.valoresAcabamento.furoLaco || 0);
+    }
+    
+    let precoCoresFixo = 0;
+    if (databaseSacola.valoresAcabamento && databaseSacola.valoresAcabamento.cores) {
+        precoCoresFixo = parseFloat(databaseSacola.valoresAcabamento.cores[corSelecionada] || 0);
+    }
 
+    let somaInsumosFisicosUnitarios = precoProdutoBase + precoIlhos + precoCordaoAlca + precoFuroLaco;
+    let subtotalTiragemFisica = somaInsumosFisicosUnitarios * qtd;
+    let custoTotalFinalDoLote = subtotalTiragemFisica + precoCoresFixo;
+    
+    if (qtd > 2000) {
+        let unidadesExcedentes = qtd - 2000;
+        let blocksDeMil = Math.ceil(unidadesExcedentes / 1000); 
+        custoTotalFinalDoLote += (blocksDeMil * 50.00);
+    }
+    
+    let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70;
+    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
+    
+    return { 
+        custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, 
+        detalhesBase, nomeCordao: nomeCordaoSelected, corSelecionada, temFuroLaco, temIlhos 
+    };
+}
+
+function obterNumeroIdentificadorSacola() {
+    if(numeroOrcamentoSacola) return numeroOrcamentoSacola;
+    const d = new Date();
+    numeroOrcamentoSacola = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    return numeroOrcamentoSacola;
+}
+
+function gerarVisualizacaoTelaSacola() {
+    const nome = document.getElementById("nomeCliente_sacola").value.trim();
+    const tel = document.getElementById("telCliente_sacola").value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
+    
+    const dadosComerciais = calcularValoresAtuaisSacola();
+    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
+    const numeroFinal = obterNumeroIdentificadorSacola();
+    
+    document.getElementById("preview-numeracao-topo_sacola").innerText = "Nº " + numeroFinal;
+    document.getElementById("text-dados-cliente_sacola").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    document.getElementById("text-dados-produto_sacola").innerHTML = `<strong>Base:</strong> ${dadosComerciais.detalhesBase}<br><strong>Cores:</strong> ${dadosComerciais.corSelecionada} | <strong>Ilhós:</strong> ${dadosComerciais.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dadosComerciais.nomeCordao} | <strong>Furo Laço:</strong> ${dadosComerciais.temFuroLaco ? 'Sim' : 'Não'}`;
+    document.getElementById("text-dados-financeiro_sacola").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
+    
+    let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
+    document.getElementById("preview-contato-rodape_sacola").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
+
+    document.getElementById("area-orcamento_sacola").style.display = "block";
+    document.getElementById("bloco-resultado_sacola").style.display = "block";
+}
+/* ==========================================================================
+   LOGICA DA ABA MÃO DE TORCIDA (ADAPTADO ÀS CORES E PREÇOS DO JSON)
+   ========================================================================== */
 function carregarMenusMao() {
     const modeloSel = document.getElementById("selectModeloMao");
     if(modeloSel) {
@@ -373,57 +483,6 @@ function verificarQuantidadeVariavel(select) {
     const campoManual = document.getElementById("campoQtdVariavel");
     campoManual.style.display = (select.value === "Variavel") ? "flex" : "none";
 }
-function mascaraTelefone(input) {
-    let v = input.value.replace(/\D/g, "");
-    if (v.length > 11) v = v.substring(0, 11);
-    if (v.length > 10) { v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3"); } 
-    else if (v.length > 6) { v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3"); } 
-    else if (v.length > 2) { v = v.replace(/^(\d{2})(\d{0,5})$/, "($1) $2"); } 
-    else if (v.length > 0) { v = v.replace(/^(\d{0,2})$/, "($1"); }
-    input.value = v;
-}
-
-function formatarMoeda(valor) {
-    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-function calcularValoresAtuaisSacola() {
-    const idProdutoSelected = parseInt(document.getElementById("selectProdutoConfigurado_sacola").value);
-    const nomeCordaoSelected = document.getElementById("selectCordao_sacola").value;
-    const corSelecionada = document.getElementById("selectCores_sacola").value;
-    const temIlhos = document.getElementById("selectIlhos_sacola").value === "Sim";
-    const temFuroLaco = document.getElementById("selectFuroLaco_sacola").value === "Sim";
-    const qtd = parseInt(document.getElementById("qtd_sacola").value) || 500;
-    
-    let produtoEncontrado = databaseSacola.produtosConfigurados.find(p => p.id === idProdutoSelected);
-    let precoProdutoBase = produtoEncontrado ? parseFloat(produtoEncontrado.precoBase || 0) : 0;
-    let detalhesBase = produtoEncontrado ? produtoEncontrado.nomeCompleto : 'Nenhum produto';
-    
-    let cordaoEncontrado = databaseSacola.cordoes.find(c => c.nome === nomeCordaoSelected);
-    let precoCordaoAlca = cordaoEncontrado ? parseFloat(cordaoEncontrado.preco || 0) : 0;
-    
-    let precoIlhos = 0;
-    if (temIlhos && databaseSacola.valoresAcabamento) { precoIlhos = parseFloat(databaseSacola.valoresAcabamento.ilhos || 0); }
-    let precoFuroLaco = 0;
-    if (temFuroLaco && databaseSacola.valoresAcabamento) { precoFuroLaco = parseFloat(databaseSacola.valoresAcabamento.furoLaco || 0); }
-    let precoCoresFixo = 0;
-    if (databaseSacola.valoresAcabamento && databaseSacola.valoresAcabamento.cores) { precoCoresFixo = parseFloat(databaseSacola.valoresAcabamento.cores[corSelecionada] || 0); }
-
-    let somaInsumosFisicosUnitarios = precoProdutoBase + precoIlhos + precoCordaoAlca + precoFuroLaco;
-    let subtotalTiragemFisica = somaInsumosFisicosUnitarios * qtd;
-    let custoTotalFinalDoLote = subtotalTiragemFisica + precoCoresFixo;
-    
-    if (qtd > 2000) {
-        let unidadesExcedentes = qtd - 2000;
-        let blocksDeMil = Math.ceil(unidadesExcedentes / 1000); 
-        custoTotalFinalDoLote += (blocksDeMil * 50.00);
-    }
-    
-    let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70;
-    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
-    
-    return { custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, detalhesBase, nomeCordao: nomeCordaoSelected, corSelecionada, temFuroLaco, temIlhos };
-}
 
 function calcularValoresAtuaisMao() {
     const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
@@ -432,8 +491,11 @@ function calcularValoresAtuaisMao() {
     const selectQtd = document.getElementById("selectQuantidade").value;
     
     let qtd = 500;
-    if (selectQtd === "Variavel") { qtd = parseInt(document.getElementById("qtdManual").value) || 1; } 
-    else { qtd = parseInt(selectQtd); }
+    if (selectQtd === "Variavel") {
+        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
+    } else {
+        qtd = parseInt(selectQtd);
+    }
     
     let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
     let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
@@ -442,9 +504,15 @@ function calcularValoresAtuaisMao() {
     let corEncontrada = databaseMao.coresEva.find(c => c.nome === nomeCorEvaSelected);
     let precoAdicionalCor = corEncontrada ? parseFloat(corEncontrada.preco || 0) : 0;
     
+    // Regra Comercial: Valor do Modelo + Cor = A
     let somaBaseA = precoModeloBase + precoAdicionalCor;
-    if (tipoEncaixe === "Luva") { somaBaseA = somaBaseA * 2; }
     
+    // Regra: Argola mantém o mesmo | Luva multiplica A por 2
+    if (tipoEncaixe === "Luva") {
+        somaBaseA = somaBaseA * 2;
+    }
+    
+    // Multiplica pela quantidade, adiciona o fixo de start (100) e põe 70% de lucro no final do lote
     let custoTiragemFisica = somaBaseA * qtd;
     let valorFixoStart = parseFloat(databaseMao.valorStartMao || 100);
     let custoTotalFinalDoLote = custoTiragemFisica + valorFixoStart;
@@ -452,125 +520,8 @@ function calcularValoresAtuaisMao() {
     let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70;
     let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
     
-    return { custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, detalhesBase, tipoEncaixe, corEva: nomeCorEvaSelected };
-}
-
-function obterNumeroIdentificadorSacola() {
-    if(numeroOrcamentoSacola) return numeroOrcamentoSacola;
-    const d = new Date();
-    numeroOrcamentoSacola = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
-    return numeroOrcamentoSacola;
-}
-
-function obterNumeroIdentificadorMao() {
-    if(numeroOrcamentoMao) return numeroOrcamentoMao;
-    const d = new Date();
-    numeroOrcamentoMao = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
-    return numeroOrcamentoMao;
-}
-
-function gerarVisualizacaoTelaSacola() {
-    const nome = document.getElementById("nomeCliente_sacola").value.trim();
-    const tel = document.getElementById("telCliente_sacola").value.trim();
-    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
-    
-    const dadosComerciais = calcularValoresAtuaisSacola();
-    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
-    const numeroFinal = obterNumeroIdentificadorSacola();
-    
-    document.getElementById("preview-numeracao-topo_sacola").innerText = "Nº " + numeroFinal;
-    document.getElementById("text-dados-cliente_sacola").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto_sacola").innerHTML = `<strong>Base:</strong> ${dadosComerciais.detalhesBase}<br><strong>Cores:</strong> ${dadosComerciais.corSelecionada} | <strong>Ilhós:</strong> ${dadosComerciais.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dadosComerciais.nomeCordao} | <strong>Furo Laço:</strong> ${dadosComerciais.temFuroLaco ? 'Sim' : 'Não'}`;
-    document.getElementById("text-dados-financeiro_sacola").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
-    
-    let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape_sacola").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
-    document.getElementById("area-orcamento_sacola").style.display = "block";
-    document.getElementById("bloco-resultado_sacola").style.display = "block";
-}
-
-function gerarVisualizacaoTelaMao() {
-    const nome = document.getElementById("nomeCliente_mao").value.trim();
-    const tel = document.getElementById("telCliente_mao").value.trim();
-    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
-    
-    const dadosComerciais = calcularValoresAtuaisMao();
-    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
-    const numeroFinal = obterNumeroIdentificadorMao();
-    
-    document.getElementById("preview-numeracao-topo_mao").innerText = "Nº " + numeroFinal;
-    document.getElementById("text-dados-cliente_mao").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto_mao").innerHTML = `<strong>Modelo:</strong> ${dadosComerciais.detalhesBase}<br><strong>Encaixe:</strong> ${dadosComerciais.tipoEncaixe} | <strong>Cor/Estampa:</strong> ${dadosComerciais.corEva}`;
-    document.getElementById("text-dados-financeiro_mao").innerHTML = `<strong>Quantidade:</strong> ${dadosComerciais.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dadosComerciais.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dadosComerciais.total)}</strong>`;
-    
-    let textoContatoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape_mao").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoContatoVendedor}`;
-    document.getElementById("area-orcamento_mao").style.display = "block";
-    document.getElementById("bloco-resultado_mao").style.display = "block";
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    let words = text.split(' '); let line = ''; let currentY = y;
-    for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-            ctx.fillText(line, x, currentY); line = words[n] + ' '; currentY += lineHeight;
-        } else { line = testLine; }
-    }
-    ctx.fillText(line, x, currentY); return currentY + lineHeight;
-}
-function exportarOrcamentoGenerico(config) {
-    const nome = document.getElementById("nomeCliente_" + config.sufixo).value.trim();
-    const telFormulario = document.getElementById("telCliente_" + config.sufixo).value.trim();
-    const vendedor = document.getElementById("nomeVendedor_" + config.sufixo).value.trim();
-    const telVendedor = document.getElementById("telVendedor_" + config.sufixo).value.trim();
-    
-    if(!nome || !telFormulario) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
-    
-    const dadosComerciais = config.funcaoCalculo();
-    const dataHoje = new Date();
-    const dataValidade = new Date();
-    dataValidade.setDate(dataHoje.getDate() + 10);
-    
-    const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
-    canvas.width = 600; canvas.height = 860;
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    try {
-        let maxAlturaLogo = 50;
-        let larguraOriginal = objImgMinha.naturalWidth || objImgMinha.width || 150;
-        let alturaOriginal = objImgMinha.naturalHeight || objImgMinha.height || 55;
-        let proporcaoLogo = larguraOriginal / alturaOriginal; 
-        let larguraCalculada = maxAlturaLogo * proporcaoLogo; 
-        if(larguraCalculada > 220) { larguraCalculada = 220; maxAlturaLogo = larguraCalculada / proporcaoLogo; }
-        ctx.drawImage(objImgMinha, 35, 30, larguraCalculada, maxAlturaLogo); 
-    } catch(e){}
-
-    const numeroFinal = config.funcaoNumero();
-    ctx.fillStyle = "#333333"; ctx.font = "bold 14px Arial"; ctx.textAlign = "right";
-    ctx.fillText("ORÇAMENTO Nº " + numeroFinal, 565, 60);
-
-    ctx.textAlign = "left";
-    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(35, 95); ctx.lineTo(565, 95); ctx.stroke();
-    ctx.fillStyle = "#0056b3"; ctx.font = "bold 15px Arial"; ctx.fillText(config.tituloProposta, 35, 130);
-    
-    desenharCaixaPdf(ctx, 35, 150, 530, 65, "Dados do Cliente");
-    ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
-    ctx.fillText("Nome / Razão Social: " + nome, 50, 185); ctx.fillText("Telefone: " + telFormulario, 50, 203);
-    
-    desenharCaixaPdf(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
-    ctx.fillStyle = "#333333"; ctx.font = "bold 11px Arial"; ctx.fillText(config.labelModelo, 50, 270); ctx.font = "11px Arial";
-    
-    let detalhesTexto = dadosComerciais.detalhesBase; let partes = detalhesTexto.split(" | ");
-    ctx.fillText("• " + partes.slice(0, 4).join(" | "), 50, 290);
-    if(partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
-    
-    ctx.font = "bold 11px Arial"; ctx.fillText(config.labelMontagem, 50, 324); ctx.font = "11px Arial";
-    ctx.fillText(config.textoLinhaInsumos(dadosComerciais), 50, 338);
-    
-    desenharCaixaPdf(ctx, 35, 360, 530, 70, "Resumo Financeiro");
-    ctx.fillStyle = "#33333
+    return { 
+        custoUnitario: precoUnitarioDe
 function exportarOrcamentoGenerico(config) {
     const nome = document.getElementById("nomeCliente_" + config.sufixo).value.trim();
     const telFormulario = document.getElementById("telCliente_" + config.sufixo).value.trim();
@@ -626,7 +577,6 @@ function exportarOrcamentoGenerico(config) {
     let partes = detalhesTexto.split(" | ");
     ctx.fillText("• " + partes.slice(0, 4).join(" | "), 50, 290);
     if(partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
-    
     ctx.font = "bold 11px Arial"; ctx.fillText(config.labelMontagem, 50, 324); ctx.font = "11px Arial";
     ctx.fillText(config.textoLinhaInsumos(dadosComerciais), 50, 338);
     
