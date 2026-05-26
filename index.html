@@ -469,7 +469,7 @@ function calcularValoresAtuaisMao() {
     } else {
         qtd = parseInt(selectQtd);
     }
-    
+
     let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
     let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
     let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
@@ -478,10 +478,21 @@ function calcularValoresAtuaisMao() {
     let precoAdicionalCor = corEncontrada ? parseFloat(corEncontrada.preco || 0) : 0;
     
     let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
-    let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
-    let custoTotalFinalDoLote = (somaInsumosUnitarios * qtd) + startLoteFixo;
     
-    let totalLoteComMargemLucro = custoTotalFinalDoLote; 
+    // 1. Soma Base (Modelo + Cor)
+    let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
+    
+    // 2. Aplica o multiplicador do Encaixe (*2 se Luva, *1 se Argola)
+    let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1;
+    let insumoComEncaixe = somaInsumosUnitarios * multiplicadorEncaixe;
+    
+    // 3. Custo final de fabricação do lote (com o Start Fixo)
+    let custoTotalFinalDoLote = (insumoComEncaixe * qtd) + startLoteFixo;
+    
+    // 4. Aplica os 70% de margem de lucro no lote total
+    let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70; 
+    
+    // 5. Divide o total de venda pela quantidade para achar o valor unitário
     let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
     
     return { 
