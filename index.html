@@ -29,7 +29,7 @@
         
         .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 30px; background: white; }
         
-        /* FORMULÁRIOS UNIFICADOS */
+        /* FORMULÁRIOS */
         h2 { font-size: 14px; margin: 15px 0 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .row { display: flex; gap: 15px; margin-bottom: 12px; }
         .field { flex: 1; display: flex; flex-direction: column; }
@@ -148,7 +148,6 @@
                     
                     <div class="rodape-contato-preview" id="preview-contato-rodape_sacola"></div>
                 </div>
-                
                 <div class="botoes-container">
                     <button class="btn-exportar" onclick="abrirImagemNovaAbaSacola()">Exportar Orçamento</button>
                 </div>
@@ -171,27 +170,27 @@
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Modelo Comercial *</label>
-                <select id="selectModeloMao_mao"></select>
+                <select id="selectModeloMao"></select>
             </div>
             
             <div class="row">
                 <div class="field">
                     <label>Tipo de Encaixe *</label>
-                    <select id="selectTipoEncaixe_mao">
+                    <select id="selectTipoEncaixe">
                         <option value="Luva">Luva</option>
                         <option value="Argola">Argola</option>
                     </select>
                 </div>
                 <div class="field">
-                    <label>Cor do E.V.A *</label>
-                    <select id="selectCorEva_mao"></select>
+                    <label>Cor / Estampa do E.V.A *</label>
+                    <select id="selectCorEva"></select>
                 </div>
             </div>
             
             <div class="row">
                 <div class="field">
                     <label>Quantidade Mínima *</label>
-                    <select id="selectQuantidade_mao" onchange="verificarQuantidadeVariavelMao(this)">
+                    <select id="selectQuantidade" onchange="verificarQuantidadeVariavel(this)">
                         <option value="100">100 un</option>
                         <option value="200">200 un</option>
                         <option value="300">300 un</option>
@@ -202,9 +201,9 @@
                         <option value="Variavel">Outra Quantidade...</option>
                     </select>
                 </div>
-                <div class="field" id="campoQtdVariavel_mao" style="display: none;">
+                <div class="field" id="campoQtdVariavel" style="display: none;">
                     <label>Digite a Quantidade *</label>
-                    <input type="number" id="qtdManual_mao" min="1" placeholder="Ex: 750">
+                    <input type="number" id="qtdManual" min="1" placeholder="Ex: 750">
                 </div>
             </div>
             <h2>Dados de Atendimento</h2>
@@ -234,15 +233,14 @@
                     
                     <div class="rodape-contato-preview" id="preview-contato-rodape_mao"></div>
                 </div>
-                
                 <div class="botoes-container">
                     <button class="btn-exportar" onclick="abrirImagemNovaAbaMao()">Exportar Orçamento</button>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
 <script>
 /* ==========================================================================
    BANCOS DE DADOS E CARREGAMENTO UNIFICADO (DADOS.JSON)
@@ -259,21 +257,24 @@ objImgMinha.onerror = function() { objImgMinha.src = "https://placehold.co"; };
 
 const bancoReservaSacola = {
   "produtosConfigurados": [
-    { "id": 1, "nomeCompleto": "500 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.78 },
-    { "id": 2, "nomeCompleto": "Sacola Offset 180g - 18x24x8 - Laminação BOPP Fosca", "precoBase": 4.50 }
+    { "id": 2, "nomeCompleto": "05 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.68 },
+    { "id": 6, "nomeCompleto": "1 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.64 }
   ],
-  "cordoes": [{ "nome": "Nylon", "preco": 0.20 }, { "nome": "Gorgurão", "preco": 0.80 }],
-  "quantidades": [500, 1000, 2000],
-  "valoresAcabamento": { "ilhos": 0.20, "furoLaco": 0.15, "cores": { "1x0": 480.0, "2x0": 550.0, "4x0": 700.0, "4x1": 850.0 } }
+  "cordoes": [{ "nome": "Nylon", "preco": 0.2 }, { "nome": "Gorgurão", "preco": 0.28 }],
+  "quantidades": [500, 1000, 2000, 3000, 4000, 5000],
+  "valoresAcabamento": { "ilhos": 0.2, "furoLaco": 0.1, "cores": { "1x0": 450, "2x0": 480, "4x0": 560, "4x1": 590 } }
 };
 
 const bancoReservaMao = {
   "logoEmpresa": "",
   "modelosMao": [
-    { "id": 1, "nome": "Mão de E.V.A - Modelo Tradicional 40cm", "precoBase": 2.50 },
-    { "id": 2, "nome": "Mão de E.V.A - Modelo Dedão Positivo 45cm", "precoBase": 2.80 }
+    { "id": 1, "nome": "Mão tipo Nº1", "precoBase": 3.5 },
+    { "id": 2, "nome": "Mão do Rock", "precoBase": 4.2 }
   ],
-  "coresEva": ["Azul Comercial", "Vermelho", "Verde", "Amarelo", "Preto", "Branco"]
+  "coresEva": [
+    { "nome": "1 cor", "preco": 0.3 },
+    { "nome": "2 cores", "preco": 0.5 }
+  ]
 };
 window.onload = function() {
     fetch('dados.json?t=' + new Date().getTime())
@@ -300,6 +301,7 @@ window.onload = function() {
                 if(document.getElementById('img-minha-preview_sacola')) document.getElementById('img-minha-preview_sacola').src = logoDefinida;
                 if(document.getElementById('img-minha-preview_mao')) document.getElementById('img-minha-preview_mao').src = logoDefinida;
             }
+            
             carregarMenusSacola(); 
             carregarMenusMao(); 
         })
@@ -311,7 +313,9 @@ window.onload = function() {
             carregarMenusMao(); 
         });
 };
-
+/* ==========================================================================
+   COMANDOS ÚNICOS COMPARTILHADOS (REDUÇÃO DE ERROS)
+   ========================================================================== */
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.substring(0, 11);
@@ -330,6 +334,23 @@ function mascaraTelefone(input) {
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    let words = text.split(' '); let line = ''; let currentY = y;
+    for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, currentY);
+            line = words[n] + ' '; currentY += lineHeight;
+        } else { line = testLine; }
+    }
+    ctx.fillText(line, x, currentY);
+    return currentY + lineHeight;
+}
+/* ==========================================================================
+   LÓGICA ESPECÍFICA: ABA SACOLA
+   ========================================================================== */
 function carregarMenusSacola() {
     const produtoSel = document.getElementById("selectProdutoConfigurado_sacola");
     if(produtoSel) {
@@ -366,7 +387,6 @@ function carregarMenusSacola() {
         }
     }
 }
-
 function calcularValoresAtuaisSacola() {
     const idProdutoSelected = parseInt(document.getElementById("selectProdutoConfigurado_sacola").value);
     const nomeCordaoSelected = document.getElementById("selectCordao_sacola").value;
@@ -382,9 +402,16 @@ function calcularValoresAtuaisSacola() {
     let cordaoEncontrado = databaseSacola.cordoes.find(c => c.nome === nomeCordaoSelected);
     let precoCordaoAlca = cordaoEncontrado ? parseFloat(cordaoEncontrado.preco || 0) : 0;
     
-    let precoIlhos = (temIlhos && databaseSacola.valoresAcabamento) ? parseFloat(databaseSacola.valoresAcabamento.ilhos || 0) : 0;
-    let precoFuroLaco = (temFuroLaco && databaseSacola.valoresAcabamento) ? parseFloat(databaseSacola.valoresAcabamento.furoLaco || 0) : 0;
-    let precoCoresFixo = (databaseSacola.valoresAcabamento && databaseSacola.valoresAcabamento.cores) ? parseFloat(databaseSacola.valoresAcabamento.cores[corSelecionada] || 0) : 0;
+    let precoIlhos = 0;
+    if (temIlhos && databaseSacola.valoresAcabamento) precoIlhos = parseFloat(databaseSacola.valoresAcabamento.ilhos || 0);
+    
+    let precoFuroLaco = 0;
+    if (temFuroLaco && databaseSacola.valoresAcabamento) precoFuroLaco = parseFloat(databaseSacola.valoresAcabamento.furoLaco || 0);
+    
+    let precoCoresFixo = 0;
+    if (databaseSacola.valoresAcabamento && databaseSacola.valoresAcabamento.cores) {
+        precoCoresFixo = parseFloat(databaseSacola.valoresAcabamento.cores[corSelecionada] || 0);
+    }
 
     let somaInsumosFisicosUnitarios = precoProdutoBase + precoIlhos + precoCordaoAlca + precoFuroLaco;
     let subtotalTiragemFisica = somaInsumosFisicosUnitarios * qtd;
@@ -404,13 +431,13 @@ function calcularValoresAtuaisSacola() {
         detalhesBase, nomeCordao: nomeCordaoSelected, corSelecionada, temFuroLaco, temIlhos 
     };
 }
+
 function obterNumeroIdentificadorSacola() {
     if(numeroOrcamentoSacola) return numeroOrcamentoSacola;
     const d = new Date();
     numeroOrcamentoSacola = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
     return numeroOrcamentoSacola;
 }
-
 function gerarVisualizacaoTelaSacola() {
     const nome = document.getElementById("nomeCliente_sacola").value.trim();
     const tel = document.getElementById("telCliente_sacola").value.trim();
@@ -431,188 +458,50 @@ function gerarVisualizacaoTelaSacola() {
     document.getElementById("area-orcamento_sacola").style.display = "block";
     document.getElementById("bloco-resultado_sacola").style.display = "block";
 }
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    let words = text.split(' '); let line = ''; let currentY = y;
-    for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-            ctx.fillText(line, x, currentY);
-            line = words[n] + ' '; currentY += lineHeight;
-        } else { line = testLine; }
-    }
-    ctx.fillText(line, x, currentY);
-    return currentY + lineHeight;
-}
-function exportarOrcamentoGenerico(config) {
-    const nome = document.getElementById("nomeCliente_" + config.sufixo).value.trim();
-    const telFormulario = document.getElementById("telCliente_" + config.sufixo).value.trim();
-    const vendedor = document.getElementById("nomeVendedor_" + config.sufixo).value.trim();
-    const telVendedor = document.getElementById("telVendedor_" + config.sufixo).value.trim();
-    
-    if(!nome || !telFormulario) { 
-        alert("Erro: Nome e Telefone do cliente são obrigatórios!"); 
-        return; 
-    }
-    
-    const dadosComerciais = config.funcaoCalculo();
-    const dataHoje = new Date();
-    const dataValidade = new Date();
-    dataValidade.setDate(dataHoje.getDate() + 10);
-    
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    
-    canvas.width = 600; 
-    canvas.height = 860;
-    ctx.fillStyle = "#ffffff"; 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    try {
-        let maxAlturaLogo = 50;
-        let larguraOriginal = objImgMinha.naturalWidth || objImgMinha.width || 150;
-        let alturaOriginal = objImgMinha.naturalHeight || objImgMinha.height || 55;
-        let proporcaoLogo = larguraOriginal / alturaOriginal; 
-        let larguraCalculada = maxAlturaLogo * proporcaoLogo; 
-        if(larguraCalculada > 220) { 
-            larguraCalculada = 220; 
-            maxAlturaLogo = larguraCalculada / proporcaoLogo; 
+/* ==========================================================================
+   LÓGICA ESPECÍFICA: ABA MÃO DE TORCIDA
+   ========================================================================== */
+function carregarMenusMao() {
+    const modeloSel = document.getElementById("selectModeloMao");
+    if(modeloSel) {
+        modeloSel.innerHTML = '';
+        if(databaseMao.modelosMao) {
+            databaseMao.modelosMao.forEach((mod) => {
+                let opt = document.createElement("option");
+                opt.value = mod.id; opt.text = mod.nome; 
+                modeloSel.add(opt);
+            });
         }
-        ctx.drawImage(objImgMinha, 35, 30, larguraCalculada, maxAlturaLogo); 
-    } catch(e){}
-
-    const numeroFinal = config.funcaoNumero();
-    ctx.fillStyle = "#333333";
-    ctx.font = "bold 14px Arial";
-    ctx.textAlign = "right";
-    ctx.fillText("ORÇAMENTO Nº " + numeroFinal, 565, 60);
-
-    ctx.textAlign = "left";
-    ctx.strokeStyle = "#0056b3"; 
-    ctx.lineWidth = 2; 
-    ctx.beginPath(); 
-    ctx.moveTo(35, 95); 
-    ctx.lineTo(565, 95); 
-    ctx.stroke();
-    
-    ctx.fillStyle = "#0056b3"; 
-    ctx.font = "bold 15px Arial"; 
-    ctx.fillText(config.tituloProposta, 35, 130);
-    
-    desenharCaixaPdf(ctx, 35, 150, 530, 65, "Dados do Cliente");
-    ctx.fillStyle = "#333333"; 
-    ctx.font = "12px Arial";
-    ctx.fillText("Nome / Razão Social: " + nome, 50, 185); 
-    ctx.fillText("Telefone: " + telFormulario, 50, 203);
-    desenharCaixaPdf(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
-    ctx.fillStyle = "#333333"; 
-    ctx.font = "bold 11px Arial"; 
-    ctx.fillText(config.labelModelo, 50, 270); 
-    ctx.font = "11px Arial";
-    
-    let detalhesTexto = dadosComerciais.detalhesBase;
-    let partes = detalhesTexto.split(" | ");
-    ctx.fillText("• " + partes.slice(0, 4).join(" | "), 50, 290);
-    if(partes.length > 4) ctx.fillText("• " + partes.slice(4).join(" | "), 50, 306);
-    
-    ctx.font = "bold 11px Arial"; 
-    ctx.fillText(config.labelMontagem, 50, 324); 
-    ctx.font = "11px Arial";
-    ctx.fillText(config.textoLinhaInsumos(dadosComerciais), 50, 338);
-    
-    desenharCaixaPdf(ctx, 35, 360, 530, 70, "Resumo Financeiro");
-    ctx.fillStyle = "#333333"; 
-    ctx.font = "12px Arial";
-    ctx.fillText("Quantidade Solicitada: " + dadosComerciais.qtd + " unidades", 50, 395); 
-    ctx.fillText("Preço Unitário Médio de Venda: " + formatarMoeda(dadosComerciais.custoUnitario), 50, 415);
-    
-    ctx.fillStyle = "#0056b3"; 
-    ctx.font = "bold 14px Arial"; 
-    ctx.textAlign = "right"; 
-    ctx.fillText("TOTAL DA PROPOSTA: " + formatarMoeda(dadosComerciais.total), 550, 410);
-    
-    ctx.fillStyle = "#f0f7ff"; 
-    ctx.fillRect(35, 450, 530, 135); 
-    ctx.strokeStyle = "#0056b3"; 
-    ctx.lineWidth = 1; 
-    ctx.strokeRect(35, 450, 530, 135);
-    
-    ctx.fillStyle = "#0056b3"; 
-    ctx.font = "bold 11px Arial"; 
-    ctx.textAlign = "left"; 
-    ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
-    ctx.fillStyle = "#444444"; 
-    ctx.font = "11px Arial";
-    let startY = 495; 
-    const maxTextWidth = 510; 
-    const lineSpacing = 16;
-    
-    startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
-    startY = wrapText(ctx, "• Forma de Pagamento: 50% de entrada na aprovação do pedido e 50% restante para 21 dias após a entrega.", 45, startY, maxTextWidth, lineSpacing);
-    startY = wrapText(ctx, "• Prazo de Produção: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.", 45, startY, maxTextWidth, lineSpacing);
-    wrapText(ctx, "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB).", 45, startY, maxTextWidth, lineSpacing);
-
-    let nomeAssinaturaVendedor = vendedor || 'Equipe Comercial Comvil';
-    ctx.fillStyle = "#777777"; 
-    ctx.font = "10px Arial"; 
-    ctx.textAlign = "center"; 
-    ctx.fillText("Documento emitido por: " + nomeAssinaturaVendedor + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
-    
-    ctx.strokeStyle = "#dddddd"; 
-    ctx.lineWidth = 0.5; 
-    ctx.beginPath(); 
-    ctx.moveTo(35, 635); 
-    ctx.lineTo(565, 635); 
-    ctx.stroke();
-    
-    ctx.fillStyle = "#0056b3"; 
-    ctx.font = "bold 11px Arial"; 
-    ctx.textAlign = "center"; 
-    ctx.fillText("COMVIL BRINDES", 300, 665);
-    
-    ctx.fillStyle = "#555555"; 
-    ctx.font = "10px Arial";
-    ctx.fillText("CNPJ: 36.206.286/0001-03  |  ✉️ comvil@comvil.com.br", 300, 685);
-    
-    let stringTelefones = "☎️ Fixo: 11 3461-0813  |  📱 WhatsApp: 11 97024-3064";
-    if (telVendedor) stringTelefones += `  |  📞 Vendedor: ${telVendedor}`;
-    ctx.fillText(stringTelefones, 300, 703);
-    const novaAba = window.open("", "_blank");
-    if (novaAba) {
-        const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
-        const nomeArquivo = `Orcamento_${config.prefixoArquivo}_${numeroFinal}_${nome.replace(/\s+/g, '_')}.jpg`;
-        const telefoneLimpo = telFormulario.replace(/\D/g, "");
-        let assinaturaMensagem = vendedor ? vendedor.trim() : "Comvil Brindes";
-        const msgTextoFormatado = `Olá, segue o orçamento solicitado. Att, ${assinaturaMensagem}.`;
-        const textoInjetado = encodeURIComponent(msgTextoFormatado);
-
-        novaAba.document.write(`
-            <html>
-            <head>
-                <title>Exportar Orçamento</title>
-                <style>
-                    body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial, sans-serif; padding: 20px 0; }
-                    img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,0.5); background:white; margin-bottom: 20px; }
-                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; }
-                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
-                    .btn-download:hover { background: #004085; }
-                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
-                    .btn-whatsapp:hover { background: #128C7E; }
-                </style>
-            </head>
-            <body>
-                <img src="${dataUrl}" />
-                <div class="btn-container">
-                    <a href="${dataUrl}" download="${nomeArquivo}" class="btn-download">Baixar Imagem</a>
-                    <a href="https://whatsapp.com{telefoneLimpo}&text=${textoInjetado}" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>
-                </div>
-            </body>
-            </html>
-        `);
-        novaAba.document.close();
+    }
+    const corSel = document.getElementById("selectCorEva");
+    if(corSel) {
+        corSel.innerHTML = '';
+        if(databaseMao.coresEva) {
+            databaseMao.coresEva.forEach((cor) => {
+                let opt = document.createElement("option");
+                opt.value = cor.nome; opt.text = cor.nome; // Vincula ao formato de objetos [{nome, preco}]
+                corSel.add(opt);
+            });
+        }
     }
 }
+
+function verificarQuantidadeVariavel(select) {
+    const campoManual = document.getElementById("campoQtdVariavel");
+    if(campoManual) campoManual.style.display = (select.value === "Variavel") ? "flex" : "none";
+}
+function calcularValoresAtuaisMao() {
+    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
+    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
+    const nomeCorEvaSelected = document.getElementById("selectCorEva").value;
+    const selectQtd = document.getElementById("selectQuantidade").value;
+    
+    let qtd = 100;
+    if (selectQtd === "Variavel") {
+        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
+    } else {
+        qtd = parseInt(selectQtd);
+    
 function abrirImagemNovaAbaSacola() {
     exportarOrcamentoGenerico({
         sufixo: "sacola",
@@ -638,7 +527,7 @@ function abrirImagemNovaAbaMao() {
         funcaoCalculo: calcularValoresAtuaisMao,
         funcaoNumero: obterNumeroIdentificadorMao,
         textoLinhaInsumos: function(d) {
-            return "• Tipo de Encaixe: " + d.tipoEncaixe + "  |  • Cor do E.V.A: " + d.corEva;
+            return "• Tipo de Encaixe: " + d.tipoEncaixe + "  |  • Cor/Estampa: " + d.corEva;
         }
     });
 }
