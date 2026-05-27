@@ -29,7 +29,6 @@
         .tab-content.active { display: block; }
         
         .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 25px; background: white; width: 100%; }
-        
         /* FORMULÁRIOS ADAPTÁVEIS COM GRID */
         h2 { font-size: 14px; margin: 20px 0 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px; }
@@ -46,6 +45,7 @@
         .botoes-container { display: flex; gap: 15px; margin-top: 15px; width: 100%; }
         .btn-exportar { flex: 1; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; height: 42px; transition: background 0.2s; }
         .btn-exportar:hover { background: #004085; }
+        
         /* ÁREA DE PREVIEW RESPONSIVA */
         .area-orcamento { background: #ffffff; border: 1px solid #ddd; padding: 20px; margin-top: 15px; color: #333; border-radius: 6px; display: none; width: 100%; word-wrap: break-word; }
         .logos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #0056b3; padding-bottom: 15px; gap: 15px; }
@@ -89,7 +89,6 @@
                 <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente_sacola" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" required></div>
                 <div class="field"><label>E-mail</label><input type="email" id="emailCliente_sacola" placeholder="email@exemplo.com"></div>
             </div>
-
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Configuração do Produto Base *</label>
@@ -114,6 +113,7 @@
                     </select>
                 </div>
             </div>
+
             <div class="row">
                 <div class="field">
                     <label>Tipo de Cordão / Alça *</label>
@@ -165,7 +165,6 @@
             </div>
         </div>
     </div>
-
     <!-- ABA MÃO -->
     <div id="tab-mao" class="tab-content">
         <div class="box-conteudo">
@@ -178,6 +177,7 @@
                 <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente_mao" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" required></div>
                 <div class="field"><label>E-mail</label><input type="email" id="emailCliente_mao" placeholder="email@exemplo.com"></div>
             </div>
+
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Modelo Comercial *</label>
@@ -251,8 +251,10 @@
         </div>
     </div>
 </div>
-
 <script>
+/* ==========================================================================
+   BANCOS DE DADOS E CARREGAMENTO UNIFICADO (DADOS.JSON)
+   ========================================================================== */
 let databaseSacola = { produtosConfigurados: [], cordoes: [], quantidades: [], valoresAcabamento: null };
 let databaseMao = { logoEmpresa: "", modelosMao: [], coresEva: [], valorStartMao: 0 };
 
@@ -315,6 +317,7 @@ window.onload = function() {
             carregarMenusMao(); 
         });
 };
+
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.substring(0, 11);
@@ -328,7 +331,9 @@ function mascaraTelefone(input) {
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
-
+/* ==========================================================================
+   LÓGICA DA ABA SACOLA
+   ========================================================================== */
 function carregarMenusSacola() {
     const produtoSel = document.getElementById("selectProdutoConfigurado_sacola");
     if(produtoSel) {
@@ -429,72 +434,6 @@ function gerarVisualizacaoTelaSacola() {
     document.getElementById("area-orcamento_sacola").style.display = "block";
     document.getElementById("bloco-resultado_sacola").style.display = "block";
 }
-
-function carregarMenusMao() {
-    const modeloSel = document.getElementById("selectModeloMao");
-    if(modeloSel) {
-        modeloSel.innerHTML = '';
-        if(databaseMao.modelosMao) {
-            databaseMao.modelosMao.forEach((mod) => {
-                let opt = document.createElement("option");
-                opt.value = mod.id; opt.text = mod.nome; 
-                modeloSel.add(opt);
-            });
-        }
-    }
-    const corSel = document.getElementById("selectCorEva");
-    if(corSel) {
-        corSel.innerHTML = '';
-        if(databaseMao.coresEva) {
-            databaseMao.coresEva.forEach((cor) => {
-                let opt = document.createElement("option");
-                opt.value = cor.nome; opt.text = cor.nome; 
-                corSel.add(opt);
-            });
-        }
-    }
-}
-
-function verificarQuantidadeVariavel(select) {
-    const campoManual = document.getElementById("campoQtdVariavel");
-    campoManual.style.display = (select.value === "Variavel") ? "flex" : "none";
-}
-
-function calcularValoresAtuaisMao() {
-    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
-    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
-    const nomeCorEvaSelected = document.getElementById("selectCorEva").value;
-    const selectQtd = document.getElementById("selectQuantidade").value;
-    
-    let qtd = 100;
-    if (selectQtd === "Variavel") {
-        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
-    } else {
-        qtd = parseInt(selectQtd);
-    }
-
-    let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
-    let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
-    let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
-    
-    let corEncontrada = databaseMao.coresEva.find(c => c.nome === nomeCorEvaSelected);
-    let precoAdicionalCor = corEncontrada ? parseFloat(corEncontrada.preco || 0) : 0;
-    
-    let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
-    
-    let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
-    let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1;
-    let insumoComEncaixe = somaInsumosUnitarios * multiplicadorEncaixe;
-    
-    let custoTotalFinalDoLote = (insumoComEncaixe * qtd) + startLoteFixo;
-    let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70; 
-    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
-    
-    return { 
-        custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, 
-        detalhesBase, tipoEncaixe, corEva: nomeCorEvaSelected
-    };
-}
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     let words = text.split(' '); let line = ''; let currentY = y;
     for (let n = 0; n < words.length; n++) {
@@ -578,6 +517,9 @@ function exportarOrcamentoGenerico(config) {
     
     ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135); ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
     ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left"; ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
+/* ==========================================================================
+   PARTE 8 DE 9 (Termos, Rodapé Centralizado no JPG e Configuração da Nova Aba)
+   ========================================================================== */
     ctx.fillStyle = "#444444"; ctx.font = "11px Arial";
     let startY = 495; const maxTextWidth = 510; const lineSpacing = 16;
     startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
@@ -589,6 +531,7 @@ function exportarOrcamentoGenerico(config) {
     ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; ctx.textAlign = "center"; 
     ctx.fillText("Documento emitido por: " + nomeAssinaturaVendedor + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
     
+    // RODAPÉ DO JPG RIGOROSAMENTE CENTRALIZADO (X = 300)
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
     ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center"; ctx.fillText("COMVIL BRINDES", 300, 665);
     ctx.fillStyle = "#555555"; ctx.font = "10px Arial"; ctx.fillText("CNPJ: 36.206.286/0001-03  |  ✉️ comvil@comvil.com.br", 300, 685);
@@ -633,6 +576,9 @@ function exportarOrcamentoGenerico(config) {
     }
 }
 
+/* ==========================================================================
+   PARTE 9 DE 9 (Ações de Disparo, Auxiliares do PDF/Abas e Fechamento)
+   ========================================================================== */
 function abrirImagemNovaAbaSacola() {
     exportarOrcamentoGenerico({
         sufixo: "sacola",
@@ -668,7 +614,7 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
     ctx.fillStyle = "#777777"; ctx.font = "bold 9px Arial"; ctx.textAlign = "left";
     ctx.fillText(titulo.toUpperCase(), x + 15, y + 18);
-    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
+    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); stroke();
 }
 
 function switchTab(e, idConteudo) {
