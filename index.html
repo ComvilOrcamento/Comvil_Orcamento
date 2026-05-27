@@ -471,10 +471,8 @@ function calcularValoresAtuaisMao() {
     let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
     
     let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
-    
     let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1;
     let insumoComEncaixe = somaInsumosUnitarios * multiplicadorEncaixe;
-    
     let custoTotalFinalDoLote = (insumoComEncaixe * qtd) + startLoteFixo;
     
     let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70; 
@@ -624,18 +622,22 @@ function exportarOrcamentoGenerico(config) {
     startY = wrapText(ctx, "• Prazo de Produção: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.", 45, startY, maxTextWidth, lineSpacing);
     wrapText(ctx, "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB).", 45, startY, maxTextWidth, lineSpacing);
 
+    // FIX DEFINITIVO MOBILE: Força o reset de alinhamento e calcula o centro matemático exato (X = 300)
+    ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
+    
+    ctx.textAlign = "center";
     let nomeAssinaturaVendedor = vendedor || 'Equipe Comercial Comvil';
-    ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; ctx.textAlign = "center"; 
+    ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; 
     ctx.fillText("Documento emitido por: " + nomeAssinaturaVendedor + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
     
-    // BLINDADO E CORRIGIDO: RODAPÉ DO JPG RIGOROSAMENTE CENTRALIZADO (X = 300)
-    ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
-    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center"; ctx.fillText("COMVIL BRINDES", 300, 665);
+    ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.fillText("COMVIL BRINDES", 300, 665);
     ctx.fillStyle = "#555555"; ctx.font = "10px Arial"; ctx.fillText("CNPJ: 36.206.286/0001-03  |  ✉️ comvil@comvil.com.br", 300, 685);
     
     let stringTelefones = "☎️ Fixo: 11 3461-0813  |  📱 WhatsApp: 11 97024-3064";
     if (telVendedor) stringTelefones += `  |  📞 Vendedor: ${telVendedor}`;
     ctx.fillText(stringTelefones, 300, 703);
+    
+    ctx.textAlign = "left"; // Limpa o estado para desenhos subsequentes
 
     const novaAba = window.open("", "_blank");
     if (novaAba) {
