@@ -469,7 +469,6 @@ function atualizarTaxaQuantidadeMao() {
     }
     document.getElementById("taxaOcultaQuantidadeMao").value = taxaEncontrada;
 }
-
 function calcularValoresAtuaisMao() {
     const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
     const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
@@ -492,18 +491,25 @@ function calcularValoresAtuaisMao() {
     
     let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
     
-    // ATRIBUIÇÃO DA TAXA EXTRA DO CAMPO OCULTO DETERMINADA PELO JSON
+    // Captura a taxa extra por quantidade vinda de forma oculta do dados.json
     let taxaQuantidadeAdicional = parseFloat(document.getElementById("taxaOcultaQuantidadeMao").value || 0);
     
-    // Modelo + Cor + Taxa Oculta por Quantidade
-    let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor + taxaQuantidadeAdicional;
+    // REGRA NOVA: (Modelo + Cor)
+    let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
     
-    let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1;
-    let insumoComEncaixe = somaInsumosUnitarios * multiplicadorEncaixe;
+    // REGRA NOVA: * quantidade
+    let subtotalTiragem = somaInsumosUnitarios * qtd;
     
-    let custoTotalFinalDoLote = (insumoComEncaixe * qtd) + startLoteFixo;
+    // REGRA NOVA: * Argola (1.5) e Luva (2)
+    let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1.5;
+    let subtotalComEncaixe = subtotalTiragem * multiplicadorEncaixe;
     
+    // REGRA NOVA: + extra + start = Custo total de fabricação do lote
+    let custoTotalFinalDoLote = subtotalComEncaixe + taxaQuantidadeAdicional + startLoteFixo;
+    
+    // REGRA NOVA: + 70% de lucro em cima do custo total
     let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70; 
+    
     let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
     
     return { 
@@ -511,32 +517,11 @@ function calcularValoresAtuaisMao() {
         detalhesBase, tipoEncaixe, corEva: nomeCorEvaSelected
     };
 }
-
 function obterNumeroIdentificadorMao() {
     if(numeroOrcamentoMao) return numeroOrcamentoMao;
     const d = new Date();
     numeroOrcamentoMao = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
     return numeroOrcamentoMao;
-}
-function gerarVisualizacaoTelaSacola() {
-    const nome = document.getElementById("nomeCliente_sacola").value.trim();
-    const tel = document.getElementById("telCliente_sacola").value.trim();
-    if(!nome || !tel) { alert("Erro: Nome e Telefone são obrigatórios!"); return; }
-    
-    const dCom = calcularValoresAtuaisSacola();
-    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
-    const numeroFinal = obterNumeroIdentificadorSacola();
-    
-    document.getElementById("preview-numeracao-topo_sacola").innerText = "Nº " + numeroFinal;
-    document.getElementById("text-dados-cliente_sacola").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto_sacola").innerHTML = `<strong>Base:</strong> ${dCom.detalhesBase}<br><strong>Cores:</strong> ${dCom.corSelecionada} | <strong>Ilhós:</strong> ${dCom.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dCom.nomeCordao} | <strong>Furo Laço:</strong> ${dCom.temFuroLaco ? 'Sim' : 'Não'}`;
-    document.getElementById("text-dados-financeiro_sacola").innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
-    
-    let textoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape_sacola").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
-
-    document.getElementById("area-orcamento_sacola").style.display = "block";
-    document.getElementById("bloco-resultado_sacola").style.display = "block";
 }
 
 function gerarVisualizacaoTelaMao() {
@@ -573,7 +558,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, currentY);
     return currentY + lineHeight;
 }
-
 function exportarOrcamentoGenerico(config) {
     const nome = document.getElementById("nomeCliente_" + config.sufixo).value.trim();
     const telFormulario = document.getElementById("telCliente_" + config.sufixo).value.trim();
@@ -642,7 +626,6 @@ function exportarOrcamentoGenerico(config) {
     
     ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135); ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
     ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left"; ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
-
     ctx.fillStyle = "#444444"; ctx.font = "11px Arial";
     let startY = 495; const maxTextWidth = 510; const lineSpacing = 16;
     startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
@@ -650,6 +633,7 @@ function exportarOrcamentoGenerico(config) {
     startY = wrapText(ctx, "• Prazo de Produção: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.", 45, startY, maxTextWidth, lineSpacing);
     wrapText(ctx, "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB).", 45, startY, maxTextWidth, lineSpacing);
 
+    // TRAVA CRÍTICA MOBILE: Força alinhamento centralizado no rodapé (X = 300)
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
     
     ctx.textAlign = "center";
@@ -664,8 +648,7 @@ function exportarOrcamentoGenerico(config) {
     if (telVendedor) stringTelefones += `  |  📞 Vendedor: ${telVendedor}`;
     ctx.fillText(stringTelefones, 300, 703);
     
-    ctx.textAlign = "left";
-
+    ctx.textAlign = "left"; // Restaura contexto base
     const novaAba = window.open("", "_blank");
     if (novaAba) {
         const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
@@ -701,7 +684,6 @@ function exportarOrcamentoGenerico(config) {
         novaAba.document.close();
     }
 }
-
 function abrirImagemNovaAbaSacola() {
     exportarOrcamentoGenerico({
         sufixo: "sacola", tituloProposta: "PROPOSTA COMERCIAL DE EMBALAGENS", prefixoArquivo: "Sacola",
