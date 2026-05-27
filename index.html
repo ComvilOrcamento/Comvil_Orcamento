@@ -13,47 +13,58 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: var(--bg-light); padding: 30px; display: flex; justify-content: center; }
+        body { background-color: var(--bg-light); padding: 15px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
 
-        .orcamento-box { background: white; width: 100%; max-width: 750px; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { font-size: 24px; color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; }
+        /* CAIXA PRINCIPAL CENTRALIZADA E RESPONSIVA */
+        .orcamento-box { background: white; width: 100%; max-width: 750px; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 0 auto; }
+        h1 { font-size: 24px; color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; text-align: center; }
 
-        /* ABAS */
-        .tabs { display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; }
-        .tab-btn { padding: 12px 24px; border: 1px solid #cbd5e1; border-radius: 6px 6px 0 0; background: #f8fafc; cursor: pointer; font-weight: bold; color: var(--text-muted); margin-bottom: -2px; }
+        /* ABAS AJUSTADAS PARA CELULAR */
+        .tabs { display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; width: 100%; justify-content: center; }
+        .tab-btn { flex: 1; max-width: 150px; text-align: center; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px 6px 0 0; background: #f8fafc; cursor: pointer; font-weight: bold; color: var(--text-muted); margin-bottom: -2px; font-size: 14px; transition: all 0.2s; }
         .tab-btn.active { background: white; color: var(--primary); border-bottom-color: transparent; position: relative; z-index: 2; }
 
         /* CONTEÚDOS */
-        .tab-content { display: none; }
+        .tab-content { display: none; width: 100%; }
         .tab-content.active { display: block; }
         
-        .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 30px; background: white; }
+        .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 25px; background: white; width: 100%; }
         
-        /* FORMULÁRIOS */
-        h2 { font-size: 14px; margin: 15px 0 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-        .row { display: flex; gap: 15px; margin-bottom: 12px; }
-        .field { flex: 1; display: flex; flex-direction: column; }
-        label { font-size: 11px; margin-bottom: 4px; color: #555; }
+        /* FORMULÁRIOS ADAPTÁVEIS COM GRID */
+        h2 { font-size: 14px; margin: 20px 0 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px; }
+        .field { display: flex; flex-direction: column; min-width: 0; }
+        label { font-size: 11px; margin-bottom: 4px; color: #555; font-weight: bold; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; outline: none; background: #fff; height: 38px; }
         
         input:focus, select:focus { border-color: #0056b3; }
         input[readonly] { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; cursor: not-allowed; }
         
-        .btn-principal { width: 100%; background: #003366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; margin: 15px 0; }
+        .btn-principal { width: 100%; background: #003366; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; margin: 20px 0 10px 0; transition: background 0.2s; }
         .btn-principal:hover { background: #002244; }
         
         .botoes-container { display: flex; gap: 15px; margin-top: 15px; width: 100%; }
-        .btn-exportar { flex: 1; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; height: 42px; }
+        .btn-exportar { flex: 1; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; height: 42px; transition: background 0.2s; }
         .btn-exportar:hover { background: #004085; }
-        
-        .area-orcamento { background: #ffffff; border: 1px solid #ddd; padding: 25px; margin-top: 15px; color: #333; border-radius: 6px; display: none; }
+        /* ÁREA DE PREVIEW RESPONSIVA */
+        .area-orcamento { background: #ffffff; border: 1px solid #ddd; padding: 20px; margin-top: 15px; color: #333; border-radius: 6px; display: none; width: 100%; word-wrap: break-word; }
         .logos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #0056b3; padding-bottom: 15px; gap: 15px; }
-        .logo-box { flex: 1; display: flex; align-items: center; }
+        .logo-box { display: flex; align-items: center; }
         .logo-box img { max-height: 55px; max-width: 150px; object-fit: contain; display: block; }
         .secao-preview { margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 6px; border-left: 3px solid #0056b3; font-size: 13px; line-height: 1.5; }
         .preview-titulo { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #777; margin-bottom: 5px; }
         
-        .rodape-contato-preview { margin-top: 15px; border: 1px solid #dddddd; padding: 12px; border-radius: 6px; background-color: #fafafa; text-align: center; font-size: 11px; color: #555555; line-height: 1.5; }
+        .rodape-contato-preview { margin-top: 15px; border: 1px solid #dddddd; padding: 12px; border-radius: 6px; background-color: #fafafa; text-align: center; font-size: 11px; color: #555555; line-height: 1.5; word-break: break-word; }
+
+        /* AJUSTES CRÍTICOS PARA CELULARES */
+        @media (max-width: 550px) {
+            body { padding: 10px; }
+            .orcamento-box { padding: 15px; }
+            .row { grid-template-columns: 1fr; gap: 12px; }
+            .logos-header { flex-direction: column; text-align: center; gap: 12px; }
+            .logo-box { justify-content: center; width: 100%; }
+            #preview-numeracao-topo_sacola, #preview-numeracao-topo_mao { text-align: center; width: 100%; font-size: 14px; }
+        }
     </style>
 </head>
 <body>
@@ -65,6 +76,7 @@
         <button class="tab-btn active" onclick="switchTab(event, 'tab-sacola')">Sacola</button>
         <button class="tab-btn" onclick="switchTab(event, 'tab-mao')">Mão</button>
     </div>
+
     <!-- ABA SACOLA -->
     <div id="tab-sacola" class="tab-content active">
         <div class="box-conteudo">
@@ -102,7 +114,6 @@
                     </select>
                 </div>
             </div>
-            
             <div class="row">
                 <div class="field">
                     <label>Tipo de Cordão / Alça *</label>
@@ -142,7 +153,7 @@
                         <div class="logo-box"><img id="img-minha-preview_sacola" src="logo-empresa.png" onerror="this.src='https://placehold.co'"></div>
                         <div id="preview-numeracao-topo_sacola" style="font-size: 14px; font-weight: bold; color: #333;"></div>
                     </div>
-                    <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase;">Pré-visualização Interna</div>
+                    <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase; text-align: center;">Pré-visualização Interna</div>
                     <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente_sacola"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto_sacola"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro_sacola"></div></div>
@@ -167,7 +178,6 @@
                 <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente_mao" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" required></div>
                 <div class="field"><label>E-mail</label><input type="email" id="emailCliente_mao" placeholder="email@exemplo.com"></div>
             </div>
-
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Modelo Comercial *</label>
@@ -228,7 +238,7 @@
                         <div class="logo-box"><img id="img-minha-preview_mao" src="logo-empresa.png" onerror="this.src='https://placehold.co'"></div>
                         <div id="preview-numeracao-topo_mao" style="font-size: 14px; font-weight: bold; color: #333;"></div>
                     </div>
-                    <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase;">Pré-visualização Interna</div>
+                    <div style="font-size:15px; font-weight:bold; color:#0056b3; margin-bottom:15px; text-transform:uppercase; text-align: center;">Pré-visualização Interna</div>
                     <div class="secao-preview"><div class="preview-titulo">Dados do Formulário</div><div id="text-dados-cliente_mao"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Especificações do Pedido</div><div id="text-dados-produto_mao"></div></div>
                     <div class="secao-preview"><div class="preview-titulo">Financeiro</div><div id="text-dados-financeiro_mao"></div></div>
@@ -241,10 +251,8 @@
         </div>
     </div>
 </div>
+
 <script>
-/* ==========================================================================
-   BANCOS DE DADOS E CARREGAMENTO UNIFICADO (DADOS.JSON)
-   ========================================================================== */
 let databaseSacola = { produtosConfigurados: [], cordoes: [], quantidades: [], valoresAcabamento: null };
 let databaseMao = { logoEmpresa: "", modelosMao: [], coresEva: [], valorStartMao: 0 };
 
@@ -307,7 +315,6 @@ window.onload = function() {
             carregarMenusMao(); 
         });
 };
-
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.substring(0, 11);
@@ -321,9 +328,7 @@ function mascaraTelefone(input) {
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
-/* ==========================================================================
-   LÓGICA DA ABA SACOLA
-   ========================================================================== */
+
 function carregarMenusSacola() {
     const produtoSel = document.getElementById("selectProdutoConfigurado_sacola");
     if(produtoSel) {
@@ -424,9 +429,7 @@ function gerarVisualizacaoTelaSacola() {
     document.getElementById("area-orcamento_sacola").style.display = "block";
     document.getElementById("bloco-resultado_sacola").style.display = "block";
 }
-/* ==========================================================================
-   LÓGICA DA ABA MÃO DE TORCIDA (ADAPTADA AO PRECO COR EM OBJETO)
-   ========================================================================== */
+
 function carregarMenusMao() {
     const modeloSel = document.getElementById("selectModeloMao");
     if(modeloSel) {
@@ -479,20 +482,12 @@ function calcularValoresAtuaisMao() {
     
     let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
     
-    // 1. Soma Base (Modelo + Cor)
     let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
-    
-    // 2. Aplica o multiplicador do Encaixe (*2 se Luva, *1 se Argola)
     let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1;
     let insumoComEncaixe = somaInsumosUnitarios * multiplicadorEncaixe;
     
-    // 3. Custo final de fabricação do lote (com o Start Fixo)
     let custoTotalFinalDoLote = (insumoComEncaixe * qtd) + startLoteFixo;
-    
-    // 4. Aplica os 70% de margem de lucro no lote total
     let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70; 
-    
-    // 5. Divide o total de venda pela quantidade para achar o valor unitário
     let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
     
     return { 
@@ -500,35 +495,6 @@ function calcularValoresAtuaisMao() {
         detalhesBase, tipoEncaixe, corEva: nomeCorEvaSelected
     };
 }
-
-function obterNumeroIdentificadorMao() {
-    if(numeroOrcamentoMao) return numeroOrcamentoMao;
-    const d = new Date();
-    numeroOrcamentoMao = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
-    return numeroOrcamentoMao;
-}
-
-function gerarVisualizacaoTelaMao() {
-    const nome = document.getElementById("nomeCliente_mao").value.trim();
-    const tel = document.getElementById("telCliente_mao").value.trim();
-    if(!nome || !tel) { alert("Erro: Nome e Telefone são obrigatórios!"); return; }
-    
-    const dCom = calcularValoresAtuaisMao();
-    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
-    const numeroFinal = obterNumeroIdentificadorMao();
-    
-    document.getElementById("preview-numeracao-topo_mao").innerText = "Nº " + numeroFinal;
-    document.getElementById("text-dados-cliente_mao").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto_mao").innerHTML = `<strong>Modelo:</strong> ${dCom.detalhesBase}<br><strong>Encaixe:</strong> ${dCom.tipoEncaixe} | <strong>Cor/Estampa:</strong> ${dCom.corEva}`;
-    document.getElementById("text-dados-financeiro_mao").innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
-    
-    let textoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape_mao").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
-
-    document.getElementById("area-orcamento_mao").style.display = "block";
-    document.getElementById("bloco-resultado_mao").style.display = "block";
-}
-
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     let words = text.split(' '); let line = ''; let currentY = y;
     for (let n = 0; n < words.length; n++) {
@@ -542,6 +508,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, currentY);
     return currentY + lineHeight;
 }
+
 function exportarOrcamentoGenerico(config) {
     const nome = document.getElementById("nomeCliente_" + config.sufixo).value.trim();
     const telFormulario = document.getElementById("telCliente_" + config.sufixo).value.trim();
@@ -611,7 +578,6 @@ function exportarOrcamentoGenerico(config) {
     
     ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135); ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
     ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left"; ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
-    
     ctx.fillStyle = "#444444"; ctx.font = "11px Arial";
     let startY = 495; const maxTextWidth = 510; const lineSpacing = 16;
     startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
@@ -647,10 +613,10 @@ function exportarOrcamentoGenerico(config) {
                 <style>
                     body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial, sans-serif; padding: 20px 0; }
                     img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,0.5); background:white; margin-bottom: 20px; }
-                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; }
-                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
+                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; padding: 0 10px; }
+                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; text-align: center; }
                     .btn-download:hover { background: #004085; }
-                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; }
+                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; text-align: center; }
                     .btn-whatsapp:hover { background: #128C7E; }
                 </style>
             </head>
@@ -666,6 +632,7 @@ function exportarOrcamentoGenerico(config) {
         novaAba.document.close();
     }
 }
+
 function abrirImagemNovaAbaSacola() {
     exportarOrcamentoGenerico({
         sufixo: "sacola",
