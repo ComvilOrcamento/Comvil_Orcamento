@@ -67,27 +67,27 @@
     {
       "id": 1,
       "nome": "Mão tipo Nº1",
-      "precoBase": 1.11
+      "precoBase": 1.12
     },
     {
       "id": 2,
       "nome": "Mão do Rock",
-      "precoBase": 2
+      "precoBase": 1.73
     },
     {
       "id": 4,
       "nome": "Mão dedo do meio",
-      "precoBase": 3
+      "precoBase": 2.6
     },
     {
       "id": 5,
       "nome": "Mão Aberta",
-      "precoBase": 2
+      "precoBase": 1.74
     },
     {
       "id": 6,
       "nome": "Mão V",
-      "precoBase": 2
+      "precoBase": 1.72
     }
   ],
   "coresEva": [
@@ -105,12 +105,22 @@
     },
     {
       "nome": "4 cores",
-      "preco": 0.9
+      "preco": 0.6
     },
     {
       "nome": "Cromia ( Papel )",
-      "preco": 2.2
+      "preco": 2.25
     }
   ],
-  "valorStartMao": 300
+  "valorStartMao": 470,
+  "taxasQuantidade": {
+    "100": 8,
+    "200": 16,
+    "300": 24,
+    "500": 40,
+    "1000": 80,
+    "2000": 160,
+    "5000": 400,
+    "Variavel": 0
+  }
 }
