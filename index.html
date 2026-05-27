@@ -29,6 +29,7 @@
         .tab-content.active { display: block; }
         
         .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 25px; background: white; width: 100%; }
+        
         /* FORMULÁRIOS ADAPTÁVEIS COM GRID */
         h2 { font-size: 14px; margin: 20px 0 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px; }
@@ -76,7 +77,6 @@
         <button class="tab-btn active" onclick="switchTab(event, 'tab-sacola')">Sacola</button>
         <button class="tab-btn" onclick="switchTab(event, 'tab-mao')">Mão</button>
     </div>
-
     <!-- ABA SACOLA -->
     <div id="tab-sacola" class="tab-content active">
         <div class="box-conteudo">
@@ -89,6 +89,7 @@
                 <div class="field"><label>Telefone / WhatsApp *</label><input type="text" id="telCliente_sacola" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" required></div>
                 <div class="field"><label>E-mail</label><input type="email" id="emailCliente_sacola" placeholder="email@exemplo.com"></div>
             </div>
+
             <h2>Itens do orçamento</h2>
             <div class="field" style="margin-bottom: 12px;">
                 <label>Configuração do Produto Base *</label>
@@ -414,6 +415,83 @@ function obterNumeroIdentificadorSacola() {
     return numeroOrcamentoSacola;
 }
 
+/* ==========================================================================
+   LÓGICA DA ABA MÃO DE TORCIDA
+   ========================================================================== */
+function carregarMenusMao() {
+    const modeloSel = document.getElementById("selectModeloMao");
+    if(modeloSel) {
+        modeloSel.innerHTML = '';
+        if(databaseMao.modelosMao) {
+            databaseMao.modelosMao.forEach((mod) => {
+                let opt = document.createElement("option");
+                opt.value = mod.id; opt.text = mod.nome; 
+                modeloSel.add(opt);
+            });
+        }
+    }
+    const corSel = document.getElementById("selectCorEva");
+    if(corSel) {
+        corSel.innerHTML = '';
+        if(databaseMao.coresEva) {
+            databaseMao.coresEva.forEach((cor) => {
+                let opt = document.createElement("option");
+                opt.value = cor.nome; opt.text = cor.nome; 
+                corSel.add(opt);
+            });
+        }
+    }
+}
+
+function verificarQuantidadeVariavel(select) {
+    const campoManual = document.getElementById("campoQtdVariavel");
+    campoManual.style.display = (select.value === "Variavel") ? "flex" : "none";
+}
+
+function calcularValoresAtuaisMao() {
+    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
+    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
+    const nomeCorEvaSelected = document.getElementById("selectCorEva").value;
+    const selectQtd = document.getElementById("selectQuantidade").value;
+    
+    let qtd = 100;
+    if (selectQtd === "Variavel") {
+        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
+    } else {
+        qtd = parseInt(selectQtd);
+    }
+
+    let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
+    let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
+    let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
+    
+    let corEncontrada = databaseMao.coresEva.find(c => c.nome === nomeCorEvaSelected);
+    let precoAdicionalCor = corEncontrada ? parseFloat(corEncontrada.preco || 0) : 0;
+    
+    let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
+    
+    let somaInsumosUnitarios = precoModeloBase + precoAdicionalCor;
+    
+    let multiplicadorEncaixe = (tipoEncaixe === "Luva") ? 2 : 1;
+    let insumoComEncaixe = somaInsumosUnitarios * multiplicadorEncaixe;
+    
+    let custoTotalFinalDoLote = (insumoComEncaixe * qtd) + startLoteFixo;
+    
+    let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70; 
+    let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
+    
+    return { 
+        custoUnitario: precoUnitarioDeVenda, qtd, total: totalLoteComMargemLucro, 
+        detalhesBase, tipoEncaixe, corEva: nomeCorEvaSelected
+    };
+}
+
+function obterNumeroIdentificadorMao() {
+    if(numeroOrcamentoMao) return numeroOrcamentoMao;
+    const d = new Date();
+    numeroOrcamentoMao = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    return numeroOrcamentoMao;
+}
 function gerarVisualizacaoTelaSacola() {
     const nome = document.getElementById("nomeCliente_sacola").value.trim();
     const tel = document.getElementById("telCliente_sacola").value.trim();
@@ -434,6 +512,28 @@ function gerarVisualizacaoTelaSacola() {
     document.getElementById("area-orcamento_sacola").style.display = "block";
     document.getElementById("bloco-resultado_sacola").style.display = "block";
 }
+
+function gerarVisualizacaoTelaMao() {
+    const nome = document.getElementById("nomeCliente_mao").value.trim();
+    const tel = document.getElementById("telCliente_mao").value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone são obrigatórios!"); return; }
+    
+    const dCom = calcularValoresAtuaisMao();
+    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
+    const numeroFinal = obterNumeroIdentificadorMao();
+    
+    document.getElementById("preview-numeracao-topo_mao").innerText = "Nº " + numeroFinal;
+    document.getElementById("text-dados-cliente_mao").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    document.getElementById("text-dados-produto_mao").innerHTML = `<strong>Modelo:</strong> ${dCom.detalhesBase}<br><strong>Encaixe:</strong> ${dCom.tipoEncaixe} | <strong>Cor/Estampa:</strong> ${dCom.corEva}`;
+    document.getElementById("text-dados-financeiro_mao").innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
+    
+    let textoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
+    document.getElementById("preview-contato-rodape_mao").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
+
+    document.getElementById("area-orcamento_mao").style.display = "block";
+    document.getElementById("bloco-resultado_mao").style.display = "block";
+}
+
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     let words = text.split(' '); let line = ''; let currentY = y;
     for (let n = 0; n < words.length; n++) {
@@ -495,7 +595,6 @@ function exportarOrcamentoGenerico(config) {
     ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
     ctx.fillText("Nome / Razão Social: " + nome, 50, 185); 
     ctx.fillText("Telefone: " + telFormulario, 50, 203);
-    
     desenharCaixaPdf(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
     ctx.fillStyle = "#333333"; ctx.font = "bold 11px Arial"; ctx.fillText(config.labelModelo, 50, 270); ctx.font = "11px Arial";
     
@@ -517,9 +616,7 @@ function exportarOrcamentoGenerico(config) {
     
     ctx.fillStyle = "#f0f7ff"; ctx.fillRect(35, 450, 530, 135); ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 1; ctx.strokeRect(35, 450, 530, 135);
     ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "left"; ctx.fillText("⚠️ CONDIÇÕES COMERCIAIS DE CONTRATAÇÃO", 45, 472);
-/* ==========================================================================
-   PARTE 8 DE 9 (Termos, Rodapé Centralizado no JPG e Configuração da Nova Aba)
-   ========================================================================== */
+
     ctx.fillStyle = "#444444"; ctx.font = "11px Arial";
     let startY = 495; const maxTextWidth = 510; const lineSpacing = 16;
     startY = wrapText(ctx, "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").", 45, startY, maxTextWidth, lineSpacing);
@@ -531,7 +628,7 @@ function exportarOrcamentoGenerico(config) {
     ctx.fillStyle = "#777777"; ctx.font = "10px Arial"; ctx.textAlign = "center"; 
     ctx.fillText("Documento emitido por: " + nomeAssinaturaVendedor + " em " + dataHoje.toLocaleDateString('pt-BR'), 300, 615);
     
-    // RODAPÉ DO JPG RIGOROSAMENTE CENTRALIZADO (X = 300)
+    // BLINDADO E CORRIGIDO: RODAPÉ DO JPG RIGOROSAMENTE CENTRALIZADO (X = 300)
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
     ctx.fillStyle = "#0056b3"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center"; ctx.fillText("COMVIL BRINDES", 300, 665);
     ctx.fillStyle = "#555555"; ctx.font = "10px Arial"; ctx.fillText("CNPJ: 36.206.286/0001-03  |  ✉️ comvil@comvil.com.br", 300, 685);
@@ -549,45 +646,38 @@ function exportarOrcamentoGenerico(config) {
         const msgTextoFormatado = `Olá, segue o orçamento solicitado. Att, ${assinaturaMensagem}.`;
         const textoInjetado = encodeURIComponent(msgTextoFormatado);
 
-        novaAba.document.write(`
-            <html>
-            <head>
-                <title>Exportar Orçamento</title>
-                <style>
-                    body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial, sans-serif; padding: 20px 0; }
-                    img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,0.5); background:white; margin-bottom: 20px; }
-                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; padding: 0 10px; }
-                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; text-align: center; }
-                    .btn-download:hover { background: #004085; }
-                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; text-align: center; }
-                    .btn-whatsapp:hover { background: #128C7E; }
-                </style>
-            </head>
-            <body>
-                <img src="${dataUrl}" />
-                <div class="btn-container">
-                    <a href="${dataUrl}" download="${nomeArquivo}" class="btn-download">Baixar Imagem</a>
-                    <a href="https://whatsapp.com{telefoneLimpo}&text=${textoInjetado}" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>
-                </div>
-            </body>
-            </html>
-        `);
+        novaAba.document.write('\
+            <html>\
+            <head>\
+                <title>Exportar Orçamento</title>\
+                <style>\
+                    body { margin:0; background:#333; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; font-family:Arial, sans-serif; padding: 20px 0; }\
+                    img { max-width:95%; max-height:85vh; box-shadow:0 5px 25px rgba(0,0,0,0.5); background:white; margin-bottom: 20px; }\
+                    .btn-container { width: 100%; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; padding: 0 10px; }\
+                    .btn-download { background: #0056b3; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; text-align: center; }\
+                    .btn-download:hover { background: #004085; }\
+                    .btn-whatsapp { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background 0.2s; text-align: center; }\
+                    .btn-whatsapp:hover { background: #128C7E; }\
+                </style>\
+            </head>\
+            <body>\
+                <img src="' + dataUrl + '" />\
+                <div class="btn-container">\
+                    <a href="' + dataUrl + '" download="' + nomeArquivo + '" class="btn-download">Baixar Imagem</a>\
+                    <a href="https://whatsapp.com' + telefoneLimpo + '&text=' + textoInjetado + '" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>\
+                </div>\
+            </body>\
+            </html>\
+        ');
         novaAba.document.close();
     }
 }
 
-/* ==========================================================================
-   PARTE 9 DE 9 (Ações de Disparo, Auxiliares do PDF/Abas e Fechamento)
-   ========================================================================== */
 function abrirImagemNovaAbaSacola() {
     exportarOrcamentoGenerico({
-        sufixo: "sacola",
-        tituloProposta: "PROPOSTA COMERCIAL DE EMBALAGENS",
-        prefixoArquivo: "Sacola",
-        labelModelo: "Modelo base de fábrica:",
-        labelMontagem: "Especificações de montagem e impressão:",
-        funcaoCalculo: calcularValoresAtuaisSacola,
-        funcaoNumero: obterNumeroIdentificadorSacola,
+        sufixo: "sacola", tituloProposta: "PROPOSTA COMERCIAL DE EMBALAGENS", prefixoArquivo: "Sacola",
+        labelModelo: "Modelo base de fábrica:", labelMontagem: "Especificações de montagem e impressão:",
+        funcaoCalculo: calcularValoresAtuaisSacola, funcaoNumero: obterNumeroIdentificadorSacola,
         textoLinhaInsumos: function(d) {
             return "• Cores: " + d.corSelecionada + "  |  • Ilhós: " + (d.temIlhos ? "Sim" : "Não") + "  |  • Alça: " + d.nomeCordao + "  |  • Furo Laço: " + (d.temFuroLaco ? "Sim" : "Não");
         }
@@ -596,13 +686,9 @@ function abrirImagemNovaAbaSacola() {
 
 function abrirImagemNovaAbaMao() {
     exportarOrcamentoGenerico({
-        sufixo: "mao",
-        tituloProposta: "PROPOSTA COMERCIAL DE EMBALAGENS E BRINDES",
-        prefixoArquivo: "Mao",
-        labelModelo: "Modelo base de fábrica:",
-        labelMontagem: "Especificações de montagem e estampa:",
-        funcaoCalculo: calcularValoresAtuaisMao,
-        funcaoNumero: obterNumeroIdentificadorMao,
+        sufixo: "mao", tituloProposta: "PROPOSTA COMERCIAL DE EMBALAGENS E BRINDES", prefixoArquivo: "Mao",
+        labelModelo: "Modelo base de fábrica:", labelMontagem: "Especificações de montagem e estampa:",
+        funcaoCalculo: calcularValoresAtuaisMao, funcaoNumero: obterNumeroIdentificadorMao,
         textoLinhaInsumos: function(d) {
             return "• Tipo de Encaixe: " + d.tipoEncaixe + "  |  • Cor/Estampa: " + d.corEva;
         }
@@ -614,7 +700,7 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
     ctx.fillStyle = "#777777"; ctx.font = "bold 9px Arial"; ctx.textAlign = "left";
     ctx.fillText(titulo.toUpperCase(), x + 15, y + 18);
-    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); stroke();
+    ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
 }
 
 function switchTab(e, idConteudo) {
