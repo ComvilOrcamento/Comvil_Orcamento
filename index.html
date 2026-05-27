@@ -271,13 +271,14 @@ let objImgMinha = new Image();
 objImgMinha.src = "logo-empresa.png";
 objImgMinha.onerror = function() { objImgMinha.src = "https://placehold.co"; };
 
+// CORREÇÃO: Preenchida a propriedade "quantidades" que estava vazia e quebrava o script
 const bancoReservaSacola = {
   "produtosConfigurados": [
     { "id": 2, "nomeCompleto": "05 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.68 },
     { "id": 6, "nomeCompleto": "1 Sacolas 17x18x8 - Offset 180g - sem revestimento", "precoBase": 0.64 }
   ],
   "cordoes": [{ "nome": "Nylon", "preco": 0.2 }, { "nome": "Gorgurão", "preco": 0.28 }],
-  "quantidades": [500, 1000, 2000, 3000, 4000, 5000],
+  "quantidades": [500, 1000, 2000, 3000, 5000],
   "valoresAcabamento": { "ilhos": 0.2, "furoLaco": 0.1, "cores": { "1x0": 450, "2x0": 480, "4x0": 560, "4x1": 590 } }
 };
 
@@ -326,7 +327,6 @@ window.onload = function() {
             atualizarTaxaQuantidadeMao();
         });
 };
-
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.substring(0, 11);
@@ -340,6 +340,7 @@ function mascaraTelefone(input) {
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
+
 /* ==========================================================================
    LÓGICA DA ABA SACOLA
    ========================================================================== */
@@ -377,7 +378,6 @@ function carregarMenusSacola() {
         }
     }
 }
-
 function calcularValoresAtuaisSacola() {
     const idProdutoSelected = parseInt(document.getElementById("selectProdutoConfigurado_sacola").value);
     const nomeCordaoSelected = document.getElementById("selectCordao_sacola").value;
@@ -421,6 +421,27 @@ function obterNumeroIdentificadorSacola() {
     const d = new Date();
     numeroOrcamentoSacola = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
     return numeroOrcamentoSacola;
+}
+
+function gerarVisualizacaoTelaSacola() {
+    const nome = document.getElementById("nomeCliente_sacola").value.trim();
+    const tel = document.getElementById("telCliente_sacola").value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone são obrigatórios!"); return; }
+    
+    const dCom = calcularValoresAtuaisSacola();
+    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
+    const numeroFinal = obterNumeroIdentificadorSacola();
+    
+    document.getElementById("preview-numeracao-topo_sacola").innerText = "Nº " + numeroFinal;
+    document.getElementById("text-dados-cliente_sacola").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    document.getElementById("text-dados-produto_sacola").innerHTML = `<strong>Base:</strong> ${dCom.detalhesBase}<br><strong>Cores:</strong> ${dCom.corSelecionada} | <strong>Ilhós:</strong> ${dCom.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dCom.nomeCordao} | <strong>Furo Laço:</strong> ${dCom.temFuroLaco ? 'Sim' : 'Não'}`;
+    document.getElementById("text-dados-financeiro_sacola").innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
+    
+    let textoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
+    document.getElementById("preview-contato-rodape_sacola").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
+
+    document.getElementById("area-orcamento_sacola").style.display = "block";
+    document.getElementById("bloco-resultado_sacola").style.display = "block";
 }
 
 /* ==========================================================================
