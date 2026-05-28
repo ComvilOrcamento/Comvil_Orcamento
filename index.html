@@ -285,20 +285,22 @@
             padding: 20px;
         }
 
+        /* PROPORÇÕES: Layout expandido para 1350px */
         .container {
             display: flex;
             width: 100%;
-            max-width: 1150px;
+            max-width: 1350px;
             gap: 30px;
-            align-items: center;
+            align-items: stretch;
         }
 
+        /* ALTERAÇÃO: "LINHA MAIOR" -> Coluna esquerda alargada */
         .form-container {
             background-color: #ffffff;
-            padding: 30px 25px;
+            padding: 20px 22px; /* DIMINUIR: Compactado */
             border-radius: 12px;
-            width: 42%;
-            min-width: 350px;
+            width: 46%; 
+            min-width: 380px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             max-height: 95vh;
             overflow-y: auto;
@@ -306,15 +308,15 @@
 
         h2 {
             color: #003366;
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
+            margin-bottom: 18px; /* DIMINUIR */
+            padding-bottom: 8px;
             border-bottom: 1px solid #eaeaea;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 12px; /* DIMINUIR */
         }
 
         label {
@@ -322,17 +324,16 @@
             font-size: 11px;
             font-weight: 600;
             color: #555555;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
-
         select {
             width: 100%;
-            padding: 12px;
+            padding: 10px; /* DIMINUIR */
             border: 1px solid #cccccc;
             border-radius: 6px;
             background-color: #ffffff;
             color: #333333;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -340,6 +341,7 @@
             background-position: right 12px center;
             background-size: 14px;
         }
+
         .papel-triplo-wrapper {
             display: flex;
             gap: 10px;
@@ -366,7 +368,7 @@
             -webkit-appearance: none;
             border: 1px solid #cccccc;
             width: 100%;
-            height: 42px;
+            height: 38px; /* DIMINUIR */
             border-radius: 6px;
             cursor: pointer;
             background: none;
@@ -378,7 +380,7 @@
 
         .btn-kraft {
             width: 33.33%;
-            height: 42px;
+            height: 38px; /* DIMINUIR */
             background-color: #c2a67a;
             color: #ffffff;
             border: none;
@@ -391,13 +393,12 @@
 
         .btn-kraft:hover { background-color: #b09468; }
         .btn-kraft.active { border: 2px solid #003366; background-color: #9e8257; }
-
         .cordao-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            gap: 6px;
+            gap: 5px; /* DIMINUIR */
             background-color: #f8fafc;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             border: 1px solid #e2e8f0;
         }
@@ -415,7 +416,7 @@
 
         input[type="range"] {
             width: 100%;
-            height: 6px;
+            height: 5px; /* DIMINUIR */
             background: #e2e8f0;
             border-radius: 4px;
             outline: none;
@@ -429,7 +430,7 @@
             align-items: center;
             border: 1px solid #cccccc;
             border-radius: 6px;
-            padding: 6px;
+            padding: 5px;
             background-color: #ffffff;
             overflow: hidden;
         }
@@ -447,14 +448,14 @@
         .btn-file {
             background-color: #efefef;
             border: 1px solid #dddddd;
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 12px;
             pointer-events: none;
         }
 
         .file-text {
-            font-size: 13px;
+            font-size: 12px;
             color: #666666;
             margin-left: 10px;
             white-space: nowrap;
@@ -465,13 +466,13 @@
         .btn-action {
             width: 100%;
             border: none;
-            padding: 13px;
-            font-size: 14px;
+            padding: 11px; /* DIMINUIR */
+            font-size: 13.5px;
             font-weight: 700;
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s;
-            margin-top: 12px;
+            margin-top: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -485,24 +486,26 @@
         .btn-download:hover { background-color: #002244; }
         .btn-download:disabled { background-color: #bdc3c7; cursor: not-allowed; }
 
+        /* ALTERAÇÃO: "AUMENTAR QUADRO IMG" -> Tela de preview expandida */
         .preview-container {
             flex-grow: 1;
-            padding: 10px;
+            width: 54%; 
+            padding: 0px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 450px;
         }
 
         .preview-box {
             width: 100%;
+            height: 100%; 
             display: flex;
             justify-content: center;
             align-items: center;
             background: #e8e8e8; 
             border-radius: 16px;
-            padding: 20px;
+            padding: 25px; 
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02);
             border: 1px solid rgba(226, 232, 240, 0.8);
@@ -511,6 +514,7 @@
 
         canvas {
             max-width: 100%;
+            max-height: 80vh; 
             height: auto !important;
             object-fit: contain;
             display: block;
@@ -520,15 +524,16 @@
         .hint-text {
             font-size: 11px;
             color: #888888;
-            margin-top: 15px;
+            margin-top: 12px;
             font-weight: 500;
             text-align: center;
         }
 
         @media (max-width: 820px) {
             .container { flex-direction: column; gap: 20px; }
-            .form-container { width: 100%; max-height: none; }
+            .form-container { width: 100%; max-height: none; min-width: 100%; }
             .preview-container { width: 100%; min-height: auto; }
+            .preview-box { height: auto; min-height: 400px; }
         }
     </style>
 </head>
@@ -671,7 +676,6 @@
                 elCordaoGrid.appendChild(box);
             });
         }
-
         function criarCamadaColorida(imgMascara, corHex) {
             const buffer = document.createElement('canvas');
             buffer.width = canvas.width;
@@ -728,8 +732,6 @@
                 let giroManualRad = (parseFloat(elLogoGiro.value) * Math.PI) / 180;
                 ctx.rotate(giroManualRad);
 
-                // CORREÇÃO VISUAL: Sinal invertido de positivo para NEGATIVO (-0.200) no Skew X.
-                // Isso muda a direção da inclinação superior, deitando a arte perfeitamente para a DIREITA.
                 if (elModelo.value === 'horizontal') {
                     ctx.transform(1, 0, -0.200, 1, 0, 0); 
                 } else {
@@ -930,7 +932,10 @@
             renderizarGradeCordoes();
             carregarArquivosDoServidor();
         });
-    </script>            
+    </script>
+
+            <!-- FIM ABA MOCKUP SACOLA -->
+            
             <h2>Configurações do Mockup</h2>
             <p style="font-size: 13px; color: #555;">Insira aqui os inputs e lógica da sua nova aba.</p>
             
