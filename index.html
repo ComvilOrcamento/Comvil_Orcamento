@@ -263,6 +263,7 @@
         <div class="box-conteudo">
             
             <!-- COLE O SEU CÓDIGO DA NOVA ABA EXATAMENTE AQUI DENTRO -->
+            
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -293,25 +294,16 @@
             align-items: stretch;
         }
 
-        /* CONFIGURAÇÃO: "MENOR" -> Coluna de formulários reduzida para 35% */
+        /* CORREÇÃO: Coluna esquerda reduzida em mais 15% (De 35% para 20%) */
         .form-container {
             background-color: #ffffff;
             padding: 20px 22px;
             border-radius: 12px;
-            width: 35%; 
-            min-width: 320px;
+            width: 20%; 
+            min-width: 280px; /* Reduzido o mínimo para permitir o encolhimento visual */
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             max-height: 95vh;
             overflow-y: auto;
-        }
-
-        h2 {
-            color: #003366;
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eaeaea;
         }
 
         .form-group {
@@ -485,10 +477,10 @@
         .btn-download:hover { background-color: #002244; }
         .btn-download:disabled { background-color: #bdc3c7; cursor: not-allowed; }
 
-        /* CONFIGURAÇÃO: "MAIOR" -> Quadro de visualização expandido para 65% */
+        /* CORREÇÃO: Coluna direita expandida compensando os 15% tirados da esquerda (De 65% para 80%) */
         .preview-container {
             flex-grow: 1;
-            width: 65%; 
+            width: 80%; 
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -542,9 +534,9 @@
 </head>
 <body>
     <div class="container">
-        <!-- COLUNA DA ESQUERDA: APENAS CONFIGURAÇÕES (MENOR) -->
+        <!-- COLUNA DA ESQUERDA: APENAS CONFIGURAÇÕES (REDUZIDA) -->
         <div class="form-container">
-            <h2>Mockup de Sacola</h2>
+            <!-- REMOVIDO: TÍTULO MOCKUP DE SACOLA DAQUI -->
             <form id="mockupForm">
                 <div class="form-group">
                     <label for="modelo">Variação *</label>
@@ -593,15 +585,15 @@
                     <input type="range" id="logo-giro" min="-15" max="15" value="0" step="0.5">
                 </div>
             </form>
+            <!-- REMOVIDO: BLOCO CONFIGURAÇÕES DO MOCKUP DAQUI -->
         </div>
 
-        <!-- COLUNA DA DIREITA: CANVAS E BOTÕES (MAIOR) -->
+        <!-- COLUNA DA DIREITA: CANVAS E BOTÕES (ALARGADA) -->
         <div class="preview-container">
             <div class="preview-box">
                 <canvas id="mockupCanvas"></canvas>
             </div>
             
-            <!-- CONFIGURAÇÃO: "MUDAR DE LUGAR" -> Botões realocados sob o mockup -->
             <div class="preview-buttons-wrapper">
                 <button type="button" id="btnGenerateJPEG" class="btn-action btn-generate">⚙️ Gerar Mockup (JPEG)</button>
                 <button type="button" id="btnDownloadLayout" class="btn-action btn-download" disabled>💾 Descarregar Layout</button>
@@ -609,7 +601,6 @@
             </div>
         </div>
     </div>
-
     <script>
         const canvas = document.getElementById('mockupCanvas');
         const ctx = canvas.getContext('2d');
@@ -698,6 +689,7 @@
             }
             return buffer;
         }
+
         function processarETingirMockup(incluirRodape = false) {
             if (!imgBase.complete || imgBase.naturalWidth === 0) return;
 
@@ -758,7 +750,6 @@
             ctx.drawImage(imgBase, 0, 0);
             ctx.restore();
 
-            /* CONFIGURAÇÃO: Rodapé com elementos totalmente centralizados */
             if (incluirRodape) {
                 ctx.save();
                 ctx.fillStyle = "#e8e8e8";
@@ -792,7 +783,6 @@
                 ctx.restore();
             }
         }
-
         function resetarPosicaoLogoPadrao() {
             if (!imgBase.naturalWidth) return;
             if (elModelo.value === 'horizontal') {
@@ -803,6 +793,7 @@
                 logoY = imgBase.naturalHeight * 0.53;
             }
         }
+
         function carregarArquivosDoServidor() {
             const sentido = elModelo.value;
             let carregadas = 0;
@@ -907,7 +898,6 @@
 
         window.addEventListener('DOMContentLoaded', () => { renderizarGradeCordoes(); carregarArquivosDoServidor(); });
     </script>
-
 
             <!-- FIM ABA MOCKUP SACOLA -->
             
