@@ -212,6 +212,96 @@
       "id": 46,
       "nomeCompleto": "5 Sacolas 18x24x8 - Offset 180g - sem revestimento",
       "precoBase": 0.61
+    },
+    {
+      "id": 47,
+      "nomeCompleto": "05 Sacolas 18x24x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.48
+    },
+    {
+      "id": 48,
+      "nomeCompleto": "1 Sacolas 18x24x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.18
+    },
+    {
+      "id": 49,
+      "nomeCompleto": "2 Sacolas 18x24x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.11
+    },
+    {
+      "id": 50,
+      "nomeCompleto": "3 Sacolas 18x24x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.08
+    },
+    {
+      "id": 51,
+      "nomeCompleto": "4 Sacolas 18x24x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.07
+    },
+    {
+      "id": 52,
+      "nomeCompleto": "5 Sacolas 18x24x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.05
+    },
+    {
+      "id": 53,
+      "nomeCompleto": "05 Sacolas 18x24x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.7
+    },
+    {
+      "id": 54,
+      "nomeCompleto": "1 Sacolas 18x24x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.65
+    },
+    {
+      "id": 55,
+      "nomeCompleto": "2 Sacolas 18x24x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.64
+    },
+    {
+      "id": 56,
+      "nomeCompleto": "3 Sacolas 18x24x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.63
+    },
+    {
+      "id": 57,
+      "nomeCompleto": "4 Sacolas 18x24x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.62
+    },
+    {
+      "id": 58,
+      "nomeCompleto": "5 Sacolas 18x24x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.61
+    },
+    {
+      "id": 59,
+      "nomeCompleto": "05 Sacolas 18x24x8 - Duplex 190g - Plastificada",
+      "precoBase": 1.12
+    },
+    {
+      "id": 60,
+      "nomeCompleto": "1 Sacolas 18x24x8 - Duplex 190g - Plastificada",
+      "precoBase": 0.86
+    },
+    {
+      "id": 61,
+      "nomeCompleto": "2 Sacolas 18x24x8 - Duplex 190g - Plastificada",
+      "precoBase": 87
+    },
+    {
+      "id": 62,
+      "nomeCompleto": "3 Sacolas 18x24x8 - Duplex 190g - Plastificada",
+      "precoBase": 0.86
+    },
+    {
+      "id": 63,
+      "nomeCompleto": "4 Sacolas 18x24x8 - Duplex 190g - Plastificada",
+      "precoBase": 0.85
+    },
+    {
+      "id": 64,
+      "nomeCompleto": "5 Sacolas 18x24x8 - Duplex 190g - Plastificada",
+      "precoBase": 0.84
     }
   ],
   "cordoes": [
