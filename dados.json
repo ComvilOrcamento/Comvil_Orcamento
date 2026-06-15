@@ -92,6 +92,96 @@
       "id": 22,
       "nomeCompleto": "5 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
       "precoBase": 0.54
+    },
+    {
+      "id": 23,
+      "nomeCompleto": "05 Sacolas 17x18x8 - Duplex 190g - Plastificado",
+      "precoBase": 1.1
+    },
+    {
+      "id": 24,
+      "nomeCompleto": "1 Sacolas 17x18x8 - Duplex 190g - Plastificado",
+      "precoBase": 0.85
+    },
+    {
+      "id": 25,
+      "nomeCompleto": "2 Sacolas 17x18x8 - Duplex 190g - Plastificado",
+      "precoBase": 0.78
+    },
+    {
+      "id": 26,
+      "nomeCompleto": "3 Sacolas 17x18x8 - Duplex 190g - Plastificado",
+      "precoBase": 0.77
+    },
+    {
+      "id": 27,
+      "nomeCompleto": "4 Sacolas 17x18x8 - Duplex 190g - Plastificado",
+      "precoBase": 0.76
+    },
+    {
+      "id": 28,
+      "nomeCompleto": "5 Sacolas 17x18x8 - Duplex 190g - Plastificado",
+      "precoBase": 0.75
+    },
+    {
+      "id": 29,
+      "nomeCompleto": "05 Sacolas 17x18x8 - Duplex 190g - BOPP + Verniz",
+      "precoBase": 1.96
+    },
+    {
+      "id": 30,
+      "nomeCompleto": "1 Sacolas 17x18x8 - Duplex 190g - BOPP + Verniz",
+      "precoBase": 1.28
+    },
+    {
+      "id": 31,
+      "nomeCompleto": "2 Sacolas 17x18x8 - Duplex 190g - BOPP + Verniz",
+      "precoBase": 1.12
+    },
+    {
+      "id": 32,
+      "nomeCompleto": "3 Sacolas 17x18x8 - Duplex 190g - BOPP + Verniz",
+      "precoBase": 1.11
+    },
+    {
+      "id": 33,
+      "nomeCompleto": "4 Sacolas 17x18x8 - Duplex 190g - BOPP + Verniz",
+      "precoBase": 1.1
+    },
+    {
+      "id": 34,
+      "nomeCompleto": "5 Sacolas 17x18x8 - Duplex 190g - BOPP + Verniz",
+      "precoBase": 1.09
+    },
+    {
+      "id": 35,
+      "nomeCompleto": "05 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
+      "precoBase": 1.98
+    },
+    {
+      "id": 36,
+      "nomeCompleto": "1 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
+      "precoBase": 1.43
+    },
+    {
+      "id": 37,
+      "nomeCompleto": "2 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
+      "precoBase": 1.3
+    },
+    {
+      "id": 38,
+      "nomeCompleto": "3 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
+      "precoBase": 1.29
+    },
+    {
+      "id": 39,
+      "nomeCompleto": "4 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
+      "precoBase": 1.28
+    },
+    {
+      "id": 40,
+      "nomeCompleto": "5 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
+      "precoBase": 1.27
     }
   ],
   "cordoes": [
