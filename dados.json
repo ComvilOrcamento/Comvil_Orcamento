@@ -182,6 +182,36 @@
       "id": 40,
       "nomeCompleto": "5 Sacolas 17x18x8 - Duplex 190g - BOPP + Hot",
       "precoBase": 1.27
+    },
+    {
+      "id": 41,
+      "nomeCompleto": "05 Sacolas 18x24x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.7
+    },
+    {
+      "id": 42,
+      "nomeCompleto": "1 Sacolas 18x24x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.65
+    },
+    {
+      "id": 43,
+      "nomeCompleto": "2 Sacolas 18x24x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.64
+    },
+    {
+      "id": 44,
+      "nomeCompleto": "3 Sacolas 18x24x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.63
+    },
+    {
+      "id": 45,
+      "nomeCompleto": "4 Sacolas 18x24x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.62
+    },
+    {
+      "id": 46,
+      "nomeCompleto": "5 Sacolas 18x24x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.61
     }
   ],
   "cordoes": [
