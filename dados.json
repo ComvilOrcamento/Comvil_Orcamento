@@ -21,7 +21,7 @@
     {
       "id": 8,
       "nomeCompleto": "3 Sacolas 17x18x8 - Offset 180g - sem revestimento",
-      "precoBase": 0.55
+      "precoBase": 0.56
     },
     {
       "id": 9,
@@ -31,6 +31,66 @@
     {
       "id": 10,
       "nomeCompleto": "5 Sacolas 17x18x8 - Offset 180g - sem revestimento",
+      "precoBase": 0.54
+    },
+    {
+      "id": 11,
+      "nomeCompleto": "05 Sacolas 17x18x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.36
+    },
+    {
+      "id": 12,
+      "nomeCompleto": "1 Sacolas 17x18x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.17
+    },
+    {
+      "id": 13,
+      "nomeCompleto": "2 Sacolas 17x18x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.04
+    },
+    {
+      "id": 14,
+      "nomeCompleto": "3 Sacolas 17x18x8 - Offset 180g - Hotstamp",
+      "precoBase": 1.01
+    },
+    {
+      "id": 15,
+      "nomeCompleto": "4 Sacolas 17x18x8 - Offset 180g - Hotstamp",
+      "precoBase": 1
+    },
+    {
+      "id": 16,
+      "nomeCompleto": "5 Sacolas 17x18x8 - Offset 180g - Hotstamp",
+      "precoBase": 0.98
+    },
+    {
+      "id": 17,
+      "nomeCompleto": "05 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.68
+    },
+    {
+      "id": 18,
+      "nomeCompleto": "1 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.64
+    },
+    {
+      "id": 19,
+      "nomeCompleto": "2 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.57
+    },
+    {
+      "id": 20,
+      "nomeCompleto": "3 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.56
+    },
+    {
+      "id": 21,
+      "nomeCompleto": "4 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
+      "precoBase": 0.55
+    },
+    {
+      "id": 22,
+      "nomeCompleto": "5 Sacolas 17x18x8 - Duplex 190g - sem revestimento",
       "precoBase": 0.54
     }
   ],
@@ -126,38 +186,38 @@
   "zonasImpressao": {
     "vertical": {
       "tl": [
-        0.2719047619047619,
-        0.11095238095238096
+        0.26476190476190475,
+        0.10142857142857144
       ],
       "tr": [
-        0.7804761904761905,
-        0.13714285714285715
+        0.79,
+        0.13476190476190478
       ],
       "bl": [
-        0.3280952380952381,
-        0.8195238095238097
+        0.32571428571428573,
+        0.8361904761904763
       ],
       "br": [
-        0.7457142857142858,
-        0.6647619047619049
+        0.752857142857143,
+        0.6766666666666667
       ]
     },
     "horizontal": {
       "tl": [
-        0.1180952380952381,
-        0.1480952380952381
+        0.10857142857142857,
+        0.14571428571428574
       ],
       "tr": [
-        0.9166666666666666,
-        0.16333333333333333
+        0.9261904761904762,
+        0.16095238095238093
       ],
       "bl": [
-        0.18333333333333332,
-        0.7495238095238096
+        0.16904761904761906,
+        0.770952380952381
       ],
       "br": [
-        0.9247619047619047,
-        0.590952380952381
+        0.9295238095238094,
+        0.5933333333333334
       ]
     }
   }
