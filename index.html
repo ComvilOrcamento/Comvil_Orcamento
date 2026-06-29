@@ -24,9 +24,14 @@
         .tab-btn { flex: 1; min-width: 110px; max-width: 150px; text-align: center; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px 6px 0 0; background: #f8fafc; cursor: pointer; font-weight: bold; color: var(--text-muted); margin-bottom: -2px; font-size: 14px; transition: all 0.2s; }
         .tab-btn.active { background: white; color: var(--primary); border-bottom-color: transparent; position: relative; z-index: 2; }
 
+        /* SUB-ABAS DO PAINEL ADMIN */
+        .sub-tabs { display: flex; gap: 8px; margin: 15px 0 25px 0; border-bottom: 2px solid #e2e8f0; width: 100%; justify-content: flex-start; }
+        .sub-tab-btn { padding: 10px 18px; border: 1px solid #cbd5e1; border-bottom: none; border-radius: 6px 6px 0 0; background: #f8fafc; cursor: pointer; font-weight: bold; color: var(--text-muted); font-size: 13px; transition: all 0.2s; }
+        .sub-tab-btn.active { background: white; color: var(--secondary); border-color: #cbd5e1 #cbd5e1 transparent #cbd5e1; position: relative; margin-bottom: -2px; z-index: 2; }
+
         /* CONTEÚDOS */
-        .tab-content { display: none; width: 100%; }
-        .tab-content.active { display: block; }
+        .tab-content, .sub-tab-content { display: none; width: 100%; }
+        .tab-content.active, .sub-tab-content.active { display: block; }
         
         .box-conteudo { border: 1px solid #cbd5e1; border-radius: 8px; padding: 25px; background: white; width: 100%; }
         
@@ -39,14 +44,14 @@
         
         input:focus, select:focus { border-color: #0056b3; }
         input[readonly] { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; cursor: not-allowed; }
-        
+
         .btn-principal { width: 100%; background: #003366; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; margin: 20px 0 10px 0; transition: background 0.2s; }
         .btn-principal:hover { background: #002244; }
         
         .botoes-container { display: flex; gap: 15px; margin-top: 15px; width: 100%; }
         .btn-exportar { flex: 1; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; height: 42px; transition: background 0.2s; }
         .btn-exportar:hover { background: #004085; }
-        
+
         /* ÁREA DE PREVIEW RESPONSIVA */
         .area-orcamento { background: #ffffff; border: 1px solid #ddd; padding: 20px; margin-top: 15px; color: #333; border-radius: 6px; display: none; width: 100%; word-wrap: break-word; }
         .logos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #0056b3; padding-bottom: 15px; gap: 15px; }
@@ -100,14 +105,12 @@
 <body>
 <div class="orcamento-box">
     <h1>Comvil Orçamentos</h1>
-    
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab(event, 'tab-sacola')">Sacola</button>
         <button class="tab-btn" onclick="switchTab(event, 'tab-mao')">Mão</button>
         <button class="tab-btn" onclick="switchTab(event, 'tab-mockup')">Mockup Sacola</button>
         <button class="tab-btn" onclick="switchTab(event, 'tab-admin')">Painel Admin</button>
     </div>
-
     <!-- ABA SACOLA -->
     <div id="tab-sacola" class="tab-content active">
         <div class="box-conteudo">
@@ -138,11 +141,8 @@
                     </select>
                 </div>
                 <div class="field">
-                    <label>Acabamento com Ilhós *</label>
-                    <select id="selectIlhos_sacola">
-                        <option value="Não">Não</option>
-                        <option value="Sim">Sim</option>
-                    </select>
+                    <label>Quantidade Mínima *</label>
+                    <select id="qtd_sacola"></select>
                 </div>
             </div>
 
@@ -152,16 +152,45 @@
                     <select id="selectCordao_sacola"></select>
                 </div>
                 <div class="field">
-                    <label>Furo para Laço *</label>
-                    <select id="selectFuroLaco_sacola">
-                        <option value="Não">Não</option>
+                    <label>Acabamento com Ilhós *</label>
+                    <select id="selectIlhos_sacola">
+                        <option value="Não" selected>Não</option>
                         <option value="Sim">Sim</option>
                     </select>
                 </div>
             </div>
-            <div class="field" style="margin-bottom: 12px;">
-                <label>Quantidade Mínima *</label>
-                <select id="qtd_sacola"></select>
+
+            <div class="row">
+                <div class="field">
+                    <label>Furo para Laço *</label>
+                    <select id="selectFuroLaco_sacola">
+                        <option value="Não" selected>Não</option>
+                        <option value="Sim">Sim</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Enobrecimento</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding-top: 2px;">
+                        <label style="font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="eno_plastBrilho" style="width:14px; height:14px;"> Plastificação Brilho
+                        </label>
+                        <label style="font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="eno_plastFosca" style="width:14px; height:14px;"> Plastificação Fosca
+                        </label>
+                        <label style="font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="eno_hotstamp" style="width:14px; height:14px;"> Hotstamp
+                        </label>
+                        <label style="font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="eno_boppBrilho" style="width:14px; height:14px;"> BOPP Brilho
+                        </label>
+                        <label style="font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="eno_boppFosca" style="width:14px; height:14px;"> BOPP Fosca
+                        </label>
+                        <label style="font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="eno_verniz" style="width:14px; height:14px;"> Verniz
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <h2>Dados de Atendimento</h2>
@@ -196,7 +225,6 @@
             </div>
         </div>
     </div>
-
     <!-- ABA MÃO -->
     <div id="tab-mao" class="tab-content">
         <div class="box-conteudo">
@@ -228,7 +256,6 @@
                     <select id="selectCorEva"></select>
                 </div>
             </div>
-            
             <div class="row">
                 <div class="field">
                     <label>Quantidade Mínima *</label>
@@ -248,7 +275,7 @@
                     <input type="number" id="qtdManual" min="1" placeholder="Ex: 750" oninput="atualizarTaxaQuantidadeMao()">
                 </div>
             </div>
-
+            
             <input type="hidden" id="taxaOcultaQuantidadeMao" value="0">
 
             <h2>Dados de Atendimento</h2>
@@ -262,7 +289,6 @@
                     <input type="text" id="telVendedor_mao" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15">
                 </div>
             </div>
-
             <button class="btn-principal" onclick="gerarVisualizacaoTelaMao()">Gerar Orçamento</button>
 
             <div id="bloco-resultado_mao" style="display: none;">
@@ -283,7 +309,7 @@
             </div>
         </div>
     </div>
-    <!-- ABA MOCKUP SACOLA -->
+    <!-- ABA MOCKUP SACOLA (RESTAURADA E INDEPENDENTE) -->
     <div id="tab-mockup" class="tab-content">
         <div class="box-conteudo">
             <div style="display: flex; width: 100%; gap: 20px; flex-wrap: wrap;">
@@ -339,133 +365,177 @@
                     <div class="preview-buttons-wrapper">
                         <button type="button" id="btnGenerateJPEG" class="btn-action btn-generate">⚙️ Gerar Mockup (JPEG)</button>
                         <button type="button" id="btnDownloadLayout" class="btn-action btn-download" disabled>💾 Descarregar Layout</button>
-<span class="hint-text">💡 Arraste o logo pela sacola / Use a barra para ajustar o tamanho</span>
+                        <span class="hint-text">💡 Arraste o logo pela sacola / Use a barra para ajustar o tamanho</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- ABA PAINEL ADMIN -->
     <div id="tab-admin" class="tab-content">
         <div class="box-conteudo">
-            <div style="font-size: 15px; margin: 10px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração de Sacola Personalizada (Produto Base)</div>
-            <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
-                <div class="field" style="width: 60%;">
-                    <label style="font-size: 12px; font-weight: bold; color: #475569;">Nome Comercial Exibido no Menu</label>
-                    <input type="text" id="prodNome" placeholder="Ex: Sacola Offset 180g - 18x24x8">
-                </div>
-                <div class="field" style="width: 20%;">
-                    <label style="font-size: 12px; font-weight: bold; color: #475569;">Preço Base (R$)</label>
-                    <input type="number" id="prodPreco" min="0" step="0.01" placeholder="0.78">
-                </div>
-                <div class="field" style="width: 20%;">
-                    <button class="btn-principal" onclick="adicionarProdutoAdmin()" style="margin:0; height:38px; padding:0;">Add</button>
-                </div>
-            </div>
-            <div style="max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
-                <table id="tableProdutosAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Nome</th><th style="padding: 8px; text-align: left; width: 20%;">Preço</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração de Cordões / Alças</div>
-            <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
-                <div class="field" style="width: 60%;">
-                    <label style="font-size: 12px; font-weight: bold; color: #475569;">Tipo de Alça / Cordão</label>
-                    <input type="text" id="cordaoNomeAdmin" placeholder="Ex: Nylon, Gorgurão">
-                </div>
-                <div class="field" style="width: 20%;">
-                    <label style="font-size: 12px; font-weight: bold; color: #475569;">Preço (R$)</label>
-                    <input type="number" id="cordaoPrecoAdmin" min="0" step="0.01" placeholder="0.20">
-                </div>
-                <div class="field" style="width: 20%;">
-                    <button class="btn-principal" onclick="adicionarCordaoAdmin()" style="margin:0; height:38px; padding:0;">Add</button>
-                </div>
-            </div>
-            <div style="max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
-                <table id="tableCordoesAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Alça</th><th style="padding: 8px; text-align: left; width: 20%;">Preço</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            <div style="font-size: 16px; margin-bottom: 15px; color: #003366; font-weight: bold;">Painel Administrativo de Parâmetros</div>
+            
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" onclick="switchSubTab(event, 'admin-sacola')">Configurações Sacola</button>
+                <button class="sub-tab-btn" onclick="switchSubTab(event, 'admin-mao')">Configurações Mão</button>
             </div>
 
-            <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Custos de Acabamentos e Cores (Sacola)</div>
-            <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Ilhós?</label><select id="statusIlhosAdmin" onchange="toggleCustoCampoAdmin('statusIlhosAdmin', 'fixoIlhosAdmin')"><option value="sim">Sim</option><option value="nao">Não</option></select></div>
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Valor Ilhós</label><input type="number" id="fixoIlhosAdmin" step="0.01"></div>
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Furo?</label><select id="statusFuroAdmin" onchange="toggleCustoCampoAdmin('statusFuroAdmin', 'fixoFuroAdmin')"><option value="sim">Sim</option><option value="nao">Não</option></select></div>
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Valor Furo</label><input type="number" id="fixoFuroAdmin" step="0.01"></div>
-            </div>
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 1x0</label><input type="number" id="cor1x0Admin" step="0.01"></div>
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 2x0</label><input type="number" id="cor2x0Admin" step="0.01"></div>
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 4x0</label><input type="number" id="cor4x0Admin" step="0.01"></div>
-                <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 4x1</label><input type="number" id="cor4x1Admin" step="0.01"></div>
-            </div>
-            <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração Mão de Torcida (E.V.A.)</div>
-            <div class="field" style="margin-bottom: 12px;">
-                <label>Valor Start Lote Mão (R$)</label>
-                <input type="number" id="valorStartMaoAdmin" step="0.01">
-            </div>
-            <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
-                <div class="field" style="width: 60%;"><label>Modelo Mão</label><input type="text" id="maoNomeAdmin" placeholder="Ex: Modelo Rock"></div>
-                <div class="field" style="width: 20%;"><label>Preço</label><input type="number" id="maoPrecoAdmin" step="0.01"></div>
-                <div class="field" style="width: 20%;"><button class="btn-principal" onclick="adicionarModeloMaoAdmin()" style="margin:0; height:38px; padding:0;">Add</button></div>
-            </div>
-            <div style="max-height: 130px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
-                <table id="tableModelosMaoAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Modelo</th><th style="padding: 8px; text-align: left; width: 20%;">Preço</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+            <!-- SUB-ABA ADMIN: CONFIGURAÇÕES SACOLA -->
+            <div id="admin-sacola" class="sub-tab-content active">
+                <div style="font-size: 15px; margin: 10px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração de Sacola Personalizada (Produto Base)</div>
+                <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
+                    <div class="field" style="width: 50%;">
+                        <label style="font-size: 12px; font-weight: bold; color: #475569;">Nome Comercial Exibido no Menu</label>
+                        <input type="text" id="prodNome" placeholder="Ex: Sacola Offset 180g - 18x24x8">
+                    </div>
+                    <div class="field" style="width: 15%;">
+                        <label style="font-size: 12px; font-weight: bold; color: #475569;">Preço Base (R$)</label>
+                        <input type="number" id="prodPreco" min="0" step="0.01" placeholder="0.78">
+                    </div>
+                    <div class="field" style="width: 15%;">
+                        <label style="font-size: 12px; font-weight: bold; color: #475569;">M² Aberto</label>
+                        <input type="number" id="prodMetroQuadrado" min="0" step="0.0001" placeholder="0.1450">
+                    </div>
+                    <div class="field" style="width: 20%;">
+                        <button class="btn-principal" onclick="adicionarProdutoAdmin()" style="margin:0; height:38px; padding:0;">Add</button>
+                    </div>
+                </div>
+                <div style="max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
+                    <table id="tableProdutosAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th style="padding: 8px; text-align: left; width: 50%;">Nome</th>
+                                <th style="padding: 8px; text-align: left; width: 15%;">Preço</th>
+                                <th style="padding: 8px; text-align: left; width: 15%;">M² Aberto</th>
+                                <th style="padding: 8px; text-align: left; width: 20%;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração de Cordões / Alças</div>
+                <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
+                    <div class="field" style="width: 60%;">
+                        <label style="font-size: 12px; font-weight: bold; color: #475569;">Tipo de Alça / Cordão</label>
+                        <input type="text" id="cordaoNomeAdmin" placeholder="Ex: Nylon, Gorgurão">
+                    </div>
+                    <div class="field" style="width: 20%;">
+                        <label style="font-size: 12px; font-weight: bold; color: #475569;">Preço (R$)</label>
+                        <input type="number" id="cordaoPrecoAdmin" min="0" step="0.01" placeholder="0.20">
+                    </div>
+                    <div class="field" style="width: 20%;">
+                        <button class="btn-principal" onclick="adicionarCordaoAdmin()" style="margin:0; height:38px; padding:0;">Add</button>
+                    </div>
+                </div>
+                <div style="max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
+                    <table id="tableCordoesAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Alça</th><th style="padding: 8px; text-align: left; width: 20%;">Preço</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Custos de Acabamentos e Cores (Sacola)</div>
+                <div style="display: flex; gap: 15px; margin-bottom: 12px; flex-wrap: wrap; width: 100%;">
+                    <div class="field" style="flex: 1; min-width: 0;"><label>Valor Adicional de Ilhós (R$)</label><input type="number" id="fixoIlhosAdmin" step="0.01" placeholder="0.20"></div>
+                    <div class="field" style="flex: 1; min-width: 0;"><label>Valor Adicional de Furo (R$)</label><input type="number" id="fixoFuroAdmin" step="0.01" placeholder="0.15"></div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 1x0</label><input type="number" id="cor1x0Admin" step="0.01"></div>
+                    <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 2x0</label><input type="number" id="cor2x0Admin" step="0.01"></div>
+                    <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 4x0</label><input type="number" id="cor4x0Admin" step="0.01"></div>
+                    <div class="field" style="flex: 1; min-width: 110px;"><label>Custo 4x1</label><input type="number" id="cor4x1Admin" step="0.01"></div>
+                </div>
+                <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração das Taxas de Enobrecimento (Sacola)</div>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; font-weight: bold; font-size: 11px; color: #475569; text-transform: uppercase;">
+                        <div>Tipo de Enobrecimento</div><div>Valor por M² (R$)</div><div>Valor Fixo Lote (R$)</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center;">
+                        <label style="font-size:12px;">Plastificação Brilho</label><input type="number" id="enoPlastBrilhoM2" step="0.0001" placeholder="0.00"><input type="number" id="enoPlastBrilhoFixo" step="0.01" placeholder="0.00">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center;">
+                        <label style="font-size:12px;">Plastificação Fosca</label><input type="number" id="enoPlastFoscaM2" step="0.0001" placeholder="0.00"><input type="number" id="enoPlastFoscaFixo" step="0.01" placeholder="0.00">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center;">
+                        <label style="font-size:12px;">Hotstamp</label><input type="number" id="enoHotstampM2" step="0.0001" placeholder="0.00"><input type="number" id="enoHotstampFixo" step="0.01" placeholder="0.00">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center;">
+                        <label style="font-size:12px;">BOPP Brilho</label><input type="number" id="enoBoppBrilhoM2" step="0.0001" placeholder="0.00"><input type="number" id="enoBoppBrilhoFixo" step="0.01" placeholder="0.00">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center;">
+                        <label style="font-size:12px;">BOPP Fosca</label><input type="number" id="enoBoppFoscaM2" step="0.0001" placeholder="0.00"><input type="number" id="enoBoppFoscaFixo" step="0.01" placeholder="0.00">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: center;">
+                        <label style="font-size:12px;">Verniz</label><input type="number" id="enoVernizM2" step="0.0001" placeholder="0.00"><input type="number" id="enoVernizFixo" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
 
-            <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
-                <div class="field" style="width: 60%;"><label>Nome da Cor de Estampa</label><input type="text" id="evaCorNomeAdmin" placeholder="Ex: Vermelho"></div>
-                <div class="field" style="width: 20%;"><label>Preço Extra</label><input type="number" id="evaCorPrecoAdmin" step="0.01"></div>
-                <div class="field" style="width: 20%;"><button class="btn-principal" onclick="adicionarCorEvaAdmin()" style="margin:0; height:38px; padding:0;">Add</button></div>
-            </div>
-            <div style="max-height: 130px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
-                <table id="tableCoresEvaAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Cor</th><th style="padding: 8px; text-align: left; width: 20%;">Extra</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Taxas Adicionais por Lote (Mão)</div>
-            <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
-                <div class="field" style="width: 60%;">
-                    <label>Selecione o Lote</label>
-                    <select id="taxaMaoQtdAlvoAdmin">
-                        <option value="100">100 un</option><option value="200">200 un</option><option value="300">300 un</option>
-                        <option value="500">500 un</option><option value="1000">1000 un</option><option value="2000">2000 un</option>
-                        <option value="5000">5000 un</option><option value="Variavel">Variável</option>
+                <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Calibração da Zona de Impressão (Mockup)</div>
+                <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Arraste os 4 vértices sobre a imagem da sacola para definir a área imprimível de cada modelo.</div>
+                <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+                    <label style="font-size:12px; font-weight:bold; color:#475569;">Modelo:</label>
+                    <select id="adminZonaModelo" onchange="adminZonaCarregarModelo()" style="height:34px; font-size:13px; border:1px solid #ccc; border-radius:6px; padding:0 8px;">
+                        <option value="vertical">Vertical</option>
+                        <option value="horizontal">Horizontal</option>
                     </select>
                 </div>
-                <div class="field" style="width: 20%;"><label>Taxa (R$)</label><input type="number" id="taxaMaoValorAdmin" step="0.01"></div>
-                <div class="field" style="width: 20%;"><button class="btn-principal" onclick="atualizarObjetoTaxaMaoAdmin()" style="margin:0; height:38px; padding:0;">Definir</button></div>
+                <div style="width:100%; max-width:420px; margin:0 auto 12px auto; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+                    <canvas id="adminZonaCanvas" style="width:100%; display:block; cursor:crosshair; touch-action:none;"></canvas>
+                </div>
+                <button class="btn-principal" onclick="adminZonaSalvar()" style="margin:0 0 20px 0; background:#7c3aed;">Aplicar Zona ao Mockup</button>
             </div>
-            <div style="max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 25px;">
-                <table id="tableTaxasQuantidadeMaoAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Lote do Sistema</th><th style="padding: 8px; text-align: left; width: 20%;">Taxa</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            <!-- SUB-ABA ADMIN: CONFIGURAÇÕES MÃO -->
+            <div id="admin-mao" class="sub-tab-content">
+                <div style="font-size: 15px; margin: 10px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Configuração Mão de Torcida (E.V.A.)</div>
+                <div class="field" style="margin-bottom: 12px;">
+                    <label>Valor Start Lote Mão (R$)</label>
+                    <input type="number" id="valorStartMaoAdmin" step="0.01">
+                </div>
+                <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
+                    <div class="field" style="width: 60%;"><label>Modelo Mão</label><input type="text" id="maoNomeAdmin" placeholder="Ex: Modelo Rock"></div>
+                    <div class="field" style="width: 20%;"><label>Preço</label><input type="number" id="maoPrecoAdmin" step="0.01"></div>
+                    <div class="field" style="width: 20%;"><button class="btn-principal" onclick="adicionarModeloMaoAdmin()" style="margin:0; height:38px; padding:0;">Add</button></div>
+                </div>
+                <div style="max-height: 130px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
+                    <table id="tableModelosMaoAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Modelo</th><th style="padding: 8px; text-align: left; width: 20%;">Preço</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
+                    <div class="field" style="width: 60%;"><label>Nome da Cor de Estampa</label><input type="text" id="evaCorNomeAdmin" placeholder="Ex: Vermelho"></div>
+                    <div class="field" style="width: 20%;"><label>Preço Extra</label><input type="number" id="evaCorPrecoAdmin" step="0.01"></div>
+                    <div class="field" style="width: 20%;"><button class="btn-principal" onclick="adicionarCorEvaAdmin()" style="margin:0; height:38px; padding:0;">Add</button></div>
+                </div>
+                <div style="max-height: 130px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
+                    <table id="tableCoresEvaAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Cor</th><th style="padding: 8px; text-align: left; width: 20%;">Extra</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Taxas Adicionais por Lote (Mão)</div>
+                <div style="display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-end; width: 100%;">
+                    <div class="field" style="width: 60%;">
+                        <label>Selecione o Lote</label>
+                        <select id="taxaMaoQtdAlvoAdmin">
+                            <option value="100">100 un</option><option value="200">200 un</option><option value="300">300 un</option>
+                            <option value="500">500 un</option><option value="1000">1000 un</option><option value="2000">2000 un</option>
+                            <option value="5000">5000 un</option><option value="Variavel">Variável</option>
+                        </select>
+                    </div>
+                    <div class="field" style="width: 20%;"><label>Taxa (R$)</label><input type="number" id="taxaMaoValorAdmin" step="0.01"></div>
+                    <div class="field" style="width: 20%;"><button class="btn-principal" onclick="atualizarObjetoTaxaMaoAdmin()" style="margin:0; height:38px; padding:0;">Definir</button></div>
+                </div>
+                <div style="max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 25px;">
+                    <table id="tableTaxasQuantidadeMaoAdmin" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead><tr style="background: #f8fafc;"><th style="padding: 8px; text-align: left; width: 60%;">Lote do Sistema</th><th style="padding: 8px; text-align: left; width: 20%;">Taxa</th><th style="padding: 8px; text-align: left; width: 20%;">Ação</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
 
-            <div style="font-size: 15px; margin: 15px 0 10px 0; color: #0f172a; font-weight: bold; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">Calibração da Zona de Impressão (Mockup)</div>
-            <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Arraste os 4 vértices sobre a imagem da sacola para definir a área imprimível de cada modelo.</div>
-            <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
-                <label style="font-size:12px; font-weight:bold; color:#475569;">Modelo:</label>
-                <select id="adminZonaModelo" onchange="adminZonaCarregarModelo()" style="height:34px; font-size:13px; border:1px solid #ccc; border-radius:6px; padding:0 8px;">
-                    <option value="vertical">Vertical</option>
-                    <option value="horizontal">Horizontal</option>
-                </select>
-            </div>
-            <div style="width:100%; max-width:420px; margin:0 auto 12px auto; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-                <canvas id="adminZonaCanvas" style="width:100%; display:block; cursor:crosshair; touch-action:none;"></canvas>
-            </div>
-            <button class="btn-principal" onclick="adminZonaSalvar()" style="margin:0 0 20px 0; background:#7c3aed;">Aplicar Zona ao Mockup</button>
-
+            <!-- BOTÕES GERAIS DO ADMINISTRADOR -->
             <div style="display: flex; gap: 15px; border-top: 2px solid #e2e8f0; padding-top: 15px;">
                 <button class="btn-principal" onclick="salvarAlteracoesAdminLocais()" style="margin:0; background: #003366; flex:1;">Salvar no Sistema</button>
                 <button class="btn-principal" onclick="exportarJsonAdminAtualizado()" style="margin:0; background: #10b981; flex:1;">Baixar dados.json</button>
@@ -476,18 +546,13 @@
 </div>
 
 <script>
-// INÍCIO DA ENGENHARIA LOGICA E PERSISTÊNCIA DO ADMINISTRADOR INTEGRADO
-let ultimoCustoIlhosValidoAdmin = 0.20;
-let ultimoCustoFuroValidoAdmin = 0.15;
-
+// INÍCIO DA ENGENHARIA LÓGICA E PERSISTÊNCIA DO ADMINISTRADOR INTEGRADO
 function verificarAberturaTabAdmin(idConteudo) {
     if (idConteudo === 'tab-admin') {
         renderAllAdmin();
         adminZonaInit();
     }
     if (idConteudo === 'tab-mockup') {
-        // Re-aplica zona com as configurações persistidas (resolve race condition de cache de imagens)
-        // Só atua se a imagem base já carregou (naturalWidth > 0); caso contrário o onload já dispara
         if (imgBase.naturalWidth > 0) {
             zonaImpressao = zonaFallbackPorModelo();
             processarETingirMockup(false);
@@ -495,23 +560,26 @@ function verificarAberturaTabAdmin(idConteudo) {
     }
 }
 
-function toggleCustoCampoAdmin(selectId, inputId) {
-    const status = document.getElementById(selectId).value;
-    const inputCampo = document.getElementById(inputId);
-    if (status === 'nao') {
-        if (inputId === 'fixoIlhosAdmin' && parseFloat(inputCampo.value) > 0) {
-            ultimoCustoIlhosValidoAdmin = parseFloat(inputCampo.value);
-        }
-        if (inputId === 'fixoFuroAdmin' && parseFloat(inputCampo.value) > 0) {
-            ultimoCustoFuroValidoAdmin = parseFloat(inputCampo.value);
-        }
-        inputCampo.value = '0.00';
-        inputCampo.disabled = true;
-    } else {
-        inputCampo.disabled = false;
-        if (parseFloat(inputCampo.value) === 0) {
-            inputCampo.value = inputId === 'fixoIlhosAdmin' ? ultimoCustoIlhosValidoAdmin : ultimoCustoFuroValidoAdmin;
-        }
+// NAVEGAÇÃO ENTRE SUB-ABAS DO PAINEL ADMIN
+function switchSubTab(e, idSubConteudo) {
+    const parentContainer = document.getElementById('tab-admin');
+    if (!parentContainer) return;
+
+    parentContainer.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+    parentContainer.querySelectorAll('.sub-tab-content').forEach(panel => panel.classList.remove('active'));
+
+    e.target.classList.add('active');
+    const targetPanel = document.getElementById(idSubConteudo);
+    if (targetPanel) targetPanel.classList.add('active');
+
+    if (idSubConteudo === 'admin-sacola') {
+        adminZonaInit();
+    }
+}
+
+function atualizarTaxaInlineMaoAdmin(chave, valor) {
+    if (databaseMao && databaseMao.taxasQuantidade) {
+        databaseMao.taxasQuantidade[chave] = Math.max(0, parseFloat(valor) || 0);
     }
 }
 function renderAllAdminParteDois() {
@@ -519,52 +587,84 @@ function renderAllAdminParteDois() {
     const tbodyCoresEva = document.querySelector('#tableCoresEvaAdmin tbody');
     if (tbodyCoresEva) {
         tbodyCoresEva.innerHTML = '';
-        databaseMao.coresEva.forEach((cor, idx) => {
-            tbodyCoresEva.innerHTML += `<tr>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${cor.nome}" onchange="atualizarDadosInlineAdmin('coresEva', ${idx}, 'nome', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${cor.preco}" onchange="atualizarDadosInlineAdmin('coresEva', ${idx}, 'preco', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('coresEva', ${idx})">Excluir</button></td>
-            </tr>`;
-        });
+        if (databaseMao && databaseMao.coresEva) {
+            databaseMao.coresEva.forEach((cor, idx) => {
+                tbodyCoresEva.innerHTML += `<tr>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${cor.nome}" onchange="atualizarDadosInlineAdmin('coresEva', ${idx}, 'nome', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${cor.preco}" onchange="atualizarDadosInlineAdmin('coresEva', ${idx}, 'preco', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('coresEva', ${idx})">Excluir</button></td>
+                </tr>`;
+            });
+        }
     }
-
     // 5. PREENCHE TABELA OPERACIONAL DE TAXAS ADICIONAIS POR LOTE
     const tbodyTaxasQtd = document.querySelector('#tableTaxasQuantidadeMaoAdmin tbody');
     if (tbodyTaxasQtd) {
         tbodyTaxasQtd.innerHTML = '';
-        if (!databaseMao.taxasQuantidade) {
-            databaseMao.taxasQuantidade = { "100": 0, "200": 0, "300": 0, "500": 0, "1000": 0, "2000": 0, "5000": 0, "Variavel": 0 };
+        if (databaseMao) {
+            if (!databaseMao.taxasQuantidade) {
+                databaseMao.taxasQuantidade = { "100": 0, "200": 0, "300": 0, "500": 0, "1000": 0, "2000": 0, "5000": 0, "Variavel": 0 };
+            }
+            Object.keys(databaseMao.taxasQuantidade).forEach((key) => {
+                let labelExibido = key === "Variavel" ? "Outra Qtd (Variável)" : key + " un";
+                tbodyTaxasQtd.innerHTML += `<tr>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${labelExibido}" disabled></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${databaseMao.taxasQuantidade[key]}" onchange="atualizarTaxaInlineMaoAdmin('${key}', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#64748b; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="resetarTaxaMaoAdmin('${key}')">Zerar</button></td>
+                </tr>`;
+            });
         }
-        Object.keys(databaseMao.taxasQuantidade).forEach((key) => {
-            let labelExibido = key === "Variavel" ? "Outra Qtd (Variável)" : key + " un";
-            tbodyTaxasQtd.innerHTML += `<tr>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${labelExibido}" disabled></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${databaseMao.taxasQuantidade[key]}" onchange="atualizarTaxaInlineMaoAdmin('${key}', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#64748b; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="resetarTaxaMaoAdmin('${key}')">Zerar</button></td>
-            </tr>`;
-        });
     }
 
     // SINCRONIZA ESTADO DOS INPUTS FIXOS DO PAINEL
-    document.getElementById('valorStartMaoAdmin').value = databaseMao.valorStartMao || 0;
+    const elStartMao = document.getElementById('valorStartMaoAdmin');
+    if (elStartMao && databaseMao) elStartMao.value = databaseMao.valorStartMao || 0;
 
-    if (databaseSacola.valoresAcabamento) {
-        const temIlhos = databaseSacola.valoresAcabamento.ilhos > 0;
-        document.getElementById('statusIlhosAdmin').value = temIlhos ? 'sim' : 'nao';
-        document.getElementById('fixoIlhosAdmin').value = databaseSacola.valoresAcabamento.ilhos;
-        document.getElementById('fixoIlhosAdmin').disabled = !temIlhos;
-
-        const temFuro = databaseSacola.valoresAcabamento.furoLaco > 0;
-        document.getElementById('statusFuroAdmin').value = temFuro ? 'sim' : 'nao';
-        document.getElementById('fixoFuroAdmin').value = databaseSacola.valoresAcabamento.furoLaco;
-        document.getElementById('fixoFuroAdmin').disabled = !temFuro;
+    if (databaseSacola && databaseSacola.valoresAcabamento) {
+        const elIlhos = document.getElementById('fixoIlhosAdmin');
+        const elFuro = document.getElementById('fixoFuroAdmin');
+        if (elIlhos) elIlhos.value = databaseSacola.valoresAcabamento.ilhos || 0;
+        if (elFuro) elFuro.value = databaseSacola.valoresAcabamento.furoLaco || 0;
         
         if (databaseSacola.valoresAcabamento.cores) {
-            document.getElementById('cor1x0Admin').value = databaseSacola.valoresAcabamento.cores['1x0'] || 0;
-            document.getElementById('cor2x0Admin').value = databaseSacola.valoresAcabamento.cores['2x0'] || 0;
-            document.getElementById('cor4x0Admin').value = databaseSacola.valoresAcabamento.cores['4x0'] || 0;
-            document.getElementById('cor4x1Admin').value = databaseSacola.valoresAcabamento.cores['4x1'] || 0;
+            const el1x0 = document.getElementById('cor1x0Admin');
+            const el2x0 = document.getElementById('cor2x0Admin');
+            const el4x0 = document.getElementById('cor4x0Admin');
+            const el4x1 = document.getElementById('cor4x1Admin');
+            if (el1x0) el1x0.value = databaseSacola.valoresAcabamento.cores['1x0'] || 0;
+            if (el2x0) el2x0.value = databaseSacola.valoresAcabamento.cores['2x0'] || 0;
+            if (el4x0) el4x0.value = databaseSacola.valoresAcabamento.cores['4x0'] || 0;
+            if (el4x1) el4x1.value = databaseSacola.valoresAcabamento.cores['4x1'] || 0;
         }
+    }
+
+    // SINCRONIZA ESTADO DOS NOVOS VALORES DE ENOBRECIMENTO M² + FIXO LOTE
+    if (databaseSacola && databaseSacola.valoresEnobrecimento) {
+        const elEpbM2 = document.getElementById('enoPlastBrilhoM2');
+        const elEpbFixo = document.getElementById('enoPlastBrilhoFixo');
+        const elEpfM2 = document.getElementById('enoPlastFoscaM2');
+        const elEpfFixo = document.getElementById('enoPlastFoscaFixo');
+        const elEhsM2 = document.getElementById('enoHotstampM2');
+        const elEhsFixo = document.getElementById('enoHotstampFixo');
+        const elEbbM2 = document.getElementById('enoBoppBrilhoM2');
+        const elEbbFixo = document.getElementById('enoBoppBrilhoFixo');
+        const elEbfM2 = document.getElementById('enoBoppFoscaM2');
+        const elEbfFixo = document.getElementById('enoBoppFoscaFixo');
+        const elEvnM2 = document.getElementById('enoVernizM2');
+        const elEvnFixo = document.getElementById('enoVernizFixo');
+
+        if (elEpbM2) elEpbM2.value = databaseSacola.valoresEnobrecimento.plastBrilhoM2 || 0;
+        if (elEpbFixo) elEpbFixo.value = databaseSacola.valoresEnobrecimento.plastBrilhoFixo || 0;
+        if (elEpfM2) elEpfM2.value = databaseSacola.valoresEnobrecimento.plastFoscaM2 || 0;
+        if (elEpfFixo) elEpfFixo.value = databaseSacola.valoresEnobrecimento.plastFoscaFixo || 0;
+        if (elEhsM2) elEhsM2.value = databaseSacola.valoresEnobrecimento.hotstampM2 || 0;
+        if (elEhsFixo) elEhsFixo.value = databaseSacola.valoresEnobrecimento.hotstampFixo || 0;
+        if (elEbbM2) elEbbM2.value = databaseSacola.valoresEnobrecimento.boppBrilhoM2 || 0;
+        if (elEbbFixo) elEbbFixo.value = databaseSacola.valoresEnobrecimento.boppBrilhoFixo || 0;
+        if (elEbfM2) elEbfM2.value = databaseSacola.valoresEnobrecimento.boppFoscaM2 || 0;
+        if (elEbfFixo) elEbfFixo.value = databaseSacola.valoresEnobrecimento.boppFoscaFixo || 0;
+        if (elEvnM2) elEvnM2.value = databaseSacola.valoresEnobrecimento.vernizM2 || 0;
+        if (elEvnFixo) elEvnFixo.value = databaseSacola.valoresEnobrecimento.vernizFixo || 0;
     }
 }
 function renderAllAdmin() {
@@ -572,118 +672,149 @@ function renderAllAdmin() {
     const tbodyProd = document.querySelector('#tableProdutosAdmin tbody');
     if (tbodyProd) {
         tbodyProd.innerHTML = '';
-        databaseSacola.produtosConfigurados.forEach((p, idx) => {
-            tbodyProd.innerHTML += `<tr>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${p.nomeCompleto}" onchange="atualizarDadosInlineAdmin('produtosConfigurados', ${idx}, 'nomeCompleto', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${p.precoBase}" onchange="atualizarDadosInlineAdmin('produtosConfigurados', ${idx}, 'precoBase', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('produtosConfigurados', ${idx})">Excluir</button></td>
-            </tr>`;
-        });
+        if (databaseSacola && databaseSacola.produtosConfigurados) {
+            databaseSacola.produtosConfigurados.forEach((p, idx) => {
+                tbodyProd.innerHTML += `<tr>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${p.nomeCompleto}" onchange="atualizarDadosInlineAdmin('produtosConfigurados', ${idx}, 'nomeCompleto', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${p.precoBase}" onchange="atualizarDadosInlineAdmin('produtosConfigurados', ${idx}, 'precoBase', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.0001" style="width:100%; border:none; background:transparent;" value="${p.metroQuadrado || 0}" onchange="atualizarDadosInlineAdmin('produtosConfigurados', ${idx}, 'metroQuadrado', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('produtosConfigurados', ${idx})">Excluir</button></td>
+                </tr>`;
+            });
+        }
     }
 
     // 2. PREENCHE TABELA DE CORDÕES / ALÇAS DA SACOLA
     const tbodyCord = document.querySelector('#tableCordoesAdmin tbody');
     if (tbodyCord) {
         tbodyCord.innerHTML = '';
-        databaseSacola.cordoes.forEach((c, idx) => {
-            tbodyCord.innerHTML += `<tr>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${c.nome}" onchange="atualizarDadosInlineAdmin('cordoes', ${idx}, 'nome', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${c.preco}" onchange="atualizarDadosInlineAdmin('cordoes', ${idx}, 'preco', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('cordoes', ${idx})">Excluir</button></td>
-            </tr>`;
-        });
+        if (databaseSacola && databaseSacola.cordoes) {
+            databaseSacola.cordoes.forEach((c, idx) => {
+                tbodyCord.innerHTML += `<tr>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${c.nome}" onchange="atualizarDadosInlineAdmin('cordoes', ${idx}, 'nome', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${c.preco}" onchange="atualizarDadosInlineAdmin('cordoes', ${idx}, 'preco', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('cordoes', ${idx})">Excluir</button></td>
+                </tr>`;
+            });
+        }
     }
-
     // 3. PREENCHE TABELA DE MODELOS COMERCIAIS DE MÃO (E.V.A)
     const tbodyMao = document.querySelector('#tableModelosMaoAdmin tbody');
     if (tbodyMao) {
         tbodyMao.innerHTML = '';
-        databaseMao.modelosMao.forEach((m, idx) => {
-            tbodyMao.innerHTML += `<tr>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${m.nome}" onchange="atualizarDadosInlineAdmin('modelosMao', ${idx}, 'nome', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${m.precoBase}" onchange="atualizarDadosInlineAdmin('modelosMao', ${idx}, 'precoBase', this.value)"></td>
-                <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('modelosMao', ${idx})">Excluir</button></td>
-            </tr>`;
-        });
+        if (databaseMao && databaseMao.modelosMao) {
+            databaseMao.modelosMao.forEach((m, idx) => {
+                tbodyMao.innerHTML += `<tr>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="text" style="width:100%; border:none; background:transparent;" value="${m.nome}" onchange="atualizarDadosInlineAdmin('modelosMao', ${idx}, 'nome', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><input type="number" min="0" step="0.01" style="width:100%; border:none; background:transparent;" value="${m.precoBase}" onchange="atualizarDadosInlineAdmin('modelosMao', ${idx}, 'precoBase', this.value)"></td>
+                    <td style="padding:8px; border-bottom:1px solid #e2e8f0;"><button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="removerItemAdmin('modelosMao', ${idx})">Excluir</button></td>
+                </tr>`;
+            });
+        }
     }
     
-    // Chama a renderização da segunda metade do painel administrativo
     renderAllAdminParteDois();
 }
-
-function atualizarTaxaInlineMaoAdmin(chave, valor) {
-    databaseMao.taxasQuantidade[chave] = Math.max(0, parseFloat(valor) || 0);
-}
-function atualizarObjetoTaxaMaoAdmin() {
-    const chave = document.getElementById('taxaMaoQtdAlvoAdmin').value;
-    const valor = Math.max(0, parseFloat(document.getElementById('taxaMaoValorAdmin').value) || 0);
-    if (!databaseMao.taxasQuantidade) databaseMao.taxasQuantidade = {};
-    databaseMao.taxasQuantidade[chave] = valor;
-    document.getElementById('taxaMaoValorAdmin').value = '';
-    renderAllAdmin();
-}
-
-function resetarTaxaMaoAdmin(chave) {
-    if (databaseMao.taxasQuantidade) databaseMao.taxasQuantidade[chave] = 0.00;
-    renderAllAdmin();
-}
-
 function atualizarDadosInlineAdmin(tipo, index, propriedade, novoValor) {
     let db = (tipo === 'produtosConfigurados' || tipo === 'cordoes') ? databaseSacola : databaseMao;
-    if (propriedade === 'precoBase' || propriedade === 'preco') {
+    if (!db || !db[tipo] || !db[tipo][index]) return;
+    
+    if (propriedade === 'precoBase' || propriedade === 'preco' || propriedade === 'metroQuadrado') {
         db[tipo][index][propriedade] = Math.max(0, parseFloat(novoValor) || 0); 
     } else {
         db[tipo][index][propriedade] = novoValor.trim();
     }
 }
 
+function atualizarObjetoTaxaMaoAdmin() {
+    const elChave = document.getElementById('taxaMaoQtdAlvoAdmin');
+    const elValor = document.getElementById('taxaMaoValorAdmin');
+    if (!elChave || !elValor || !databaseMao) return;
+    
+    const chave = elChave.value;
+    const valor = Math.max(0, parseFloat(elValor.value) || 0);
+    if (!databaseMao.taxasQuantidade) databaseMao.taxasQuantidade = {};
+    databaseMao.taxasQuantidade[chave] = valor;
+    elValor.value = '';
+    renderAllAdmin();
+}
+
+function resetarTaxaMaoAdmin(chave) {
+    if (databaseMao && databaseMao.taxasQuantidade) {
+        databaseMao.taxasQuantidade[chave] = 0.00;
+    }
+    renderAllAdmin();
+}
+
 function adicionarProdutoAdmin() {
-    const nome = document.getElementById('prodNome').value.trim();
-    const preco = Math.max(0, parseFloat(document.getElementById('prodPreco').value) || 0);
+    const elNome = document.getElementById('prodNome');
+    const elPreco = document.getElementById('prodPreco');
+    const elM2 = document.getElementById('prodMetroQuadrado');
+    if (!elNome || !elPreco || !elM2 || !databaseSacola) return;
+
+    const nome = elNome.value.trim();
+    const preco = Math.max(0, parseFloat(elPreco.value) || 0);
+    const m2 = Math.max(0, parseFloat(elM2.value) || 0);
     if(!nome) return;
+    
     if (!databaseSacola.produtosConfigurados) databaseSacola.produtosConfigurados = [];
     const novoId = databaseSacola.produtosConfigurados.length > 0 ? Math.max(...databaseSacola.produtosConfigurados.map(p => p.id)) + 1 : 1;
-    databaseSacola.produtosConfigurados.push({ "id": novoId, "nomeCompleto": nome, "precoBase": preco });
-    document.getElementById('prodNome').value = ''; document.getElementById('prodPreco').value = '';
+    databaseSacola.produtosConfigurados.push({ "id": novoId, "nomeCompleto": nome, "precoBase": preco, "metroQuadrado": m2 });
+    
+    elNome.value = ''; elPreco.value = ''; elM2.value = '';
     renderAllAdmin();
 }
 
 function adicionarCordaoAdmin() {
-    const nome = document.getElementById('cordaoNomeAdmin').value.trim();
-    const preco = Math.max(0, parseFloat(document.getElementById('cordaoPrecoAdmin').value) || 0);
+    const elNome = document.getElementById('cordaoNomeAdmin');
+    const elPreco = document.getElementById('cordaoPrecoAdmin');
+    if (!elNome || !elPreco || !databaseSacola) return;
+
+    const nome = elNome.value.trim();
+    const preco = Math.max(0, parseFloat(elPreco.value) || 0);
     if(!nome) return;
     if (!databaseSacola.cordoes) databaseSacola.cordoes = [];
     databaseSacola.cordoes.push({ "nome": nome, "preco": preco });
-    document.getElementById('cordaoNomeAdmin').value = ''; document.getElementById('cordaoPrecoAdmin').value = '';
+    elNome.value = ''; elPreco.value = '';
     renderAllAdmin();
 }
 
 function adicionarModeloMaoAdmin() {
-    const nome = document.getElementById('maoNomeAdmin').value.trim();
-    const preco = Math.max(0, parseFloat(document.getElementById('maoPrecoAdmin').value) || 0);
+    const elNome = document.getElementById('maoNomeAdmin');
+    const elPreco = document.getElementById('maoPrecoAdmin');
+    if (!elNome || !elPreco || !databaseMao) return;
+
+    const nome = elNome.value.trim();
+    const preco = Math.max(0, parseFloat(elPreco.value) || 0);
     if(!nome) return;
     if (!databaseMao.modelosMao) databaseMao.modelosMao = [];
     const novoId = databaseMao.modelosMao.length > 0 ? Math.max(...databaseMao.modelosMao.map(m => m.id)) + 1 : 1;
     databaseMao.modelosMao.push({ "id": novoId, "nome": nome, "precoBase": preco });
-    document.getElementById('maoNomeAdmin').value = ''; document.getElementById('maoPrecoAdmin').value = '';
+    elNome.value = ''; elPreco.value = '';
     renderAllAdmin();
 }
+
 function adicionarCorEvaAdmin() {
-    const nome = document.getElementById('evaCorNomeAdmin').value.trim();
-    const preco = Math.max(0, parseFloat(document.getElementById('evaCorPrecoAdmin').value) || 0);
+    const elNome = document.getElementById('evaCorNomeAdmin');
+    const elPreco = document.getElementById('evaCorPrecoAdmin');
+    if (!elNome || !elPreco || !databaseMao) return;
+
+    const nome = elNome.value.trim();
+    const preco = Math.max(0, parseFloat(elPreco.value) || 0);
     if(!nome) return;
     if (!databaseMao.coresEva) databaseMao.coresEva = [];
     databaseMao.coresEva.push({ "nome": nome, "preco": preco });
-    document.getElementById('evaCorNomeAdmin').value = ''; document.getElementById('evaCorPrecoAdmin').value = '';
+    elNome.value = ''; elPreco.value = '';
     renderAllAdmin();
 }
 
 function removerItemAdmin(tipo, index) {
     let db = (tipo === 'produtosConfigurados' || tipo === 'cordoes') ? databaseSacola : databaseMao;
-    db[tipo].splice(index, 1); 
+    if (db && db[tipo]) {
+        db[tipo].splice(index, 1); 
+    }
     renderAllAdmin(); 
 }
-
 /* ==========================================================================
    EDITOR VISUAL DE ZONA DE IMPRESSÃO (PAINEL ADMIN)
    ========================================================================== */
@@ -710,7 +841,6 @@ function adminZonaCarregarModelo() {
     if (sel) adminZonaModelo = sel.value;
     const canvas = document.getElementById('adminZonaCanvas');
     if (!canvas) return;
-
     adminZonaImgRef = new Image();
     adminZonaImgRef.onload = function() {
         const MAX_W = canvas.parentElement ? canvas.parentElement.clientWidth : 420;
@@ -730,7 +860,7 @@ function adminZonaCarregarModelo() {
 
 function adminZonaInicializarCantos(canvas) {
     const W = canvas.width, H = canvas.height;
-    const salvo = databaseSacola.zonasImpressao && databaseSacola.zonasImpressao[adminZonaModelo];
+    const salvo = databaseSacola && databaseSacola.zonasImpressao && databaseSacola.zonasImpressao[adminZonaModelo];
     const src = salvo
         ? [salvo.tl, salvo.tr, salvo.bl, salvo.br].map(p => [p[0], p[1]])
         : ADMIN_ZONA_DEFAULTS[adminZonaModelo];
@@ -765,7 +895,6 @@ function adminZonaDesenhar(canvas) {
     ctx.closePath(); ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();
-
     const LABELS = ['TL','TR','BL','BR'];
     const HR = Math.max(12, W * 0.028);
     adminZonaCorners.forEach((c, i) => {
@@ -815,7 +944,7 @@ function adminZonaSetupEventos(canvas) {
 
 function adminZonaSalvar() {
     const canvas = document.getElementById('adminZonaCanvas');
-    if (!canvas || !adminZonaCorners) return;
+    if (!canvas || !adminZonaCorners || !databaseSacola) return;
     const W = canvas.width, H = canvas.height;
     if (!databaseSacola.zonasImpressao) databaseSacola.zonasImpressao = {};
     const [tl, tr, bl, br] = adminZonaCorners;
@@ -830,26 +959,71 @@ function adminZonaSalvar() {
     localStorage.setItem('comvil_catalogo_cache', JSON.stringify(objetoUnificado));
     alert('Zona salva e aplicada ao mockup!');
 }
-
 function sincronizarFormularioObjetoAdmin() {
-    databaseMao.valorStartMao = Math.max(0, parseFloat(document.getElementById('valorStartMaoAdmin').value) || 0);
-    if (!databaseSacola.valoresAcabamento) databaseSacola.valoresAcabamento = { cores: {} };
-    
-    const ilhosStatus = document.getElementById('statusIlhosAdmin').value;
-    databaseSacola.valoresAcabamento.ilhos = ilhosStatus === 'sim' ? Math.max(0, parseFloat(document.getElementById('fixoIlhosAdmin').value) || 0) : 0.00;
-    
-    const furoStatus = document.getElementById('statusFuroAdmin').value;
-    databaseSacola.valoresAcabamento.furoLaco = furoStatus === 'sim' ? Math.max(0, parseFloat(document.getElementById('fixoFuroAdmin').value) || 0) : 0.00;
-    
-    if (!databaseSacola.valoresAcabamento.cores) databaseSacola.valoresAcabamento.cores = {};
-    databaseSacola.valoresAcabamento.cores['1x0'] = Math.max(0, parseFloat(document.getElementById('cor1x0Admin').value) || 0);
-    databaseSacola.valoresAcabamento.cores['2x0'] = Math.max(0, parseFloat(document.getElementById('cor2x0Admin').value) || 0);
-    databaseSacola.valoresAcabamento.cores['4x0'] = Math.max(0, parseFloat(document.getElementById('cor4x0Admin').value) || 0);
-    databaseSacola.valoresAcabamento.cores['4x1'] = Math.max(0, parseFloat(document.getElementById('cor4x1Admin').value) || 0);
-}
+    if (!databaseMao || !databaseSacola) return;
 
+    const valorStartMao = document.getElementById('valorStartMaoAdmin');
+    if (valorStartMao) {
+        databaseMao.valorStartMao = Math.max(0, parseFloat(valorStartMao.value) || 0);
+    }
+
+    if (!databaseSacola.valoresAcabamento) {
+        databaseSacola.valoresAcabamento = { cores: {} };
+    }
+
+    const fixoIlhos = document.getElementById('fixoIlhosAdmin');
+    databaseSacola.valoresAcabamento.ilhos = fixoIlhos ? Math.max(0, parseFloat(fixoIlhos.value) || 0) : 0;
+
+    const fixoFuro = document.getElementById('fixoFuroAdmin');
+    databaseSacola.valoresAcabamento.furoLaco = fixoFuro ? Math.max(0, parseFloat(fixoFuro.value) || 0) : 0;
+
+    if (!databaseSacola.valoresAcabamento.cores) {
+        databaseSacola.valoresAcabamento.cores = {};
+    }
+    const cor1x0 = document.getElementById('cor1x0Admin');
+    const cor2x0 = document.getElementById('cor2x0Admin');
+    const cor4x0 = document.getElementById('cor4x0Admin');
+    const cor4x1 = document.getElementById('cor4x1Admin');
+
+    databaseSacola.valoresAcabamento.cores['1x0'] = cor1x0 ? Math.max(0, parseFloat(cor1x0.value) || 0) : 0;
+    databaseSacola.valoresAcabamento.cores['2x0'] = cor2x0 ? Math.max(0, parseFloat(cor2x0.value) || 0) : 0;
+    databaseSacola.valoresAcabamento.cores['4x0'] = cor4x0 ? Math.max(0, parseFloat(cor4x0.value) || 0) : 0;
+    databaseSacola.valoresAcabamento.cores['4x1'] = cor4x1 ? Math.max(0, parseFloat(cor4x1.value) || 0) : 0;
+
+    // PERSISTÊNCIA DOS NOVOS CAMPOS DE ENOBRECIMENTO M² + FIXO LOTE
+    if (!databaseSacola.valoresEnobrecimento) {
+        databaseSacola.valoresEnobrecimento = {};
+    }
+    const elEpbM2 = document.getElementById('enoPlastBrilhoM2');
+    const elEpbFixo = document.getElementById('enoPlastBrilhoFixo');
+    const elEpfM2 = document.getElementById('enoPlastFoscaM2');
+    const elEpfFixo = document.getElementById('enoPlastFoscaFixo');
+    const elEhsM2 = document.getElementById('enoHotstampM2');
+    const elEhsFixo = document.getElementById('enoHotstampFixo');
+    const elEbbM2 = document.getElementById('enoBoppBrilhoM2');
+    const elEbbFixo = document.getElementById('enoBoppBrilhoFixo');
+    const elEbfM2 = document.getElementById('enoBoppFoscaM2');
+    const elEbfFixo = document.getElementById('enoBoppFoscaFixo');
+    const elEvnM2 = document.getElementById('enoVernizM2');
+    const elEvnFixo = document.getElementById('enoVernizFixo');
+
+    databaseSacola.valoresEnobrecimento.plastBrilhoM2 = elEpbM2 ? Math.max(0, parseFloat(elEpbM2.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.plastBrilhoFixo = elEpbFixo ? Math.max(0, parseFloat(elEpbFixo.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.plastFoscaM2 = elEpfM2 ? Math.max(0, parseFloat(elEpfM2.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.plastFoscaFixo = elEpfFixo ? Math.max(0, parseFloat(elEpfFixo.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.hotstampM2 = elEhsM2 ? Math.max(0, parseFloat(elEhsM2.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.hotstampFixo = elEhsFixo ? Math.max(0, parseFloat(elEhsFixo.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.boppBrilhoM2 = elEbbM2 ? Math.max(0, parseFloat(elEbbM2.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.boppBrilhoFixo = elEbbFixo ? Math.max(0, parseFloat(elEbbFixo.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.boppFoscaM2 = elEbfM2 ? Math.max(0, parseFloat(elEbfM2.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.boppFoscaFixo = elEbfFixo ? Math.max(0, parseFloat(elEbfFixo.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.vernizM2 = elEvnM2 ? Math.max(0, parseFloat(elEvnM2.value) || 0) : 0;
+    databaseSacola.valoresEnobrecimento.vernizFixo = elEvnFixo ? Math.max(0, parseFloat(elEvnFixo.value) || 0) : 0;
+}
 function salvarAlteracoesAdminLocais() {
+    console.log("Iniciando salvamento");
     sincronizarFormularioObjetoAdmin();
+    console.log("Após sincronização");
     
     if (typeof carregarMenusSacola === "function") carregarMenusSacola();
     if (typeof carregarMenusMao === "function") carregarMenusMao();
@@ -857,24 +1031,41 @@ function salvarAlteracoesAdminLocais() {
     
     let objetoUnificado = Object.assign({}, databaseSacola, databaseMao);
     localStorage.setItem('comvil_catalogo_cache', JSON.stringify(objetoUnificado));
-    
-    alert("✓ Configurações aplicadas com sucesso no sistema!");
+    console.log("Salvou no localStorage");
+
+    alert("✓ Configurações aplicadas com sucesso!");
     renderAllAdmin();
 }
 
 function exportarJsonAdminAtualizado() {
     sincronizarFormularioObjetoAdmin();
-    let objetoUnificado = Object.assign({}, databaseSacola, databaseMao);
-    const blob = new Blob([JSON.stringify(objetoUnificado, null, 2)], { type: "application/json" });
-    const link = document.createElement("a"); 
-    link.href = URL.createObjectURL(blob); 
-    link.download = "dados.json"; 
-    link.click();
+    const objetoUnificado = {
+        ...databaseSacola,
+        ...databaseMao
+    };
+
+    const blob = new Blob(
+        [JSON.stringify(objetoUnificado, null, 2)],
+        { type: "application/json;charset=utf-8" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "dados.json";
+
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
 }
 /* ==========================================================================
    BANCOS DE DADOS E CARREGAMENTO UNIFICADO (DADOS.JSON)
    ========================================================================== */
-let databaseSacola = { produtosConfigurados: [], cordoes: [], quantidades: [], valoresAcabamento: null };
+let databaseSacola = { produtosConfigurados: [], cordoes: [], quantidades: [], valoresAcabamento: null, valoresEnobrecimento: null };
 let databaseMao = { logoEmpresa: "", modelosMao: [], coresEva: [], valorStartMao: 0, taxasQuantidade: {} };
 
 let numeroOrcamentoSacola = "";
@@ -883,21 +1074,28 @@ let numeroOrcamentoMao = "";
 let objImgMinha = new Image();
 objImgMinha.src = "logo-empresa.png";
 objImgMinha.onerror = function() { objImgMinha.src = "https://placehold.co"; };
-
 const bancoReservaSacola = {
   "produtosConfigurados": [
-    { "id": 1, "nomeCompleto": "Sacola Offset 180g - 18x24x8", "precoBase": 0.78 },
-    { "id": 2, "nomeCompleto": "Sacola Offset 180g - 24x35x10", "precoBase": 0.95 }
+    { "id": 1, "nomeCompleto": "Sacola Offset 180g - 18x24x8", "precoBase": 0.78, "metroQuadrado": 0.1450 },
+    { "id": 2, "nomeCompleto": "Sacola Offset 180g - 24x35x10", "precoBase": 0.95, "metroQuadrado": 0.2200 }
   ],
   "cordoes": [
     { "nome": "Nylon", "preco": 0.20 }, 
     { "nome": "Gorgurão", "preco": 0.28 }
   ],
-  "quantidades": [500, 1000, 2000, 3000, 4000, 5000],
+  "quantidades":[],
   "valoresAcabamento": { 
     "ilhos": 0.20, 
     "furoLaco": 0.15, 
     "cores": { "1x0": 450.00, "2x0": 480.00, "4x0": 560.00, "4x1": 590.00 } 
+  },
+  "valoresEnobrecimento": {
+    "plastBrilhoM2": 1.20,  "plastBrilhoFixo": 80.00,
+    "plastFoscaM2": 1.80,   "plastFoscaFixo": 100.00,
+    "hotstampM2": 3.50,     "hotstampFixo": 250.00,
+    "boppBrilhoM2": 1.50,   "boppBrilhoFixo": 90.00,
+    "boppFoscaM2": 2.10,    "boppFoscaFixo": 110.00,
+    "vernizM2": 0.90,       "vernizFixo": 70.00
   }
 };
 
@@ -913,6 +1111,7 @@ const bancoReservaMao = {
   "valorStartMao": 150.00,
   "taxasQuantidade": { "100": 0.00, "200": 0.00, "300": 0.00, "500": 0.00, "1000": 0.00, "2000": 0.00, "5000": 0.00, "Variavel": 0.00 }
 };
+
 window.onload = function() {
     const cacheLocal = localStorage.getItem('comvil_catalogo_cache');
     if (cacheLocal) {
@@ -939,7 +1138,7 @@ window.onload = function() {
 
 function processarDadosCarregados(data) {
     if (data) {
-        if (data.produtosConfigurados || data.valoresAcabamento) { databaseSacola = data; } 
+        if (data.produtosConfigurados || data.valoresAcabamento || data.valoresEnobrecimento) { databaseSacola = data; } 
         else { databaseSacola = JSON.parse(JSON.stringify(bancoReservaSacola)); }
 
         if (data.modelosMao || data.coresEva) { databaseMao = data; } 
@@ -948,8 +1147,10 @@ function processarDadosCarregados(data) {
         let logoDefinida = data.logoEmpresa || databaseSacola.logoEmpresa || databaseMao.logoEmpresa;
         if(logoDefinida && logoDefinida.trim() !== "") {
             objImgMinha.src = logoDefinida;
-            if(document.getElementById('img-minha-preview_sacola')) document.getElementById('img-minha-preview_sacola').src = logoDefinida;
-            if(document.getElementById('img-minha-preview_mao')) document.getElementById('img-minha-preview_mao').src = logoDefinida;
+            const elPrevSacola = document.getElementById('img-minha-preview_sacola');
+            const elPrevMao = document.getElementById('img-minha-preview_mao');
+            if(elPrevSacola) elPrevSacola.src = logoDefinida;
+            if(elPrevMao) elPrevMao.src = logoDefinida;
         }
     } else {
         databaseSacola = JSON.parse(JSON.stringify(bancoReservaSacola));
@@ -959,7 +1160,6 @@ function processarDadosCarregados(data) {
     carregarMenusMao(); 
     atualizarTaxaQuantidadeMao();
 }
-
 function mascaraTelefone(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.substring(0, 11);
@@ -973,6 +1173,7 @@ function mascaraTelefone(input) {
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
+
 /* ==========================================================================
    LÓGICA DA ABA SACOLA
    ========================================================================== */
@@ -980,7 +1181,7 @@ function carregarMenusSacola() {
     const produtoSel = document.getElementById("selectProdutoConfigurado_sacola");
     if(produtoSel) {
         produtoSel.innerHTML = '';
-        if(databaseSacola.produtosConfigurados) {
+        if(databaseSacola && databaseSacola.produtosConfigurados) {
             databaseSacola.produtosConfigurados.forEach((prod) => {
                 let opt = document.createElement("option");
                 opt.value = prod.id; opt.text = prod.nomeCompleto; 
@@ -991,7 +1192,7 @@ function carregarMenusSacola() {
     const cordaoSel = document.getElementById("selectCordao_sacola");
     if(cordaoSel) {
         cordaoSel.innerHTML = '';
-        if(databaseSacola.cordoes) {
+        if(databaseSacola && databaseSacola.cordoes) {
             databaseSacola.cordoes.forEach((c) => {
                 let opt = document.createElement("option");
                 opt.value = c.nome; opt.text = c.nome; 
@@ -1002,7 +1203,7 @@ function carregarMenusSacola() {
     const qtdSel = document.getElementById("qtd_sacola");
     if(qtdSel) {
         qtdSel.innerHTML = '';
-        if(databaseSacola.quantidades) {
+        if(databaseSacola && databaseSacola.quantidades) {
             databaseSacola.quantidades.forEach((q) => {
                 let opt = new Option(q + " un", q);
                 qtdSel.add(opt);
@@ -1010,30 +1211,69 @@ function carregarMenusSacola() {
         }
     }
 }
-
 function calcularValoresAtuaisSacola() {
-    const idProdutoSelected = parseInt(document.getElementById("selectProdutoConfigurado_sacola").value);
-    const nomeCordaoSelected = document.getElementById("selectCordao_sacola").value;
-    const corSelecionada = document.getElementById("selectCores_sacola").value;
-    const temIlhos = document.getElementById("selectIlhos_sacola").value === "Sim";
-    const temFuroLaco = document.getElementById("selectFuroLaco_sacola").value === "Sim";
-    const qtd = parseInt(document.getElementById("qtd_sacola").value) || 500;
+    const elProd = document.getElementById("selectProdutoConfigurado_sacola");
+    const elCord = document.getElementById("selectCordao_sacola");
+    const elCores = document.getElementById("selectCores_sacola");
+    const elIlhos = document.getElementById("selectIlhos_sacola");
+    const elFuro = document.getElementById("selectFuroLaco_sacola");
+    const elQtd = document.getElementById("qtd_sacola");
+
+    const idProdutoSelected = elProd ? parseInt(elProd.value) : 0;
+    const nomeCordaoSelected = elCord ? elCord.value : "";
+    const corSelecionada = elCores ? elCores.value : "1x0";
     
-    let produtoEncontrado = databaseSacola.produtosConfigurados.find(p => p.id === idProdutoSelected);
+    const temIlhos = elIlhos ? elIlhos.value === "Sim" : false;
+    const temFuroLaco = elFuro ? elFuro.value === "Sim" : false;
+    const qtd = elQtd ? (parseInt(elQtd.value) || 500) : 500;
+    
+    const elEpb = document.getElementById("eno_plastBrilho");
+    const elEpf = document.getElementById("eno_plastFosca");
+    const elEhs = document.getElementById("eno_hotstamp");
+    const elEbb = document.getElementById("eno_boppBrilho");
+    const elEbf = document.getElementById("eno_boppFosca");
+    const elEvn = document.getElementById("eno_verniz");
+
+    const enoPlastBrilho = elEpb ? elEpb.checked : false;
+    const enoPlastFosca = elEpf ? elEpf.checked : false;
+    const enoHotstamp = elEhs ? elEhs.checked : false;
+    const enoBoppBrilho = elEbb ? elEbb.checked : false;
+    const enoBoppFosca = elEbf ? elEbf.checked : false;
+    const enoVerniz = elEvn ? elEvn.checked : false;
+
+    let produtoEncontrado = databaseSacola && databaseSacola.produtosConfigurados ? databaseSacola.produtosConfigurados.find(p => p.id === idProdutoSelected) : null;
     let precoProdutoBase = produtoEncontrado ? parseFloat(produtoEncontrado.precoBase || 0) : 0;
+    let metroQuadradoBase = produtoEncontrado ? parseFloat(produtoEncontrado.metroQuadrado || 0) : 0;
     let detalhesBase = produtoEncontrado ? produtoEncontrado.nomeCompleto : 'Nenhum produto';
     
-    let cordaoEncontrado = databaseSacola.cordoes.find(c => c.nome === nomeCordaoSelected);
+    let cordaoEncontrado = databaseSacola && databaseSacola.cordoes ? databaseSacola.cordoes.find(c => c.nome === nomeCordaoSelected) : null;
     let precoCordaoAlca = cordaoEncontrado ? parseFloat(cordaoEncontrado.preco || 0) : 0;
     
-    let precoIlhos = (temIlhos && databaseSacola.valoresAcabamento) ? parseFloat(databaseSacola.valoresAcabamento.ilhos || 0) : 0;
-    let precoFuroLaco = (temFuroLaco && databaseSacola.valoresAcabamento) ? parseFloat(databaseSacola.valoresAcabamento.furoLaco || 0) : 0;
+    let precoIlhos = temIlhos ? parseFloat(databaseSacola.valoresAcabamento?.ilhos || 0) : 0;
+    let precoFuroLaco = temFuroLaco ? parseFloat(databaseSacola.valoresAcabamento?.furoLaco || 0) : 0;
     let precoCoresFixo = (databaseSacola.valoresAcabamento && databaseSacola.valoresAcabamento.cores) ? parseFloat(databaseSacola.valoresAcabamento.cores[corSelecionada] || 0) : 0;
 
-    let somaInsumosFisicosUnitarios = precoProdutoBase + precoIlhos + precoCordaoAlca + precoFuroLaco;
-    let subtotalTiragemFisica = somaInsumosFisicosUnitarios * qtd;
-    let custoTotalFinalDoLote = subtotalTiragemFisica + precoCoresFixo;
-    
+    let dbEno = (databaseSacola && databaseSacola.valoresEnobrecimento) ? databaseSacola.valoresEnobrecimento : {};
+
+    let custoEnoUnitarioM2 = 0;
+    if (enoPlastBrilho) custoEnoUnitarioM2 += (metroQuadradoBase * parseFloat(dbEno.plastBrilhoM2 || 0));
+    if (enoPlastFosca)  custoEnoUnitarioM2 += (metroQuadradoBase * parseFloat(dbEno.plastFoscaM2 || 0));
+    if (enoHotstamp)    custoEnoUnitarioM2 += (metroQuadradoBase * parseFloat(dbEno.hotstampM2 || 0));
+    if (enoBoppBrilho)  custoEnoUnitarioM2 += (metroQuadradoBase * parseFloat(dbEno.boppBrilhoM2 || 0));
+    if (enoBoppFosca)   custoEnoUnitarioM2 += (metroQuadradoBase * parseFloat(dbEno.boppFoscaM2 || 0));
+    if (enoVerniz)      custoEnoUnitarioM2 += (metroQuadradoBase * parseFloat(dbEno.vernizM2 || 0));
+
+    let custoEnoFixoLote = 0;
+    if (enoPlastBrilho) custoEnoFixoLote += parseFloat(dbEno.plastBrilhoFixo || 0);
+    if (enoPlastFosca)  custoEnoFixoLote += parseFloat(dbEno.plastFoscaFixo || 0);
+    if (enoHotstamp)    custoEnoFixoLote += parseFloat(dbEno.hotstampFixo || 0);
+    if (enoBoppBrilho)  custoEnoFixoLote += parseFloat(dbEno.boppBrilhoFixo || 0);
+    if (enoBoppFosca)   custoEnoFixoLote += parseFloat(dbEno.boppFoscaFixo || 0);
+    if (enoVerniz)      custoEnoFixoLote += parseFloat(dbEno.vernizFixo || 0);
+
+    let parteA = precoProdutoBase + precoCordaoAlca + precoFuroLaco + precoIlhos + custoEnoUnitarioM2;
+    let custoTotalFinalDoLote = (parteA * qtd) + precoCoresFixo + custoEnoFixoLote;
+
     if (qtd > 2000) {
         let unidadesExcedentes = qtd - 2000;
         let blocksDeMil = Math.ceil(unidadesExcedentes / 1000); 
@@ -1043,47 +1283,76 @@ function calcularValoresAtuaisSacola() {
     let totalLoteComMargemLucro = custoTotalFinalDoLote * 1.70;
     let precoUnitarioDeVenda = totalLoteComMargemLucro / qtd;
     
+    let listEno = [];
+    if(enoPlastBrilho) listEno.push("Plast. Brilho");
+    if(enoPlastFosca) listEno.push("Plast. Fosca");
+    if(enoHotstamp) listEno.push("Hotstamp");
+    if(enoBoppBrilho) listEno.push("BOPP Brilho");
+    if(enoBoppFosca) listEno.push("BOPP Fosca");
+    if(enoVerniz) listEno.push("Verniz");
+    let enoTextoFinal = listEno.length > 0 ? listEno.join(", ") : "Nenhum";
+    
     return { 
         custoUnitario: precoUnitarioDeVenda, qtd: qtd, total: totalLoteComMargemLucro, 
-        detalhesBase: detalhesBase, nomeCordao: nomeCordaoSelected, corSelecionada: corSelecionada, temFuroLaco: temFuroLaco, temIlhos: temIlhos 
+        detalhesBase: detalhesBase, nomeCordao: nomeCordaoSelected, corSelecionada: corSelecionada, 
+        temFuroLaco: temFuroLaco, temIlhos: temIlhos, enoTexto: enoTextoFinal
     };
 }
 function obterNumeroIdentificadorSacola() {
     if(numeroOrcamentoSacola) return numeroOrcamentoSacola;
     const d = new Date();
-    numeroOrcamentoSacola = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    const ano = d.getFullYear();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    const milisegundos = String(d.getMilliseconds()).substring(0, 2);
+    
+    numeroOrcamentoSacola = ano + mes + dia + milisegundos;
     return numeroOrcamentoSacola;
 }
 
 function gerarVisualizacaoTelaSacola() {
-    const nome = document.getElementById("nomeCliente_sacola").value.trim();
-    const tel = document.getElementById("telCliente_sacola").value.trim();
+    const elNome = document.getElementById("nomeCliente_sacola");
+    const elTel = document.getElementById("telCliente_sacola");
+    if (!elNome || !elTel) return;
+
+    const nome = elNome.value.trim();
+    const tel = elTel.value.trim();
     if(!nome || !tel) { alert("Erro: Nome e Telefone são obrigatórios!"); return; }
 
     const dCom = calcularValoresAtuaisSacola();
-    const telVendedor = document.getElementById("telVendedor_sacola").value.trim();
+    const elVendedor = document.getElementById("telVendedor_sacola");
+    const telVendedor = elVendedor ? elVendedor.value.trim() : "";
     const numeroFinal = obterNumeroIdentificadorSacola();
     
-    document.getElementById("preview-numeracao-topo_sacola").innerText = "Nº " + numeroFinal;
-    document.getElementById("text-dados-cliente_sacola").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto_sacola").innerHTML = `<strong>Base:</strong> ${dCom.detalhesBase}<br><strong>Cores:</strong> ${dCom.corSelecionada} | <strong>Ilhós:</strong> ${dCom.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dCom.nomeCordao} | <strong>Furo Laço:</strong> ${dCom.temFuroLaco ? 'Sim' : 'Não'}`;
-    document.getElementById("text-dados-financeiro_sacola").innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
+    const elNumTopo = document.getElementById("preview-numeracao-topo_sacola");
+    const elDadosCli = document.getElementById("text-dados-cliente_sacola");
+    const elDadosProd = document.getElementById("text-dados-produto_sacola");
+    const elDadosFin = document.getElementById("text-dados-financeiro_sacola");
+    const elRodape = document.getElementById("preview-contato-rodape_sacola");
+    const elAreaOrc = document.getElementById("area-orcamento_sacola");
+    const elBlocoRes = document.getElementById("bloco-resultado_sacola");
+
+    if (elNumTopo) elNumTopo.innerText = "Nº " + numeroFinal;
+    if (elDadosCli) elDadosCli.innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    if (elDadosProd) elDadosProd.innerHTML = `<strong>Base:</strong> ${dCom.detalhesBase}<br><strong>Cores:</strong> ${dCom.corSelecionada} | <strong>Ilhós:</strong> ${dCom.temIlhos ? 'Sim' : 'Não'}<br><strong>Alça:</strong> ${dCom.nomeCordao} | <strong>Furo Laço:</strong> ${dCom.temFuroLaco ? 'Sim' : 'Não'}<br><strong>Enobrecimento:</strong> ${dCom.enoTexto}`;
+    if (elDadosFin) elDadosFin.innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
     
     let textoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape_sacola").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
+    if (elRodape) elRodape.innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
 
-    document.getElementById("area-orcamento_sacola").style.display = "block";
-    document.getElementById("bloco-resultado_sacola").style.display = "block";
+    if (elAreaOrc) elAreaOrc.style.display = "block";
+    if (elBlocoRes) elBlocoRes.style.display = "block";
 }
-
 /* ==========================================================================
-   LÓGICA DA ABA MÃO DE TORCIDA
+   LÓGICA DA ABA MÃO DE TORCIDA (CORRIGIDA E HIGIENIZADA)
    ========================================================================== */
+
+// 1. CARREGAMENTO DOS MENUS DINÂMICOS DA ABA MÃO
 function carregarMenusMao() {
     const modeloSel = document.getElementById("selectModeloMao");
     if(modeloSel) {
         modeloSel.innerHTML = '';
-        if(databaseMao.modelosMao) {
+        if(databaseMao && databaseMao.modelosMao) {
             databaseMao.modelosMao.forEach((mod) => {
                 let opt = document.createElement("option");
                 opt.value = mod.id; opt.text = mod.nome; 
@@ -1094,7 +1363,7 @@ function carregarMenusMao() {
     const corSel = document.getElementById("selectCorEva");
     if(corSel) {
         corSel.innerHTML = '';
-        if(databaseMao.coresEva) {
+        if(databaseMao && databaseMao.coresEva) {
             databaseMao.coresEva.forEach((cor) => {
                 let opt = document.createElement("option");
                 opt.value = cor.nome; opt.text = cor.nome; 
@@ -1103,6 +1372,8 @@ function carregarMenusMao() {
         }
     }
 }
+
+// 2. EXIBIÇÃO DE CAMPOS E CONTROLE DE TAXAS ADICIONAIS POR LOTE
 function verificarQuantidadeVariavel(select) {
     const campoManual = document.getElementById("campoQtdVariavel");
     if(campoManual) {
@@ -1115,7 +1386,7 @@ function atualizarTaxaQuantidadeMao() {
     if(!selectElement) return;
     const selectQtd = selectElement.value;
     let taxaEncontrada = 0;
-    if(databaseMao.taxasQuantidade) {
+    if(databaseMao && databaseMao.taxasQuantidade) {
         if(selectQtd === "Variavel") {
             taxaEncontrada = parseFloat(databaseMao.taxasQuantidade["Variavel"] || 0);
         } else {
@@ -1128,27 +1399,34 @@ function atualizarTaxaQuantidadeMao() {
     }
 }
 
+// 3. ENGENHARIA DE CÁLCULO DE CUSTOS E PREÇO DE VENDA DA MÃO
 function calcularValoresAtuaisMao() {
-    const idModeloSelected = parseInt(document.getElementById("selectModeloMao").value);
-    const tipoEncaixe = document.getElementById("selectTipoEncaixe").value;
-    const nomeCorEvaSelected = document.getElementById("selectCorEva").value;
-    const selectQtd = document.getElementById("selectQuantidade").value;
+    const elMod = document.getElementById("selectModeloMao");
+    const elEnc = document.getElementById("selectTipoEncaixe");
+    const elCor = document.getElementById("selectCorEva");
+    const elQtd = document.getElementById("selectQuantidade");
+
+    const idModeloSelected = elMod ? parseInt(elMod.value) : 0;
+    const tipoEncaixe = elEnc ? elEnc.value : "Luva";
+    const nomeCorEvaSelected = elCor ? elCor.value : "";
+    const selectQtd = elQtd ? elQtd.value : "100";
     
     let qtd = 100;
     if (selectQtd === "Variavel") {
-        qtd = parseInt(document.getElementById("qtdManual").value) || 1;
+        const elManual = document.getElementById("qtdManual");
+        qtd = elManual ? (parseInt(elManual.value) || 1) : 1;
     } else {
         qtd = parseInt(selectQtd);
     }
 
-    let modeloEncontrado = databaseMao.modelosMao.find(m => m.id === idModeloSelected);
+    let modeloEncontrado = databaseMao && databaseMao.modelosMao ? databaseMao.modelosMao.find(m => m.id === idModeloSelected) : null;
     let precoModeloBase = modeloEncontrado ? parseFloat(modeloEncontrado.precoBase || 0) : 0;
     let detalhesBase = modeloEncontrado ? modeloEncontrado.nome : 'Nenhum modelo';
     
-    let corEncontrada = databaseMao.coresEva.find(c => c.nome === nomeCorEvaSelected);
+    let corEncontrada = databaseMao && databaseMao.coresEva ? databaseMao.coresEva.find(c => c.nome === nomeCorEvaSelected) : null;
     let precoAdicionalCor = corEncontrada ? parseFloat(corEncontrada.preco || 0) : 0;
     
-    let startLoteFixo = parseFloat(databaseMao.valorStartMao || 0);
+    let startLoteFixo = databaseMao ? parseFloat(databaseMao.valorStartMao || 0) : 0;
     
     let taxaQuantidadeAdicional = 0;
     const taxaOculta = document.getElementById("taxaOcultaQuantidadeMao");
@@ -1171,58 +1449,71 @@ function calcularValoresAtuaisMao() {
         detalhesBase: detalhesBase, tipoEncaixe: tipoEncaixe, corEva: nomeCorEvaSelected
     };
 }
+
+// 4. GERADOR DE NUMERAÇÃO SERIAL EXCLUSIVA PARA PROPOSTAS DA MÃO
 function obterNumeroIdentificadorMao() {
     if(numeroOrcamentoMao) return numeroOrcamentoMao;
     const d = new Date();
-    numeroOrcamentoMao = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + String(d.getMilliseconds()).substring(0,2);
+    const ano = d.getFullYear();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    const milisegundos = String(d.getMilliseconds()).substring(0, 2);
+    
+    numeroOrcamentoMao = ano + mes + dia + milisegundos;
     return numeroOrcamentoMao;
 }
 
+// 5. RENDERIZADOR DA PRÉ-VISUALIZAÇÃO INTERNA NA TELA DO SISTEMA
 function gerarVisualizacaoTelaMao() {
-    const nome = document.getElementById("nomeCliente_mao").value.trim();
-    const tel = document.getElementById("telCliente_mao").value.trim();
-    if(!nome || !tel) { alert("Erro: Nome e Telefone são obrigatórios!"); return; }
+    const elNome = document.getElementById("nomeCliente_mao");
+    const elTel = document.getElementById("telCliente_mao");
+    if (!elNome || !elTel) return;
+
+    const nome = elNome.value.trim();
+    const tel = elTel.value.trim();
+    if(!nome || !tel) { alert("Erro: Nome e Telefone do cliente são obrigatórios!"); return; }
 
     const dCom = calcularValoresAtuaisMao();
-    const telVendedor = document.getElementById("telVendedor_mao").value.trim();
+    const elVendedor = document.getElementById("telVendedor_mao");
+    const telVendedor = elVendedor ? elVendedor.value.trim() : "";
     const numeroFinal = obterNumeroIdentificadorMao();
     
-    document.getElementById("preview-numeracao-topo_mao").innerText = "Nº " + numeroFinal;
-    document.getElementById("text-dados-cliente_mao").innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
-    document.getElementById("text-dados-produto_mao").innerHTML = `<strong>Modelo:</strong> ${dCom.detalhesBase}<br><strong>Encaixe:</strong> ${dCom.tipoEncaixe} | <strong>Cor/Estampa:</strong> ${dCom.corEva}`;
-    document.getElementById("text-dados-financeiro_mao").innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
+    const elNumTopo = document.getElementById("preview-numeracao-topo_mao");
+    const elDadosCli = document.getElementById("text-dados-cliente_mao");
+    const elDadosProd = document.getElementById("text-dados-produto_mao");
+    const elDadosFin = document.getElementById("text-dados-financeiro_mao");
+    const elRodape = document.getElementById("preview-contato-rodape_mao");
+    const elAreaOrc = document.getElementById("area-orcamento_mao");
+    const elBlocoRes = document.getElementById("bloco-resultado_mao");
+
+    if (elNumTopo) elNumTopo.innerText = "Nº " + numeroFinal;
+    if (elDadosCli) elDadosCli.innerHTML = `<strong>Nome:</strong> ${nome} <br> <strong>Telefone:</strong> ${tel}`;
+    if (elDadosProd) elDadosProd.innerHTML = `<strong>Modelo base:</strong> ${dCom.detalhesBase}<br><strong>Tipo de Encaixe:</strong> ${dCom.tipoEncaixe}<br><strong>Cor/Estampa:</strong> ${dCom.corEva}`;
+    if (elDadosFin) elDadosFin.innerHTML = `<strong>Quantidade:</strong> ${dCom.qtd} un | <strong>Unitário de Venda:</strong> ${formatarMoeda(dCom.custoUnitario)} <br> <strong>Total do Lote: ${formatarMoeda(dCom.total)}</strong>`;
     
     let textoVendedor = telVendedor ? ` | 📞 Vendedor: ${telVendedor}` : '';
-    document.getElementById("preview-contato-rodape_mao").innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
+    if (elRodape) elRodape.innerHTML = `<strong>COMVIL BRINDES</strong><br>CNPJ: 36.206.286/0001-03 | ✉️ comvil@comvil.com.br<br>☎️ Fixo: 11 3461-0813 | 📱 WhatsApp: 11 97024-3064${textoVendedor}`;
 
-    document.getElementById("area-orcamento_mao").style.display = "block";
-    document.getElementById("bloco-resultado_mao").style.display = "block";
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    let words = text.split(' '); let line = ''; let currentY = y;
-    for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-            ctx.fillText(line, x, currentY);
-            line = words[n] + ' '; currentY += lineHeight;
-        } else { line = testLine; }
-    }
-    ctx.fillText(line, x, currentY);
-    return currentY + lineHeight;
+    if (elAreaOrc) elAreaOrc.style.display = "block";
+    if (elBlocoRes) elBlocoRes.style.display = "block";
 }
 function exportarOrcamentoGenerico(config) {
-    const nome = document.getElementById("nomeCliente_" + config.sufixo).value.trim();
-    const telFormulario = document.getElementById("telCliente_" + config.sufixo).value.trim();
-    const vendedor = document.getElementById("nomeVendedor_" + config.sufixo).value.trim();
-    const telVendedor = document.getElementById("telVendedor_" + config.sufixo).value.trim();
+    const elNome = document.getElementById("nomeCliente_" + config.sufixo);
+    const elTelForm = document.getElementById("telCliente_" + config.sufixo);
+    const elVend = document.getElementById("nomeVendedor_" + config.sufixo);
+    const elTelVend = document.getElementById("telVendedor_" + config.sufixo);
+    if (!elNome || !elTelForm) return;
+    
+    const nome = elNome.value.trim();
+    const telFormulario = elTelForm.value.trim();
+    const vendedor = elVend ? elVend.value.trim() : "";
+    const telVendedor = elTelVend ? elTelVend.value.trim() : "";
     
     if(!nome || !telFormulario) { 
         alert("Erro: Nome e Telefone do cliente são obrigatórios!"); 
         return; 
     }
-    
+
     const dadosComerciais = config.funcaoCalculo();
     const dataHoje = new Date();
     const dataValidade = new Date();
@@ -1234,7 +1525,6 @@ function exportarOrcamentoGenerico(config) {
     canvas.width = 600; canvas.height = 860;
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Só desenha se for data URL — imagens file:// contaminam o canvas e bloqueiam toDataURL
     if (objImgMinha.naturalWidth > 0 && objImgMinha.src && objImgMinha.src.startsWith('data:')) {
         try {
             let maxAlturaLogo = 50;
@@ -1259,7 +1549,6 @@ function exportarOrcamentoGenerico(config) {
     ctx.fillStyle = "#333333"; ctx.font = "12px Arial";
     ctx.fillText("Nome / Razão Social: " + nome, 50, 185); 
     ctx.fillText("Telefone: " + telFormulario, 50, 203);
-    
     desenharCaixaPdf(ctx, 35, 235, 530, 105, "Especificações Técnicas do Pedido");
     ctx.fillStyle = "#333333"; ctx.font = "bold 11px Arial"; ctx.fillText(config.labelModelo, 50, 270); ctx.font = "11px Arial";
     
@@ -1286,7 +1575,7 @@ function exportarOrcamentoGenerico(config) {
     const condicoes = config.condicoesComerciais || [
         "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em " + dataValidade.toLocaleDateString('pt-BR') + ").",
         "• Forma de Pagamento: 50% de entrada na aprovação do pedido e 50% restante para 21 dias após a entrega.",
-        "• Prazo de Produção: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.",
+        "• Prazo de Production: 20 dias úteis a partir da validação digital do layout e pagamento do sinal de entrada.",
         "• Condições de Frete: São Paulo Capital (CIF - Por nossa conta) | Grande SP e Outros Estados (FOB)."
     ];
     condicoes.forEach((linha, i) => {
@@ -1294,7 +1583,6 @@ function exportarOrcamentoGenerico(config) {
         if (i < condicoes.length - 1) startY = wrapText(ctx, texto, 45, startY, maxTextWidth, lineSpacing);
         else wrapText(ctx, texto, 45, startY, maxTextWidth, lineSpacing);
     });
-
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(35, 635); ctx.lineTo(565, 635); ctx.stroke();
     ctx.textAlign = "center";
     let nomeAssinaturaVendedor = vendedor || 'Equipe Comercial Comvil';
@@ -1316,7 +1604,7 @@ function exportarOrcamentoGenerico(config) {
             dataUrl = canvas.toDataURL("image/jpeg", 0.98);
         } catch(e) {
             novaAba.close();
-            alert("Erro ao exportar: o canvas foi contaminado por uma imagem externa.\nVerifique se o logotipo da empresa foi carregado via upload (não por caminho direto).");
+            alert("Erro ao exportar: o canvas foi contaminado por uma imagem externa.\nVerifique se o logotipo da empresa foi carregado via upload.");
             return;
         }
         const nomeArquivo = `Orcamento_${config.prefixoArquivo}_${numeroFinal}_${nome.replace(/\s+/g, '_')}.jpg`;
@@ -1343,7 +1631,8 @@ function exportarOrcamentoGenerico(config) {
                 <img src="' + dataUrl + '" />\
                 <div class="btn-container">\
                     <a href="' + dataUrl + '" download="' + nomeArquivo + '" class="btn-download">Baixar Imagem</a>\
-                    <a href="https://api.whatsapp.com/send?phone=55' + telefoneLimpo + '&text=' + textoInjetado + '" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>\                </div>\
+                    <a href="https://api.whatsapp.com/send?phone=55' + telefoneLimpo + '&text=' + textoInjetado + '" target="_blank" class="btn-whatsapp">Abrir WhatsApp</a>\
+                </div>\
             </body>\
             </html>\
         ');
@@ -1356,7 +1645,7 @@ function abrirImagemNovaAbaSacola() {
         labelModelo: "Modelo base de fábrica:", labelMontagem: "Especificações de montagem e impressão:",
         funcaoCalculo: calcularValoresAtuaisSacola, funcaoNumero: obterNumeroIdentificadorSacola,
         textoLinhaInsumos: function(d) {
-            return "• Cores: " + d.corSelecionada + "  |  • Ilhós: " + (d.temIlhos ? "Sim" : "Não") + "  |  • Alça: " + d.nomeCordao + "  |  • Furo Laço: " + (d.temFuroLaco ? "Sim" : "Não");
+            return "• Cores: " + d.corSelecionada + "  |  • Ilhós: " + (d.temIlhos ? "Sim" : "Não") + "  |  • Alça: " + d.nomeCordao + "  |  • Furo Laço: " + (d.temFuroLaco ? "Sim" : "Não") + "  |  • Enobrecimento: " + d.enoTexto;
         },
         condicoesComerciais: [
             "• Validade da Proposta: Ativa por 10 dias (vencimento obrigatório em {dataValidade}).",
@@ -1384,6 +1673,20 @@ function abrirImagemNovaAbaMao() {
     });
 }
 
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    let words = text.split(' '); let line = ''; let currentY = y;
+    for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, currentY);
+            line = words[n] + ' '; currentY += lineHeight;
+        } else { line = testLine; }
+    }
+    ctx.fillText(line, x, currentY);
+    return currentY + lineHeight;
+}
+
 function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
     ctx.fillStyle = "#fafafa"; ctx.fillRect(x, y, w, h);
     ctx.strokeStyle = "#dddddd"; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
@@ -1391,6 +1694,7 @@ function desenharCaixaPdf(ctx, x, y, w, h, titulo) {
     ctx.fillText(titulo.toUpperCase(), x + 15, y + 18);
     ctx.strokeStyle = "#0056b3"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
 }
+
 /* ==========================================================================
    LÓGICA E MOTOR GRÁFICO DO MOCKUP INTERATIVO (CANVAS)
    ========================================================================== */
@@ -1408,7 +1712,7 @@ let arrastandoLogo = false;
 let offsetUV = { u: 0, v: 0 };
 let corCordaoSelecionada = "#ffffff";
 
-// MATRIZ CORRIGIDA E COMPLETA DE CORES DO MOSTRUÁRIO DE CORDÕES
+// MATRIZ DE CORES DO MOSTRUÁRIO DE CORDÕES
 const mostruarioCordao = [
     { nome: "Branco", hex: "#ffffff" }, { nome: "Preto", hex: "#000000" },
     { nome: "Cinza Claro", hex: "#8c8c8c" }, { nome: "Azul Caneta", hex: "#0b2bc6" },
@@ -1423,7 +1727,6 @@ const mostruarioCordao = [
 
 imgEmpresa.onload = function() { logoEmpresaPronta = true; };
 imgEmpresa.src = 'logo-empresa.png';
-
 function renderizarGradeCordoes() {
     const elGrid = document.getElementById('cordaoGrid');
     if(!elGrid) return;
@@ -1446,6 +1749,7 @@ function renderizarGradeCordoes() {
         elGrid.appendChild(box);
     });
 }
+
 function criarCamadaColorida(imgMascara, corHex) {
     const buffer = document.createElement('canvas');
     const canvasRef = document.getElementById('mockupCanvas');
@@ -1460,7 +1764,6 @@ function criarCamadaColorida(imgMascara, corHex) {
     }
     return buffer;
 }
-
 /* ---------- SISTEMA DE ZONA UV ---------- */
 function pontoDaZona(u, v) {
     if (!zonaImpressao) return { x: 0, y: 0 };
@@ -1522,7 +1825,6 @@ function computarCantosLogo() {
         return offsets.map(({ du, dv }) => pontoDaZona(u + du, v + dv));
     }
 
-    // Rotação em espaço de superfície: logo gira como adesivo na sacola
     const cos = Math.cos(giroRad), sin = Math.sin(giroRad);
     return offsets.map(({ du, dv }) => {
         const sx = du * Wpx, sy = dv * Hpx;
@@ -1531,7 +1833,6 @@ function computarCantosLogo() {
         return pontoDaZona(u + rx / Wpx, v + ry / Hpx);
     });
 }
-
 function detectarZonaDeImpressao() {
     if (!imgFrente.complete || imgFrente.naturalWidth === 0) return null;
     const W = imgFrente.naturalWidth, H = imgFrente.naturalHeight;
@@ -1539,7 +1840,7 @@ function detectarZonaDeImpressao() {
         const off = document.createElement('canvas');
         off.width = W; off.height = H;
         off.getContext('2d').drawImage(imgFrente, 0, 0);
-        const dados = off.getContext('2d').getImageData(0, 0, W, H).data; // lança SecurityError em file://
+        const dados = off.getContext('2d').getImageData(0, 0, W, H).data;
         const alpha = (x, y) => dados[(y * W + x) * 4 + 3];
         const LIMIAR = 40;
 
@@ -1578,7 +1879,6 @@ function detectarZonaDeImpressao() {
         const inset = p => ({ x: p.x + (cx - p.x) * 0.06, y: p.y + (cy - p.y) * 0.06 });
         return { tl: inset(tl), tr: inset(tr), bl: inset(bl), br: inset(br) };
     } catch(e) {
-        // SecurityError em file:// — usa coordenadas salvas no admin ou fallback geométrico
         return null;
     }
 }
@@ -1587,9 +1887,8 @@ function zonaFallbackPorModelo() {
     const elModelo = document.getElementById('modelo');
     const horizontal = elModelo && elModelo.value === 'horizontal';
     const W = imgBase.naturalWidth, H = imgBase.naturalHeight;
-    // Verifica se o admin já salvou coordenadas calibradas
     const chave = horizontal ? 'horizontal' : 'vertical';
-    if (databaseSacola.zonasImpressao && databaseSacola.zonasImpressao[chave]) {
+    if (databaseSacola && databaseSacola.zonasImpressao && databaseSacola.zonasImpressao[chave]) {
         const z = databaseSacola.zonasImpressao[chave];
         return {
             tl: { x: z.tl[0] * W, y: z.tl[1] * H },
@@ -1598,7 +1897,6 @@ function zonaFallbackPorModelo() {
             br: { x: z.br[0] * W, y: z.br[1] * H }
         };
     }
-    // Fallback geométrico: retângulo centrado na face da sacola
     if (horizontal) {
         return {
             tl: { x: W * 0.08, y: H * 0.16 },
@@ -1629,7 +1927,6 @@ function desenharGridPerspectiva(ctx) {
         ctx.beginPath(); ctx.moveTo(top.x, top.y);   ctx.lineTo(bot.x, bot.y);   ctx.stroke();
         ctx.beginPath(); ctx.moveTo(left.x, left.y); ctx.lineTo(right.x, right.y); ctx.stroke();
     }
-    // Borda da zona
     ctx.setLineDash([5, 4]);
     ctx.strokeStyle = 'rgba(0,83,166,0.45)';
     ctx.lineWidth = 1.5;
@@ -1640,8 +1937,6 @@ function desenharGridPerspectiva(ctx) {
     ctx.closePath(); ctx.stroke();
     ctx.restore();
 }
-/* ---------------------------------------- */
-
 function desenharTrianguloPerspectiva(ctx, img, x0,y0, x1,y1, x2,y2, u0,v0, u1,v1, u2,v2) {
     const denom = (u0*(v1-v2) + u1*(v2-v0) + u2*(v0-v1));
     if (Math.abs(denom) < 1e-10) return;
@@ -1675,7 +1970,6 @@ function desenharLogoComPerspectiva(ctx, img, tl, tr, bl, br) {
         }
     }
 }
-
 function processarETingirMockup(incluirRodape = false) {
     const canvasRef = document.getElementById('mockupCanvas');
     if(!canvasRef) return;
@@ -1697,10 +1991,8 @@ function processarETingirMockup(incluirRodape = false) {
     ctxRef.drawImage(imgBase, 0, 0);
     ctxRef.restore();
 
-    const elModelo = document.getElementById('modelo');
     const elCorFrente = document.getElementById('cor-frente');
     const elCorLateral = document.getElementById('cor-lateral');
-    const elLogoZoom = document.getElementById('logo-zoom');
 
     if (imgFrente.complete && imgFrente.naturalWidth > 0) {
         const corFinalFrente = modoKraftAtivo ? "#c2a67a" : (elCorFrente ? elCorFrente.value : "#ffffff");
@@ -1712,7 +2004,6 @@ function processarETingirMockup(incluirRodape = false) {
         const camadaLateral = criarCamadaColorida(imgLateral, corFinalLateral);
         ctxRef.drawImage(camadaLateral, 0, 0);
     }
-
     if (!incluirRodape && zonaImpressao) {
         desenharGridPerspectiva(ctxRef);
     }
@@ -1743,6 +2034,7 @@ function processarETingirMockup(incluirRodape = false) {
     ctxRef.globalCompositeOperation = 'multiply';
     ctxRef.drawImage(imgBase, 0, 0);
     ctxRef.restore();
+    
     if (incluirRodape) {
         ctxRef.save();
         ctxRef.fillStyle = "#e8e8e8";
@@ -1757,7 +2049,6 @@ function processarETingirMockup(incluirRodape = false) {
 
         let altDesejada = 34; 
         let centroCanvasX = canvasRef.width / 2;
-
         ctxRef.textAlign = "center";
 
         if (logoEmpresaPronta && imgEmpresa.naturalWidth > 0) {
@@ -1782,22 +2073,23 @@ function resetarPosicaoLogoPadrao() {
 }
 
 function resetarCanvas() {
-    // Limpa o logo e reseta todos os controles para o estado inicial
     logoCarregada = false;
     imgLogo.src = '';
     logoUV = { u: 0.5, v: 0.5 };
     const elZoom = document.getElementById('logo-zoom');
     const elGiro = document.getElementById('logo-giro');
-    const elInput = document.getElementById('logoFile');
-    if (elZoom)  { elZoom.value  = 40; document.getElementById('logo-zoom-val') && (document.getElementById('logo-zoom-val').textContent = '40%'); }
-    if (elGiro)  { elGiro.value  = 0;  document.getElementById('logo-giro-val') && (document.getElementById('logo-giro-val').textContent = '0°'); }
+    const elInput = document.getElementById('logo');
+    if (elZoom)  { elZoom.value  = 40; }
+    if (elGiro)  { elGiro.value  = 0;  }
     if (elInput) elInput.value = '';
     mockupGeradoComRodape = false;
     const btnDownload = document.getElementById('btnDownloadLayout');
     if (btnDownload) btnDownload.disabled = true;
     processarETingirMockup(false);
 }
-
+/* ==========================================================================
+   CORREÇÃO DE SINTAXE: MOTOR DE ARRASTO E CARREGAMENTO DO MOCKUP
+   ========================================================================== */
 function carregarArquivosDoServidor() {
     const elModelo = document.getElementById('modelo');
     if (!elModelo) return;
@@ -1821,13 +2113,13 @@ function carregarArquivosDoServidor() {
     imgLateral.src = `sacola_${sentido}_lateral.png?v=${Date.now()}`;
     imgCordao.src = `sacola_${sentido}_cordao.png?v=${Date.now()}`;
 }
+
 const elInputLogo = document.getElementById('logo');
 const elFileText = document.getElementById('file-text');
 const canvasRef = document.getElementById('mockupCanvas');
 
 if (elInputLogo) {
     elInputLogo.addEventListener('change', function(e) {
-        // CORREÇÃO DEFINITIVA: Lê o arquivo de índice zero do array e.target.files
         if (e.target.files && e.target.files[0]) {
             if (elFileText) elFileText.textContent = e.target.files[0].name;
             const leitorBase64 = new FileReader();
@@ -1871,9 +2163,11 @@ if (canvasRef) {
         if (!logoCarregada || !zonaImpressao) return;
         const mouse = obterCoordenadasPointer(e);
         const cantos = computarCantosLogo();
-        if (!cantos) return;
-        // Ordem de polígono: TL, TR, BR, BL
+        if (!cantos || cantos.length < 4) return;
+        
+        // CORREÇÃO: Mapeia corretamente os 4 cantos distintos da imagem (TL, TR, BR, BL)
         const poly = [cantos[0], cantos[1], cantos[3], cantos[2]];
+        
         if (pontoNoPoly(mouse.x, mouse.y, poly)) {
             canvasRef.setPointerCapture(e.pointerId);
             arrastandoLogo = true;
@@ -1881,8 +2175,6 @@ if (canvasRef) {
             offsetUV = { u: uv.u - logoUV.u, v: uv.v - logoUV.v };
             canvasRef.style.cursor = 'grabbing';
             mockupGeradoComRodape = false;
-            const btnDownload = document.getElementById('btnDownloadLayout');
-            if (btnDownload) btnDownload.disabled = true;
         }
     });
 
@@ -1899,11 +2191,11 @@ if (canvasRef) {
         } else {
             if (logoCarregada) {
                 const cantos = computarCantosLogo();
-                const poly = cantos ? [cantos[0], cantos[1], cantos[3], cantos[2]] : null;
-                canvasRef.style.cursor = (poly && pontoNoPoly(mouse.x, mouse.y, poly)) ? 'grab' : 'default';
-            } else {
-                canvasRef.style.cursor = 'default';
-            }
+                if (cantos && cantos.length >= 4) {
+                    const poly = [cantos[0], cantos[1], cantos[3], cantos[2]];
+                    canvasRef.style.cursor = pontoNoPoly(mouse.x, mouse.y, poly) ? 'grab' : 'default';
+                } else { canvasRef.style.cursor = 'default'; }
+            } else { canvasRef.style.cursor = 'default'; }
         }
     });
 
@@ -1915,6 +2207,7 @@ if (canvasRef) {
         }
     });
 }
+
 const btnGenerateJPEG = document.getElementById('btnGenerateJPEG');
 const btnDownloadLayout = document.getElementById('btnDownloadLayout');
 const elBtnKraft = document.getElementById('btnKraft');
@@ -1955,15 +2248,14 @@ if (elBtnKraft) {
 if (elCorFrente) elCorFrente.addEventListener('input', () => { modoKraftAtivo = false; if (elBtnKraft) elBtnKraft.classList.remove('active'); mockupGeradoComRodape = false; if (btnDownloadLayout) btnDownloadLayout.disabled = true; processarETingirMockup(false); });
 if (elCorLateral) elCorLateral.addEventListener('input', () => { modoKraftAtivo = false; if (elBtnKraft) elBtnKraft.classList.remove('active'); mockupGeradoComRodape = false; if (btnDownloadLayout) btnDownloadLayout.disabled = true; processarETingirMockup(false); });
 if (elLogoZoom) elLogoZoom.addEventListener('input', () => { mockupGeradoComRodape = false; if (btnDownloadLayout) btnDownloadLayout.disabled = true; processarETingirMockup(false); });
+
 const elLogoGiro = document.getElementById('logo-giro');
 if (elLogoGiro) elLogoGiro.addEventListener('input', () => { mockupGeradoComRodape = false; if (btnDownloadLayout) btnDownloadLayout.disabled = true; processarETingirMockup(false); });
 if (elModelo) elModelo.addEventListener('change', carregarArquivosDoServidor);
-
 window.addEventListener('DOMContentLoaded', () => { 
     renderizarGradeCordoes(); 
     carregarArquivosDoServidor(); 
 });
-
 // FUNÇÃO GLOBAL DE TROCA DE ABAS SEGUIDA DE TRAVA DE SEGURANÇA POR SENHA PARA O ADMIN
 function switchTab(e, idConteudo) {
     if (idConteudo === 'tab-admin') {
