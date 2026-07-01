@@ -201,9 +201,9 @@
     }
   },
   "valoresEnobrecimento": {
-    "plastBrilhoM2": 1.0,
+    "plastBrilhoM2": 1.4,
     "plastBrilhoFixo": 50,
-    "plastFoscaM2": 1.0,
+    "plastFoscaM2": 1.3,
     "plastFoscaFixo": 50,
     "hotstampM2": 0.58,
     "hotstampFixo": 130,
