@@ -58,7 +58,7 @@
       "id": 10,
       "nomeCompleto": "Sacola 28x33x10 - Duplex 190g",
       "precoBase": 1.15,
-      "metroQuadrado": 0.34
+      "metroQuadrado": 0.32
     },
     {
       "id": 11,
@@ -201,9 +201,9 @@
     }
   },
   "valoresEnobrecimento": {
-    "plastBrilhoM2": 0.8,
+    "plastBrilhoM2": 0.74,
     "plastBrilhoFixo": 50,
-    "plastFoscaM2": 0.75,
+    "plastFoscaM2": 0.72,
     "plastFoscaFixo": 50,
     "hotstampM2": 0.58,
     "hotstampFixo": 130,
